@@ -1,0 +1,11 @@
+@media (max-width: 600px) {
+    .SearchBarInput {
+        width: 95vw;
+       }
+}
+
+@media (min-width: 600px) {
+    .SearchBarInput {
+        width: 55vw;
+       }
+}

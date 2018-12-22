@@ -1,0 +1,32 @@
+.Elevation-container {
+    height: 100%;
+    width: 100%;
+}
+
+.Elevation {
+    margin: auto;
+    max-height: 800px;
+    max-width: 500px;
+}
+
+.Elevation-inner {
+    display: grid;
+    grid-template-columns: 10% auto 10%; 
+}
+
+.Header {
+    grid-column: 2;
+    margin-bottom: 30px;
+}
+
+.Field {
+    grid-column: 2;
+    margin-bottom: 10px;
+}
+
+.Button {
+    grid-column: 2;
+    max-width: 100px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

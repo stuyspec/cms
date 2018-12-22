@@ -1,0 +1,11 @@
+@media (min-width: 600px) {
+    .AppBar {
+        height: 64px;
+    }
+}
+
+@media (max-width: 600px) {
+    .AppBar {
+        height: 56px;
+    }
+}

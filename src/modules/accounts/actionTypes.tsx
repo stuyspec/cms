@@ -1,0 +1,22 @@
+
+export const SIGN_IN_PENDING = "accounts/SIGN_IN_PENDING";
+export type SIGN_IN_PENDING = typeof SIGN_IN_PENDING;
+export const SIGN_IN_FULFILLED = "accounts/SIGN_IN_FULFILLED";
+export type SIGN_IN_FULFILLED = typeof SIGN_IN_FULFILLED;
+export const SIGN_IN_REJECTED = "accounts/SIGN_IN_REJECTED";
+export type SIGN_IN_REJECTED = typeof SIGN_IN_REJECTED;
+
+export const SIGN_OUT_PENDING = "accounts/SIGN_OUT_PENDING";
+export type SIGN_OUT_PENDING = typeof SIGN_OUT_PENDING;
+export const SIGN_OUT_FULFILLED = "accounts/SIGN_OUT_FULFILLED";
+export type SIGN_OUT_FULFILLED = typeof SIGN_OUT_FULFILLED;
+export const SIGN_OUT_REJECTED = "accounts/SIGN_OUT_REJECTED";
+export type SIGN_OUT_REJECTED = typeof SIGN_OUT_REJECTED;
+
+export const CREATE_SESSION = "accounts/CREATE_SESSION";
+export type CREATE_SESSION = typeof CREATE_SESSION;
+
+export const VALIDATE_TOKEN_FULFILLED = "accounts/VALIDATE_TOKEN_FULFILLED";
+export type VALIDATE_TOKEN_FULFILLED = typeof VALIDATE_TOKEN_FULFILLED;
+export const VALIDATE_TOKEN_REJECTED = "accounts/VALIDATE_TOKEN_REJECTED";
+export type VALIDATE_TOKEN_REJECTED = typeof VALIDATE_TOKEN_REJECTED;
