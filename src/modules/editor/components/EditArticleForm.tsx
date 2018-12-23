@@ -25,7 +25,7 @@ query articleBySlug($slug: String!) {
         }
         preview
         contributors {
-            email
+            slug
         }
         created_at
     }
@@ -44,7 +44,7 @@ interface IArticleData {
         },
         preview?: string,
         contributors?: Array<{
-            email: string
+            slug: string
         }>,
         created_at?: string
     }
@@ -130,7 +130,7 @@ export const EditArticleForm: React.SFC<IProps> = ({ slug }) => {
                                                 section: data.articleBySlug.section.id.toString(),
                                                 focus: data.articleBySlug.preview || "",
                                                 contributors: data.articleBySlug.contributors ?
-                                                    data.articleBySlug.contributors.map(c => c.email) : [],
+                                                    data.articleBySlug.contributors.map(c => c.slug) : [],
                                                 editorState: stringToEditorState(data.articleBySlug.content, schema)
                                             }}
                                             onPost={async (state) => {
