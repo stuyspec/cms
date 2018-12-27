@@ -4,7 +4,6 @@ import './ArticlesHome.css';
 import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
-//import { CircularProgress } from '@rmwc/circular-progress'
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -84,7 +83,7 @@ export class ArticlesHome extends React.Component<{}, typeof initialState> {
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchArticles} /> : undefined
+                        this.state.data ? <SearchResults results={this.state.data.searchArticles} /> : null
                     }
                 </div>
                 <div className="ArticlesHomeFab">

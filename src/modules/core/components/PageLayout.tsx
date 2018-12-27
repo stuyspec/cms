@@ -20,8 +20,6 @@ export const PageLayout: React.SFC<IPageLayoutProps> = ({ children }) => (
                 navigationIcon={onNavigate}
             />
         </div>
-        <>
-            {children}
-        </>
+        {children}
     </div>
 )
