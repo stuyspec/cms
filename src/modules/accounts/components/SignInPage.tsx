@@ -66,6 +66,11 @@ class SignInPageUnconnected extends React.Component<any, State> {
                             className='Field'
                         />
                         <Button raised={true} className='Button'>Sign in</Button>
+                        <div className="SignInErrorText">
+                        {
+                            this.props.errors
+                        }
+                        </div>
                     </form>
                 </Elevation>
             </div>
@@ -75,7 +80,8 @@ class SignInPageUnconnected extends React.Component<any, State> {
 
 function mapStateToProps(state: IState) {
     return {
-        session: state.accounts.session
+        session: state.accounts.session,
+        errors: state.accounts.errors
     }
 }
 

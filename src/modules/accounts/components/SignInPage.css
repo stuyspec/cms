@@ -30,3 +30,8 @@
     margin-top: 10px;
     margin-bottom: 20px;
 }
+
+.SignInErrorText {
+    color: red;
+    grid-column: 2;
+}
