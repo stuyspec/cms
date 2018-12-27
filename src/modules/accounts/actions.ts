@@ -12,7 +12,7 @@ interface ISignInParams {
 export const setSession = new ActionCreator<IAccountsSession | null, IState>(
   "accounts/SET_SESSION",
   (state, payload): IState => {
-    if(payload) {
+    if (payload) {
       try {
         window.localStorage.setItem("session", JSON.stringify(payload))
       }
@@ -29,6 +29,19 @@ export const setSession = new ActionCreator<IAccountsSession | null, IState>(
       }
     }
   }
+)
+
+const setErrors= new ActionCreator<string[], IState>(
+  "accounts/SET_ERRORS",
+  (state, errors) => (
+    {
+      ...state,
+      accounts: {
+        ...state.accounts,
+        errors
+      }
+    }
+  )
 )
 
 /*export const signInPending = new ActionCreator<ISignInParams, IState>(
@@ -79,36 +92,32 @@ export const validateTokenPending = new ActionCreator<void, IState>(
   }
 )
 
-export const signIn = (dispatch: Dispatch, params: ISignInParams) => {
+export const signIn = async (dispatch: Dispatch, params: ISignInParams) => {
   //dispatch(signInPending.call(params));
-  console.log("about to fetch.");
-  fetch(`${STUY_SPEC_API_URL}/auth/sign_in`, {
-    method: "POST",
-    headers: STUY_SPEC_API_HEADERS,
-    body: JSON.stringify({
-      email: params.email,
-      password: params.password
-    }),
-  })
-    .then(
-      response => {
-        console.log("fetch completed!");
-        const session = headersToAccountsSession(response.headers);
-        dispatch(setSession.call(session));
-        /*if (session) {
-          dispatch(signInFulfilled.call(session));
-        }
-        else {
-          dispatch(signInRejected.call(null))
-        }*/
-      }
-    )
-    .catch(
-      () => {
-        //dispatch(signInRejected.call(null));
-        dispatch(setSession.call(null));
-      }
-    )
+  dispatch(setErrors.call([]))
+  try {
+    const response = await fetch(`${STUY_SPEC_API_URL}/auth/sign_in`, {
+      method: "POST",
+      headers: STUY_SPEC_API_HEADERS,
+      body: JSON.stringify({
+        email: params.email,
+        password: params.password
+      }),
+    });
+    
+    const session = headersToAccountsSession(response.headers);
+    dispatch(setSession.call(session));
+    const results = await response.json();
+    if (results.errors) {
+      dispatch(setErrors.call(results.errors))
+    }
+  }
+
+  catch (e) {
+    console.error(e)
+    dispatch(setErrors.call(["Failed to connect to server."]))
+    dispatch(setSession.call(null));
+  }
 }
 
 function headersToAccountsSession(headers: Headers): IAccountsSession | null {
