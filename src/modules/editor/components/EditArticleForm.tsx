@@ -1,16 +1,24 @@
 import * as React from 'react';
 
+import { connect } from 'react-redux';
+
+import { IState } from '../../state';
+import { setUpdateArticleSucceeded } from '../actions';
+
+import { Redirect } from 'react-router-dom';
+
 import { ArticleFormBase } from './ArticleFormBase';
 
 import gql from 'graphql-tag';
-import { Query, ApolloConsumer } from 'react-apollo';
+import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 
-import { stringToEditorState } from '../serializeState';
-import { editorStateToString } from '../serializeState';
+import { stringToEditorState, editorStateToString } from '../serializeState';
 import { queryAccountIDs } from '../queryHelpers';
 
 
 import { schema } from 'prosemirror-schema-basic';
+
+import { Snackbar } from '@rmwc/snackbar';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -55,10 +63,6 @@ interface IArticleVariables {
 }
 
 class ArticleQuery extends Query<IArticleData, IArticleVariables> { }
-
-interface IProps {
-    slug: string
-}
 
 const ARTICLE_MUTATION = gql`
 mutation updateArticle(
@@ -108,7 +112,13 @@ interface IVariables {
     contributors: number[]
 }
 
-export const EditArticleForm: React.SFC<IProps> = ({ slug }) => {
+class UpdateArticleMutation extends Mutation<IData, IVariables> { }
+
+const EditArticleUnconnected: React.SFC<any> = ({ slug, updateArticleSucceeded, dispatch }) => {
+    if (updateArticleSucceeded) {
+        return <Redirect to="/home" push={true} />
+    }
+
     return (
         <ApolloConsumer>
             {
@@ -121,40 +131,56 @@ export const EditArticleForm: React.SFC<IProps> = ({ slug }) => {
                                 }
                                 if (data && data.articleBySlug) {
                                     return (
-
-                                        <ArticleFormBase
-                                            initialState={{
-                                                title: data.articleBySlug.title,
-                                                volume: data.articleBySlug.volume.toString(),
-                                                issue: data.articleBySlug.issue.toString(),
-                                                section: data.articleBySlug.section.id.toString(),
-                                                focus: data.articleBySlug.preview || "",
-                                                contributors: data.articleBySlug.contributors ?
-                                                    data.articleBySlug.contributors.map(c => c.slug) : [],
-                                                editorState: stringToEditorState(data.articleBySlug.content, schema)
-                                            }}
-                                            onPost={async (state) => {
-                                                const userIDs = await queryAccountIDs(state.contributors, client)
-                                                client.mutate<IData, IVariables>({
-                                                    mutation: ARTICLE_MUTATION,
-                                                    variables: {
-                                                        id: data!.articleBySlug!.id,
-                                                        title: state.title,
-                                                        section_id: parseInt(state.section, 10),
-                                                        content: editorStateToString(state.editorState),
-                                                        summary: state.focus,
-                                                        created_at: data!.articleBySlug!.created_at
-                                                            || new Date().toISOString(),
-                                                        outquotes: [],
-                                                        volume: parseInt(state.volume, 10),
-                                                        issue: parseInt(state.issue, 10),
-                                                        contributors: userIDs,
-                                                    }
-                                                })
-                                            }}
-                                            postLabel="Edit"
-                                        />
-
+                                        <UpdateArticleMutation
+                                            mutation={ARTICLE_MUTATION}
+                                            onError={(error) => dispatch(setUpdateArticleSucceeded.call(false))}
+                                            onCompleted={(result) => dispatch(setUpdateArticleSucceeded.call(true))}
+                                        >
+                                            {
+                                                (mutate) =>
+                                                    (
+                                                        <>
+                                                            <ArticleFormBase
+                                                                initialState={{
+                                                                    title: data!.articleBySlug!.title,
+                                                                    volume: data!.articleBySlug!.volume.toString(),
+                                                                    issue: data!.articleBySlug!.issue.toString(),
+                                                                    section: data!.articleBySlug!.section.id.toString(),
+                                                                    focus: data!.articleBySlug!.preview || "",
+                                                                    contributors: data!.articleBySlug!.contributors ?
+                                                                        data!.articleBySlug!.contributors!.map(c => c.slug) : [],
+                                                                    editorState: stringToEditorState(data!.articleBySlug!.content, schema)
+                                                                }}
+                                                                onPost={async (state) => {
+                                                                    const userIDs = await queryAccountIDs(state.contributors, client)
+                                                                    mutate({
+                                                                        variables: {
+                                                                            id: data!.articleBySlug!.id,
+                                                                            title: state.title,
+                                                                            section_id: parseInt(state.section, 10),
+                                                                            content: editorStateToString(state.editorState),
+                                                                            summary: state.focus,
+                                                                            created_at: data!.articleBySlug!.created_at
+                                                                                || new Date().toISOString(),
+                                                                            outquotes: [],
+                                                                            volume: parseInt(state.volume, 10),
+                                                                            issue: parseInt(state.issue, 10),
+                                                                            contributors: userIDs,
+                                                                        }
+                                                                    })
+                                                                }}
+                                                                postLabel="Edit"
+                                                            />
+                                                            <Snackbar
+                                                                show={updateArticleSucceeded === false}
+                                                                onHide={() => dispatch(setUpdateArticleSucceeded.call(null))}
+                                                                message="Failed to edit article."
+                                                                timeout={2000}
+                                                            />
+                                                        </>
+                                                    )
+                                            }
+                                        </UpdateArticleMutation>
                                     )
                                 }
                                 if (data) {
@@ -169,3 +195,14 @@ export const EditArticleForm: React.SFC<IProps> = ({ slug }) => {
         </ApolloConsumer>
     )
 }
+
+
+
+
+function mapStateToProps(state: IState) {
+    return {
+        updateArticleSucceeded: state.editor.updateArticleSucceeded
+    }
+}
+
+export const EditArticleForm = connect(mapStateToProps, null)(EditArticleUnconnected);

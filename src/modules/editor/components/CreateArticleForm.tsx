@@ -1,5 +1,14 @@
 import * as React from "react";
 
+import { connect } from 'react-redux';
+
+import { IState } from '../../state';
+import { setCreateArticleSucceeded } from '../actions';
+
+import { Redirect } from "react-router-dom";
+
+import { Snackbar } from "@rmwc/snackbar";
+
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
 
@@ -60,7 +69,7 @@ interface IVariables {
 
 class CreateArticleMutation extends Mutation<IData, IVariables> { };
 
-const initialState = {
+const initialArticleState = {
     title: "",
     volume: "",
     issue: "",
@@ -75,36 +84,61 @@ const initialState = {
     )
 }
 
-export const CreateArticleForm: React.SFC<{}> = ({ }) => {
+const CreateArticleUnconnected: React.SFC<any> = (props) => {
+    if(props.createArticleSucceeded) {
+        return <Redirect to="/home" push={true} />
+    }
     return (
-        <CreateArticleMutation mutation={ARTICLE_MUTATION}>
-            {(mutate) => (
-                <ApolloConsumer>
-                    {(client) => (
-                        <ArticleFormBase
-                            initialState={initialState}
-                            postLabel="Post"
-                            onPost={async (state) => {
-                                const userIDs = await queryAccountIDs(state.contributors, client);
-                                mutate({
-                                    variables: {
-                                        title: state.title,
-                                        section_id: parseInt(state.section, 10),
-                                        content: editorStateToString(state.editorState),
-                                        summary: state.focus,
-                                        created_at: new Date().toISOString(),
-                                        outquotes: [],
-                                        volume: parseInt(state.volume, 10),
-                                        issue: parseInt(state.issue, 10),
-                                        contributors: userIDs,
-                                    }
-                                })
-                            }}
-                        />
-                    )
-                    }
-                </ApolloConsumer>
-            )}
-        </CreateArticleMutation>
+        <>
+            <CreateArticleMutation
+                mutation={ARTICLE_MUTATION}
+                onError={(error) => props.dispatch(setCreateArticleSucceeded.call(false))}
+                onCompleted={(data) => props.dispatch(setCreateArticleSucceeded.call(true))}
+            >
+                {(mutate) => (
+                    <ApolloConsumer>
+                        {(client) => (
+                            <ArticleFormBase
+                                initialState={initialArticleState}
+                                postLabel="Post"
+                                onPost={async (state) => {
+                                    const userIDs = await queryAccountIDs(state.contributors, client);
+                                    mutate({
+                                        variables: {
+                                            title: state.title,
+                                            section_id: parseInt(state.section, 10),
+                                            content: editorStateToString(state.editorState),
+                                            summary: state.focus,
+                                            created_at: new Date().toISOString(),
+                                            outquotes: [],
+                                            volume: parseInt(state.volume, 10),
+                                            issue: parseInt(state.issue, 10),
+                                            contributors: userIDs,
+                                        },
+                                    });
+                                }}
+                            />
+                        )
+                        }
+                    </ApolloConsumer>
+                )}
+            </CreateArticleMutation>
+            <Snackbar
+                show={props.createArticleSucceeded === false}
+                onHide={() => props.dispatch(setCreateArticleSucceeded.call(null))}
+                message="Failed to publish article."
+                timeout={2000}
+            />
+        </>
     )
 }
+
+
+function mapStateToProps(state: IState) {
+    return {
+        createArticleSucceeded: state.editor.createArticleSucceeded
+    }
+}
+
+export const CreateArticleForm = connect(mapStateToProps, null)(CreateArticleUnconnected);
+
