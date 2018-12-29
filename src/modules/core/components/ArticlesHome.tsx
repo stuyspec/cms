@@ -4,12 +4,18 @@ import './ArticlesHome.css';
 import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
+import { Snackbar } from '@rmwc/snackbar';
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
 
 import gql from 'graphql-tag';
 import { ApolloConsumer } from 'react-apollo';
+
+import { connect } from 'react-redux';
+
+import { IState } from '../../state';
+import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
 interface IData {
     searchArticles: Array<({
@@ -34,8 +40,8 @@ const initialState = {
     data: undefined as IData | undefined,
 }
 
-export class ArticlesHome extends React.Component<{}, typeof initialState> {
-    constructor(props: Readonly<{}>) {
+class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
+    constructor(props: Readonly<any>) {
         super(props);
         this.state = initialState;
     }
@@ -89,8 +95,29 @@ export class ArticlesHome extends React.Component<{}, typeof initialState> {
                 <div className="ArticlesHomeFab">
                     <Fab icon="add" onClick={this.onFabClick} />
                 </div>
+                <Snackbar
+                    show={this.props.createArticleSucceeded}
+                    onHide={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
+                    message="The article was successfully created."
+                    timeout={2000}
+                />
+                <Snackbar
+                    show={this.props.updateArticleSucceeded} 
+                    onHide={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
+                    message="The article was successfully updated."
+                    timeout={2000}
+                />
             </>
         )
 
     }
 }
+
+function mapStateToProps(state: IState) {
+    return {
+        createArticleSucceeded: state.editor.createArticleSucceeded,
+        updateArticleSucceeded: state.editor.updateArticleSucceeded
+    }
+}
+
+export const ArticlesHome = connect(mapStateToProps, null)(ArticlesHomeUnconnected);
