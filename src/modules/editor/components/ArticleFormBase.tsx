@@ -10,7 +10,6 @@ import { FocusField } from './helpers/FocusField';
 import { ContributorsField } from './helpers/ContributorsField';
 
 import { Button } from '@rmwc/button';
-import { TextField } from '@rmwc/textfield';
 
 interface IState {
     title: string,
@@ -47,12 +46,6 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         value={this.state.title}
                         onChange={this.onTitleChange}
                         label="Title"
-                    />
-                    <TextField
-                        value={this.state.title}
-                        onChange={(e: React.FormEvent<HTMLInputElement>) => this.onTitleChange(e.currentTarget.value)}
-                        label="Title"
-                        outlined={true}
                     />
                     <div className="ArticleFormHorizontal">
                         <NumberField
