@@ -2,10 +2,8 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import { IState } from '../../state';
 import { setUpdateArticleSucceeded } from '../actions';
-
-import { Redirect } from 'react-router-dom';
+import { FormStateNotification } from './FormStateNotification';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
@@ -17,8 +15,6 @@ import { queryAccountIDs } from '../queryHelpers';
 
 
 import { schema } from 'prosemirror-schema-basic';
-
-import { Snackbar } from '@rmwc/snackbar';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -114,11 +110,7 @@ interface IVariables {
 
 class UpdateArticleMutation extends Mutation<IData, IVariables> { }
 
-const EditArticleUnconnected: React.SFC<any> = ({ slug, updateArticleSucceeded, dispatch }) => {
-    if (updateArticleSucceeded) {
-        return <Redirect to="/home" push={true} />
-    }
-
+const EditArticleUnconnected: React.SFC<any> = ({ slug, dispatch }) => {
     return (
         <ApolloConsumer>
             {
@@ -140,6 +132,7 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, updateArticleSucceeded, 
                                                 (mutate) =>
                                                     (
                                                         <>
+                                                            <FormStateNotification />
                                                             <ArticleFormBase
                                                                 initialState={{
                                                                     title: data!.articleBySlug!.title,
@@ -171,12 +164,6 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, updateArticleSucceeded, 
                                                                 }}
                                                                 postLabel="Edit"
                                                             />
-                                                            <Snackbar
-                                                                show={updateArticleSucceeded === false}
-                                                                onHide={() => dispatch(setUpdateArticleSucceeded.call(null))}
-                                                                message="Failed to edit article."
-                                                                timeout={2000}
-                                                            />
                                                         </>
                                                     )
                                             }
@@ -196,13 +183,4 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, updateArticleSucceeded, 
     )
 }
 
-
-
-
-function mapStateToProps(state: IState) {
-    return {
-        updateArticleSucceeded: state.editor.updateArticleSucceeded
-    }
-}
-
-export const EditArticleForm = connect(mapStateToProps, null)(EditArticleUnconnected);
+export const EditArticleForm = connect(null, null)(EditArticleUnconnected);

@@ -2,12 +2,7 @@ import * as React from "react";
 
 import { connect } from 'react-redux';
 
-import { IState } from '../../state';
 import { setCreateArticleSucceeded } from '../actions';
-
-import { Redirect } from "react-router-dom";
-
-import { Snackbar } from "@rmwc/snackbar";
 
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
@@ -20,6 +15,8 @@ import { editorStateToString } from '../serializeState';
 import { queryAccountIDs } from '../queryHelpers';
 
 import { ArticleFormBase } from './ArticleFormBase';
+
+import { FormStateNotification } from './FormStateNotification';
 
 
 const ARTICLE_MUTATION = gql`
@@ -85,11 +82,9 @@ const initialArticleState = {
 }
 
 const CreateArticleUnconnected: React.SFC<any> = (props) => {
-    if(props.createArticleSucceeded) {
-        return <Redirect to="/home" push={true} />
-    }
     return (
         <>
+            <FormStateNotification />
             <CreateArticleMutation
                 mutation={ARTICLE_MUTATION}
                 onError={(error) => props.dispatch(setCreateArticleSucceeded.call(false))}
@@ -123,22 +118,9 @@ const CreateArticleUnconnected: React.SFC<any> = (props) => {
                     </ApolloConsumer>
                 )}
             </CreateArticleMutation>
-            <Snackbar
-                show={props.createArticleSucceeded === false}
-                onHide={() => props.dispatch(setCreateArticleSucceeded.call(null))}
-                message="Failed to publish article."
-                timeout={2000}
-            />
         </>
     )
 }
 
-
-function mapStateToProps(state: IState) {
-    return {
-        createArticleSucceeded: state.editor.createArticleSucceeded
-    }
-}
-
-export const CreateArticleForm = connect(mapStateToProps, null)(CreateArticleUnconnected);
+export const CreateArticleForm = connect(null, null)(CreateArticleUnconnected);
 
