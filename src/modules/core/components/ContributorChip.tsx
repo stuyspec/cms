@@ -2,9 +2,21 @@ import * as React from 'react';
 import { Chip } from '@rmwc/chip';
 import { CircularProgress } from '@rmwc/circular-progress';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
 
-type Props = { slug: string } & ({ deletable: false } | { deletable: true, onDelete: (id: string) => any });
+import { client } from '../../apolloClient';
+
+
+//The first and last name of the contributor can optionally be specified.
+//Do this whenever possible.
+//Supplying information allows the component to avoid unnecessary unbatched queries
+interface IUserInfo { slug: string, firstName?: string, lastName?: string };
+
+//This prop specifies whether the chip can be removed from a list
+//Specifying true for deletable will render a delete button
+//If deletable is true, a callback must be specified for the action performed on delete
+type DeleteProps = { deletable: false } | { deletable: true, onDelete: (slug: string) => any };
+
+type Props = IUserInfo & DeleteProps;
 
 const USER_QUERY = gql`
     query ContributorChipQuery($slug: String!) {
@@ -23,23 +35,38 @@ interface IVariables {
     slug: string
 }
 
-class UserByEmailQuery extends Query<IData, IVariables> { };
+export const ContributorChip: React.SFC<Props> = (props) => {
+    const [name, setName] = React.useState(
+        props.firstName === undefined
+            || props.lastName === undefined
+            ? undefined : props.firstName + " " + props.lastName
+    );
 
-export const ContributorChip: React.SFC<Props> = (props) => (
-    <UserByEmailQuery query={USER_QUERY} variables={{ slug: props.slug }}>
-        {({ loading, data }) => {
-            console.dir(data)
-            if(loading) {
-                return <Chip leadingIcon={<CircularProgress />} />
-            }
-            return (
-                <Chip
-                    leadingIcon="face"
-                    text={data && data.userBySlug ? data.userBySlug.first_name + " " + data.userBySlug.last_name : "INVALID USER"}
-                    trailingIcon={props.deletable ? "close" : undefined}
-                    onTrailingIconInteraction={props.deletable ? (e) => { props.onDelete(props.slug) } : undefined}
-                />
-            );
-        }}
-    </UserByEmailQuery>
-)
+    if (name === undefined) {
+        client.query<IData, IVariables>({ query: USER_QUERY, variables: props })
+            .then(
+                (result) => {
+                    if (result.errors || !result.data.userBySlug) {
+                        setName("NETWORK ERROR")
+                    }
+                    else {
+                        setName((result.data.userBySlug.first_name || "") + " " + (result.data.userBySlug.last_name || ""))
+                    }
+                }
+            )
+    }
+
+    if (name === undefined) {
+        return <Chip leadingIcon={<CircularProgress />} />
+    }
+
+    return (
+        <Chip
+            leadingIcon="face"
+            text={name}
+            trailingIcon={props.deletable ? "close" : undefined}
+            onTrailingIconInteraction={props.deletable ? (e) => { props.onDelete(props.slug) } : undefined}
+        />
+    );
+
+}
