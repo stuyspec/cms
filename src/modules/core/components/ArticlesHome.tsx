@@ -19,7 +19,14 @@ import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../edit
 
 interface IData {
     searchArticles: Array<({
-        id: string,
+        searchable: {
+            id: string,
+            title: string,
+            preview?: string,
+            slug: string,
+            contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
+            section: { permalink: string }
+        }
     } | undefined)>
 }
 
@@ -30,7 +37,20 @@ interface IVariables {
 const SEARCH_QUERY = gql`
 query SearchQuery($query: String!) {
     searchArticles(query: $query) {
-        id
+        searchable {
+            id
+            title
+            preview
+            slug
+            contributors {
+                slug
+                first_name
+                last_name
+            }
+            section {
+                permalink
+            }
+        }
     }
 }`
 
@@ -102,7 +122,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                     timeout={2000}
                 />
                 <Snackbar
-                    show={this.props.updateArticleSucceeded} 
+                    show={this.props.updateArticleSucceeded}
                     onHide={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
                     message="The article was successfully updated."
                     timeout={2000}
