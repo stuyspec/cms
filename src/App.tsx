@@ -1,4 +1,4 @@
-import 'node_modules/material-components-web/dist/material-components-web.min.css';
+import 'material-components-web/dist/material-components-web.min.css';
 
 import * as React from 'react';
 import { Provider } from 'react-redux';
