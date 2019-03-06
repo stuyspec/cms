@@ -1,10 +1,10 @@
 //import accountsReducer from "./accounts/reducer";
-import { IState } from './state';
+import { IState, initialState } from './state';
 import { IGenericAction } from "./betterRedux";
 
-export function reducer(state: IState, action: any): IState {
+export function reducer(state: IState | undefined, action: any): IState {
     if((action as IGenericAction<IState>).handler) {
         return action.handler(state)
     }
-    return state;
+    return state || initialState;
 }

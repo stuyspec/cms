@@ -132,7 +132,7 @@ function headersToAccountsSession(headers: Headers): IAccountsSession | null {
   return null;
 }
 
-function headersObjectToAccountsSession(headers: object): IAccountsSession | null {
+function headersObjectToAccountsSession(headers: any): IAccountsSession | null {
   if (headers["access-token"] &&
     (headers as IAccountsSession).expiry &&
     (headers as IAccountsSession).client &&
