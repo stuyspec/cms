@@ -1,11 +1,13 @@
 .Elevation-container {
-    height: 100%;
-    width: 100%;
+    display: grid;
+    height: 100vh;
+    width: 100vw;
 }
 
 .Elevation {
     margin: auto;
     max-height: 800px;
+    min-width: 300px;
     max-width: 500px;
 }
 
@@ -17,6 +19,7 @@
 .Header {
     grid-column: 2;
     margin-bottom: 30px;
+    margin-top: 20px;
 }
 
 .Field {
