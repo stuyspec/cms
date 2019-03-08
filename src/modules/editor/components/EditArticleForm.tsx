@@ -16,6 +16,8 @@ import { queryAccountIDs } from '../queryHelpers';
 
 import { schema } from 'prosemirror-schema-basic';
 
+import { withPageLayout } from '../../core/withPageLayout';
+
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
     articleBySlug(slug: $slug) {
@@ -183,4 +185,4 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, dispatch }) => {
     )
 }
 
-export const EditArticleForm = connect(null, null)(EditArticleUnconnected);
+export const EditArticleForm = connect(null, null)(withPageLayout(EditArticleUnconnected));

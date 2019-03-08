@@ -17,6 +17,8 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
+import { withPageLayout } from '../withPageLayout';
+
 interface IData {
     searchArticles: Array<({
         searchable: {
@@ -140,4 +142,4 @@ function mapStateToProps(state: IState) {
     }
 }
 
-export const ArticlesHome = connect(mapStateToProps, null)(ArticlesHomeUnconnected);
+export const ArticlesHome = connect(mapStateToProps, null)(withPageLayout(ArticlesHomeUnconnected));

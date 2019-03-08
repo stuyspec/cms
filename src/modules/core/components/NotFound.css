@@ -1,0 +1,15 @@
+.NotFoundCenter {
+    display: grid;
+    height: 100vh;
+    width: 100 vw;
+}
+
+.NotFoundChild {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.NotFound404 {
+    text-align: center;
+}
