@@ -33,7 +33,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.5",
     "redux": "^4.0.1",
-    "rmwc": "^4.0.1",
+    "rmwc": "^4.0.6",
     "typesafe-actions": "^2.0.4"
   },
   "scripts": {
