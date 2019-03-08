@@ -18,6 +18,8 @@ import { ArticleFormBase } from './ArticleFormBase';
 
 import { FormStateNotification } from './FormStateNotification';
 
+import { withPageLayout } from '../../core/withPageLayout';
+
 
 const ARTICLE_MUTATION = gql`
 mutation createArticle(
@@ -122,5 +124,5 @@ const CreateArticleUnconnected: React.SFC<any> = (props) => {
     )
 }
 
-export const CreateArticleForm = connect(null, null)(CreateArticleUnconnected);
+export const CreateArticleForm = connect(null, null)(withPageLayout(CreateArticleUnconnected));
 
