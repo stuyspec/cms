@@ -43,7 +43,7 @@ class SignInPageUnconnected extends React.Component<any, State> {
 
     public render() {
         if (this.props.session) {
-            return <Redirect to={this.props.redirect || "/home"} />
+            return <Redirect to={this.props.redirect || "/"} />
         }
         return (
             <div className='Elevation-container'>
