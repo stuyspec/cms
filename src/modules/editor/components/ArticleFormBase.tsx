@@ -8,6 +8,7 @@ import { RichEditor } from "./RichEditor";
 import { NumberField } from './helpers/NumberField';
 import { FocusField } from './helpers/FocusField';
 import { ContributorsField } from './helpers/ContributorsField';
+import { SectionField } from './helpers/SectionField';
 
 import { Button } from '@rmwc/button';
 
@@ -59,10 +60,9 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                             label="Issue"
                         />
                     </div>
-                    <NumberField
+                    <SectionField
                         value={this.state.section}
                         onChange={this.onSectionChange}
-                        label="Section"
                     />
                     <FocusField
                         value={this.state.focus}

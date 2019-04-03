@@ -35,17 +35,11 @@ export const SearchBar: React.SFC<IProps> = ({ onChange, value, onEnter }) => {
                         onEnter()
                     }
                 }}
-                withTrailingIcon={
-                    <TextFieldIcon
-                        icon="search"
-                        tabIndex={0}
-                        onClick={e => {
-                            if (onEnter) {
-                                onEnter()
-                            }
-                        }}
-                    />
-                }
+                withTrailingIcon={{icon: "search", onClick: (e: any) => {
+                    if (onEnter) {
+                        onEnter()
+                    }
+                }}}
                 fullwidth={true}
             />
         </div>

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './PageLayout.css';
 
+import { SignOutButton } from "./SignOutButton";
+
 import { SimpleTopAppBar } from '@rmwc/top-app-bar';
 
 interface IPageLayoutProps {
@@ -18,6 +20,7 @@ export const PageLayout: React.SFC<IPageLayoutProps> = ({ children }) => (
                 title="CMS"
                 fixed={true}
                 navigationIcon={onNavigate}
+                endContent={<SignOutButton />}
             />
         </div>
         {children}
