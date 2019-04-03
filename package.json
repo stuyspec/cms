@@ -2,6 +2,7 @@
   "name": "cms",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/cms",
   "dependencies": {
     "@aeaton/react-prosemirror": "^0.21.1",
     "@types/classnames": "^2.2.6",
