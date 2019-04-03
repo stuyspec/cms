@@ -11,11 +11,8 @@ import { Snackbar } from '@rmwc/snackbar';
 import { connect } from 'react-redux';
 
 const FormStateUnconnected: React.SFC<any> = (props) => {
-    if (props.createArticleSucceeded) {
-        return <Redirect to="/home" push={true} />
-    }
-    if (props.updateArticleSucceeded) {
-        return <Redirect to="/home" push={true} />
+    if (props.createArticleSucceeded || props.updateArticleSucceeded) {
+        return <Redirect to="/" push={true} />
     }
 
     return (

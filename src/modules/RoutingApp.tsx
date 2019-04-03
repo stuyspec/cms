@@ -2,7 +2,8 @@ import * as React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 //import { PermissionLevel } from './accounts/permissionLevel';
-//import { AuthorizedRoute } from './accounts/components/AuthorizedRoute';
+import { AuthorizedRoute } from './accounts/components/AuthorizedRoute';
+import { PermissionLevel } from './accounts/permissionLevel';
 import { withPageLayout } from './core/withPageLayout';
 
 import { SignInPage } from './accounts/components/SignInPage';
@@ -21,19 +22,22 @@ export const RoutingApp = ({ }) => (
                 key="sign-in"
                 component={SignInPage}
             />
-            <Route
+            <AuthorizedRoute
                 path="/"
                 exact={true}
+                auth={PermissionLevel.Admin}
                 key="/"
                 component={ArticlesHome}
             />
-            <Route
+            <AuthorizedRoute
                 path="/article/new"
+                auth={PermissionLevel.Admin}
                 key="article/new"
                 component={CreateArticleForm}
             />
-            <Route
+            <AuthorizedRoute
                 path="/article/edit/:slug"
+                auth={PermissionLevel.Admin}
                 key="/article/edit"
                 render={({match}) => <EditArticleForm slug={match.params.slug} />}
             />

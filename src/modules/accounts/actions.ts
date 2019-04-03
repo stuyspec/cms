@@ -31,6 +31,44 @@ export const setSession = new ActionCreator<IAccountsSession | null, IState>(
   }
 )
 
+export const validateToken = (dispatch: Dispatch, session: IAccountsSession) => {
+  let timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+        clearTimeout(id);
+        reject("Timed out.")
+    }, 1000)
+});
+try {
+    Promise.race([
+        fetch(`${STUY_SPEC_API_URL}/auth/validate_token`, {
+            method: "GET",
+            headers: {
+                uid: session.uid,
+                client: session.client,
+                "access-token": session["access-token"]
+            },
+        }),
+        timeout
+    ])
+        .then(async (result) => {
+            if ((result as Response).status) {
+                if(!((result as Response).status == 200)) {
+                  dispatch(setSession.call(null))
+                }
+            }
+            else {
+                console.log("Validate token timed out.")
+            }
+        })
+        .catch(() => {
+            dispatch(setSession.call(null))
+        })
+      }
+      catch(e) {
+        dispatch(setSession.call(null))
+      }
+}
+
 const setErrors= new ActionCreator<string[], IState>(
   "accounts/SET_ERRORS",
   (state, errors) => (
@@ -43,45 +81,6 @@ const setErrors= new ActionCreator<string[], IState>(
     }
   )
 )
-
-/*export const signInPending = new ActionCreator<ISignInParams, IState>(
-  "accounts/SIGN_IN_PENDING",
-  (state, payload): IState => {
-    return {
-      ...state,
-      accounts: {
-        ...state.accounts,
-        error: null
-      }
-    }
-  }
-)
-
-export const signInFulfilled = new ActionCreator<IAccountsSession, IState>(
-  "accounts/SIGN_IN_FULFILLED",
-  (state, payload): IState => {
-    return {
-      ...state,
-      accounts: {
-        ...state.accounts,
-        session: payload
-      }
-    }
-  }
-)
-
-export const signInRejected = new ActionCreator<null, IState>(
-  "accounts/SIGN_IN_REJECTED",
-  (state, payload): IState => {
-    return {
-      ...state,
-      accounts: {
-        ...state.accounts,
-        session: null
-      }
-    }
-  }
-)*/
 
 export const validateTokenPending = new ActionCreator<void, IState>(
   "accounts/VALIDATE_TOKEN_PENDING",
