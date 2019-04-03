@@ -20,7 +20,7 @@ const SignOutUnconnected: React.FunctionComponent<IProps> = (props) => {
             outlined={true}
             theme={['secondaryBg', 'onSecondary']}
             onClick={() => { props.dispatch(setSession.call(null)); setClicked(true); } }
-        >Sign Out</Button>
+        />
     )
 }
 

@@ -57,12 +57,12 @@ export const ContributorChip: React.SFC<Props> = (props) => {
     }
 
     if (name === undefined) {
-        return <Chip leadingIcon={<CircularProgress />} />
+        return <Chip icon={<CircularProgress />} />
     }
 
     return (
         <Chip
-            leadingIcon="face"
+            icon="face"
             text={name}
             trailingIcon={props.deletable ? "close" : undefined}
             onTrailingIconInteraction={props.deletable ? (e) => { props.onDelete(props.slug) } : undefined}

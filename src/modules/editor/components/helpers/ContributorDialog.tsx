@@ -72,7 +72,7 @@ export class ContributorDialog extends React.Component<IProps, typeof initialSta
                         onChange={this.onQueryChange}
                         fullwidth={true}
                         label="Search by name or email"
-                        withTrailingIcon={<TextFieldIcon icon="search" />}
+                        withTrailingIcon={{icon: "search"}}
                     />
                     <ContributorsQuery query={CONTRIBUTORS_QUERY}>
                         {
