@@ -11,6 +11,7 @@ import { ContributorsField } from './helpers/ContributorsField';
 import { SectionField } from './helpers/SectionField';
 
 import { Button } from '@rmwc/button';
+import { initialState } from '../../state';
 
 interface IState {
     title: string,
@@ -78,7 +79,11 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         />
                     </div>
                 </div>
-                <Button onClick={e => this.props.onPost(this.state)}>{this.props.postLabel}</Button>
+                <Button
+                    onClick={e => { this.props.onPost(this.state); this.setState(this.props.initialState); }}
+                >
+                    {this.props.postLabel}
+                </Button>
             </form>
         )
     }
