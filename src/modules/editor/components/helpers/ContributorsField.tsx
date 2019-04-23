@@ -1,9 +1,11 @@
 import * as React from 'react';
+import './EditorHelpers.css';
 
 import { ContributorDialog } from './ContributorDialog';
 import { ContributorChip } from '../../../core/components/ContributorChip';
 
 import { IconButton } from '@rmwc/icon-button';
+import { Typography } from '@rmwc/typography';
 
 interface IProps {
     value: string[],
@@ -22,17 +24,20 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
 
     public render() {
         return (
-            <div>
-                {
-                    this.props.value.map(c => <ContributorChip
-                        slug={c}
-                        key={c}
-                        deletable={true}
-                        onDelete={slug => this.props.onChange(this.props.value.filter(elem => elem !== slug))}
-                    />)
-                }
-                <IconButton icon="add" onClick={this.onAddClick}/>
-                <ContributorDialog open={this.state.dialogOpen} onClose={this.onDialogClose} />
+            <div className="EditorField">
+            <Typography use="caption">Contributors</Typography>
+                <div>
+                    {
+                        this.props.value.map(c => <ContributorChip
+                            slug={c}
+                            key={c}
+                            deletable={true}
+                            onDelete={slug => this.props.onChange(this.props.value.filter(elem => elem !== slug))}
+                        />)
+                    }
+                    <IconButton icon="add" onClick={this.onAddClick} />
+                    <ContributorDialog open={this.state.dialogOpen} onClose={this.onDialogClose} />
+                </div>
             </div>
         )
     }
@@ -47,7 +52,7 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
         this.setState({
             dialogOpen: false,
         });
-        if(slug && !(this.props.value.indexOf(slug) > -1)) {
+        if (slug && !(this.props.value.indexOf(slug) > -1)) {
             this.props.onChange([...this.props.value, slug]);
         }
     }
