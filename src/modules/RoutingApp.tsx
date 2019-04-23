@@ -14,6 +14,9 @@ import { EditArticleForm } from './editor/components/EditArticleForm';
 
 import { NotFound } from './core/components/NotFound';
 
+
+//The article edit and create keys are the current date so that their state is discarded when the location changes.
+//Previously, after submitting an article re-entering the page would re-submit.
 export const RoutingApp = ({ }) => (
     <BrowserRouter>
         <Switch>
@@ -32,7 +35,7 @@ export const RoutingApp = ({ }) => (
             <AuthorizedRoute
                 path="/article/new"
                 auth={PermissionLevel.Admin}
-                key="article/new"
+                key={Date.now().toString()}
                 component={CreateArticleForm}
             />
             <AuthorizedRoute
