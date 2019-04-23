@@ -42,23 +42,27 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
 
             <form onSubmit={(e) => {
                 e.preventDefault();
+                this.props.onPost(this.state); 
             }}>
                 <div>
                     <FocusField
                         value={this.state.title}
                         onChange={this.onTitleChange}
                         label="Title"
+                        required={true}
                     />
                     <div className="ArticleFormHorizontal">
                         <NumberField
                             value={this.state.volume}
                             onChange={this.onVolumeChange}
                             label="Volume"
+                            required={true}
                         />
                         <NumberField
                             value={this.state.issue}
                             onChange={this.onIssueChange}
                             label="Issue"
+                            required={true}
                         />
                     </div>
                     <SectionField
@@ -79,9 +83,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         />
                     </div>
                 </div>
-                <Button
-                    onClick={e => { this.props.onPost(this.state); this.setState(this.props.initialState); }}
-                >
+                <Button>
                     {this.props.postLabel}
                 </Button>
             </form>

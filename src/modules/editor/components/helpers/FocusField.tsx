@@ -8,13 +8,15 @@ interface IProps {
     onChange: (s: string) => void,
     error?: string,
     label: string,
+    required?: boolean
 }
 
 export const FocusField: React.SFC<IProps> = ({
     value,
     onChange,
     label,
-    error
+    error,
+    required
 }) => {
     return (
         <TextField
@@ -24,6 +26,7 @@ export const FocusField: React.SFC<IProps> = ({
             label={label}
             outlined={true}
             size={75}
+            required={required}
         />
     );
 };
