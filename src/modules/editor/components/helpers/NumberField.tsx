@@ -9,6 +9,7 @@ interface IProps {
     error?: string,
     label: string,
     autoComplete?: string,
+    required?: boolean
 }
 
 export const NumberField: React.SFC<IProps> = ({
@@ -16,7 +17,8 @@ export const NumberField: React.SFC<IProps> = ({
     onChange,
     label,
     error,
-    autoComplete
+    autoComplete,
+    required
 }) => {
     return (
         <TextField
@@ -27,6 +29,7 @@ export const NumberField: React.SFC<IProps> = ({
             size={5}
             label={label}
             autoComplete={autoComplete}
+            required={required}
             pattern="\d*"
         />
     )

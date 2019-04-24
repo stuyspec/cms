@@ -30,7 +30,7 @@ interface IHelperProps {
 class SectionsQuery extends Query<IData, {}> { }
 
 export const SectionField: React.FunctionComponent<IHelperProps> = ({ value, onChange }) => {
-
+    const [isInvalid, setIsInvalid] = React.useState(false)
     return (
         <div className="EditorField">
             <SectionsQuery query={ALL_SECTIONS_QUERY} >
@@ -53,9 +53,15 @@ export const SectionField: React.FunctionComponent<IHelperProps> = ({ value, onC
                                 label="Section"
                                 outlined={true}
                                 enhanced={true}
+                                required={true}
                                 options={options}
                                 value={value}
-                                onChange={(evt: React.FormEvent<HTMLInputElement>) => { onChange(evt.currentTarget.value) }}
+                                invalid={isInvalid}
+                                onBlur={() => { setIsInvalid(!value); } }
+                                onChange={(evt: React.FormEvent<HTMLInputElement>) => {
+                                    onChange(evt.currentTarget.value);
+                                }}
+                                
                             />
                         )
                     }
