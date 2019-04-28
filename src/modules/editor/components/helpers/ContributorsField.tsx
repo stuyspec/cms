@@ -35,7 +35,7 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
                             onDelete={slug => this.props.onChange(this.props.value.filter(elem => elem !== slug))}
                         />)
                     }
-                    <IconButton icon="add" onClick={this.onAddClick} />
+                    <IconButton icon="add" type="button" onClick={this.onAddClick} />
                     <ContributorDialog open={this.state.dialogOpen} onClose={this.onDialogClose} />
                 </div>
             </div>
