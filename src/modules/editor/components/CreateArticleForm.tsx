@@ -28,10 +28,10 @@ mutation createArticle(
     $content: String!,
     $summary: String,
     $created_at: String,
-    $outquotes: [String],
-    $volume: Int,
-    $issue: Int,
-    $contributors: [Int]!) {
+    $outquotes: [String!],
+    $volume: Int!,
+    $issue: Int!,
+    $contributors: [Int!]!) {
         createArticle(
             title: $title, 
             section_id: $section_id, 
@@ -61,8 +61,8 @@ interface IVariables {
     summary?: string,
     created_at?: string,
     outquotes?: string[],
-    volume?: number,
-    issue?: number,
+    volume: number,
+    issue: number,
     contributors: number[]
 }
 
