@@ -70,10 +70,10 @@ mutation updateArticle(
     $content: String!,
     $summary: String,
     $created_at: String,
-    $outquotes: [String],
+    $outquotes: [String!],
     $volume: Int,
     $issue: Int,
-    $contributors: [Int]!) {
+    $contributors: [Int!]!) {
         updateArticle(
             id: $id
             title: $title, 
