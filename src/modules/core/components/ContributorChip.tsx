@@ -63,7 +63,7 @@ export const ContributorChip: React.SFC<Props> = (props) => {
     return (
         <Chip
             icon="face"
-            text={name}
+            label={name}
             trailingIcon={props.deletable ? "close" : undefined}
             onTrailingIconInteraction={props.deletable ? (e) => { props.onDelete(props.slug) } : undefined}
         />
