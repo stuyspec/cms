@@ -7,7 +7,7 @@ import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
 
 import { store } from './store';
-import { setSession } from './accounts/actions';
+//import { setSession } from './accounts/actions';
 
 const httpLink = new HttpLink({ uri: `${STUY_SPEC_API_URL}/graphql` });
 
@@ -34,18 +34,20 @@ const authMiddleWare = new ApolloLink((operation, forward) => {
     return null;
 })
 
-//gets response headers and updates auth headers/session accordingly
-const addToken = new ApolloLink((operation, forward) => {
-    if (forward) {
-        return forward(operation).map((response) => {
-            console.dir(operation.getContext());
-            const context = operation.getContext();
-            store.dispatch(setSession.call(context.headers || null));
-            return response;
-        })
-    }
-    return null;
-})
+//currently disabled: server keeps tokens static until expiration
+
+// //gets response headers and updates auth headers/session accordingly
+// const addToken = new ApolloLink((operation, forward) => {
+//     if (forward) {
+//         return forward(operation).map((response) => {
+//             console.dir(operation.getContext());
+//             const context = operation.getContext();
+//             store.dispatch(setSession.call(context.headers || null));
+//             return response;
+//         })
+//     }
+//     return null;
+// })
 
 //adapted from https://www.apollographql.com/docs/react/features/error-handling.html
 //logs execution and network errors encountered while executing a request
@@ -63,6 +65,6 @@ const logErrors = onError(({ graphQLErrors, networkError }) => {
 });
 
 export const client = new ApolloClient({
-    link: ApolloLink.from([authMiddleWare, addToken, logErrors, httpLink]),
+    link: ApolloLink.from([authMiddleWare, logErrors, httpLink]),
     cache: new InMemoryCache()
 });
