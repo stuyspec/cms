@@ -35,7 +35,7 @@ export const SearchBar: React.SFC<IProps> = ({ onChange, value, onEnter }) => {
                         onEnter()
                     }
                 }}
-                withTrailingIcon={{icon: "search", onClick: (e: any) => {
+                trailingIcon={{icon: "search", onClick: (e: any) => {
                     if (onEnter) {
                         onEnter()
                     }
