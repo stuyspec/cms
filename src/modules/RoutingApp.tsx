@@ -35,13 +35,13 @@ export const RoutingApp = ({ }) => (
             <AuthorizedRoute
                 path="/article/new"
                 auth={PermissionLevel.Admin}
-                key={Date.now().toString()}
+                key={Date.now().toString() + "article/new"}
                 component={CreateArticleForm}
             />
             <AuthorizedRoute
                 path="/article/edit/:slug"
                 auth={PermissionLevel.Admin}
-                key="/article/edit"
+                key={Date.now().toString() + "article/edit"}
                 render={({match}) => <EditArticleForm slug={match.params.slug} />}
             />
             <Route
