@@ -72,7 +72,8 @@ export class ContributorDialog extends React.Component<IProps, typeof initialSta
                         onChange={this.onQueryChange}
                         fullwidth={true}
                         label="Search by name or email"
-                        withTrailingIcon={{icon: "search"}}
+                        trailingIcon={{icon: "search"}}
+                        autoComplete="none"
                     />
                     <ContributorsQuery query={CONTRIBUTORS_QUERY}>
                         {
@@ -110,8 +111,8 @@ export class ContributorDialog extends React.Component<IProps, typeof initialSta
                     </ContributorsQuery>
                 </DialogContent>
                 <DialogActions>
-                    <DialogButton action="close">Close</DialogButton>
-                    <DialogButton action="accept" disabled={this.state.selected === null}>Select</DialogButton>
+                    <DialogButton type="button" action="close">Close</DialogButton>
+                    <DialogButton type="button" action="accept" disabled={this.state.selected === null}>Select</DialogButton>
                 </DialogActions>
             </Dialog>
         )
