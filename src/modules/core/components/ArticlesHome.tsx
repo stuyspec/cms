@@ -51,6 +51,7 @@ query SearchQuery($query: String!) {
             }
             section {
                 permalink
+                id
             }
         }
     }
@@ -118,14 +119,14 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                     <Fab icon="add" onClick={this.onFabClick} />
                 </div>
                 <Snackbar
-                    show={this.props.createArticleSucceeded}
-                    onHide={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
+                    open={this.props.createArticleSucceeded}
+                    onClose={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
                     message="The article was successfully created."
                     timeout={2000}
                 />
                 <Snackbar
-                    show={this.props.updateArticleSucceeded}
-                    onHide={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
+                    open={this.props.updateArticleSucceeded}
+                    onClose={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
                     message="The article was successfully updated."
                     timeout={2000}
                 />
