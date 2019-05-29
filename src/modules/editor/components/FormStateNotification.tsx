@@ -18,14 +18,14 @@ const FormStateUnconnected: React.SFC<any> = (props) => {
     return (
         <>
             <Snackbar
-                show={props.createArticleSucceeded === false}
-                onHide={() => props.dispatch(setCreateArticleSucceeded.call(null))}
+                open={props.createArticleSucceeded === false}
+                onClose={() => props.dispatch(setCreateArticleSucceeded.call(null))}
                 message="Failed to publish article."
                 timeout={2000}
             />
             <Snackbar
-                show={props.updateArticleSucceeded === false}
-                onHide={() => props.dispatch(setUpdateArticleSucceeded.call(null))}
+                open={props.updateArticleSucceeded === false}
+                onClose={() => props.dispatch(setUpdateArticleSucceeded.call(null))}
                 message="Failed to edit article."
                 timeout={2000}
             />

@@ -27,7 +27,7 @@ export const SearchResults: React.SFC<IProps> = ({ results }) => (
         <Typography use="headline3"><b>Search Results</b></Typography>
         {
             results.map(a => a ?
-                <div style={cardPadding}>
+                <div style={cardPadding} key={a.searchable.id}>
                     <ArticleCard data={a.searchable} />
                 </div>
                 : undefined
