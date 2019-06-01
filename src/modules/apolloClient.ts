@@ -66,5 +66,6 @@ const logErrors = onError(({ graphQLErrors, networkError }) => {
 
 export const client = new ApolloClient({
     link: ApolloLink.from([authMiddleWare, logErrors, httpLink]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    connectToDevTools: true
 });
