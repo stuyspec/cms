@@ -13,7 +13,6 @@ import {
     DataTableCell
 } from '@rmwc/data-table';
 
-
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
@@ -60,11 +59,7 @@ export class ContributorDialog extends React.Component<IProps, typeof initialSta
 
     public render() {
         return (
-            <Dialog open={this.props.open} onStateChange={(state) => {
-                if(state === "closing") {
-                    this.props.onClose(this.state.selected)
-                }
-            }}>
+            <Dialog open={this.props.open} preventOutsideDismiss={true} onClose={() => {this.props.onClose(this.state.selected)}}>
                 <DialogTitle>Select a Contributor</DialogTitle>
                 <DialogContent>
                     <TextField

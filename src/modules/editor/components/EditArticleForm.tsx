@@ -7,6 +7,8 @@ import { FormStateNotification } from './FormStateNotification';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
+import { ImageDialog } from './helpers/ImageDialog';
+
 import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 
@@ -17,6 +19,7 @@ import { queryAccountIDs } from '../queryHelpers';
 import { schema } from '../schema';
 
 import { withPageLayout } from '../../core/withPageLayout';
+import { Button } from '@rmwc/button';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -115,7 +118,8 @@ interface IVariables {
 
 class UpdateArticleMutation extends Mutation<IData, IVariables> { }
 
-const EditArticleUnconnected: React.SFC<any> = ({ slug, publish, dispatch }) => {
+const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
+    const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
     return (
         <ApolloConsumer>
             {
@@ -169,6 +173,12 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, publish, dispatch }) => 
                                                                     })
                                                                 }}
                                                                 postLabel="Edit"
+                                                            />
+                                                            <Button onClick={() => setImageDialogOpen(true)}>Upload Image</Button>
+                                                            <ImageDialog 
+                                                                articleId={data!.articleBySlug!.id} 
+                                                                open={imageDialogOpen}
+                                                                onClose={() => setImageDialogOpen(false)}
                                                             />
                                                         </>
                                                     )
