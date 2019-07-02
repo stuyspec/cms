@@ -4,6 +4,8 @@ import './RichEditor.css';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
+import { MenuBar } from './helpers/MenuBar';
+
 interface IProps {
     editorState: EditorState,
     onEditorState: (state: EditorState) => any,
@@ -16,7 +18,12 @@ export class RichEditor extends React.Component<IProps> {
     public render() {
         // Render just an empty div which is then used as a container for an
         // EditorView instance.
-        return <div ref={this.createEditorView} className="RichEditor" />;
+        return (
+            <div>
+                <MenuBar editorState={this.props.editorState} />
+                <div ref={this.createEditorView} className="RichEditor" />
+            </div>
+        );
     }
 
     public focus() {
