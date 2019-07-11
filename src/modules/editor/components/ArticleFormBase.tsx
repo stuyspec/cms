@@ -44,6 +44,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                 e.preventDefault();
                 this.props.onPost(this.state); 
             }}>
+                <button disabled={true} className="ArticleFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
                 <div>
                     <FocusField
                         value={this.state.title}
