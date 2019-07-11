@@ -7,7 +7,7 @@ import { setCreateArticleSucceeded } from '../actions';
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
 
-import { schema } from "prosemirror-schema-basic";
+import { schema } from "../schema";
 import { EditorState } from "prosemirror-state";
 import { exampleSetup } from "prosemirror-example-setup";
 
