@@ -78,7 +78,7 @@ const initialArticleState = {
     editorState: EditorState.create(
         {
             schema,
-            plugins: exampleSetup({ schema })
+            plugins: exampleSetup({ schema, menuBar: false })
         }
     )
 }
