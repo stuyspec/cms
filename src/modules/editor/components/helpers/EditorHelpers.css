@@ -10,6 +10,7 @@
     flex-direction: row;
     align-items: center;
     border: 1px solid silver;
+    border-bottom: none;
 }
 
 .CheckedMenuBarButton{
