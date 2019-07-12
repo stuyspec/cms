@@ -18,6 +18,6 @@ export const stringToEditorState = (s: string, schema: Schema): EditorState => {
     return EditorState.create({
         schema,
         doc,
-        plugins: exampleSetup({ schema })
+        plugins: exampleSetup({ schema, menuBar: false })
     })
 }

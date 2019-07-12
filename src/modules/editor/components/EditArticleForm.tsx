@@ -14,7 +14,7 @@ import { stringToEditorState, editorStateToString } from '../serializeState';
 import { queryAccountIDs } from '../queryHelpers';
 
 
-import { schema } from 'prosemirror-schema-basic';
+import { schema } from '../schema';
 
 import { withPageLayout } from '../../core/withPageLayout';
 
