@@ -1,6 +1,8 @@
 .RichEditor {
     width: 80vw;
     border: 1px solid silver;
+    max-height: 80vh;
+    overflow-y: scroll;
 }
 
 .RichEditorHeader, .RichEditorCenteredHeader {
