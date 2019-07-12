@@ -2,3 +2,11 @@
     width: 80vw;
     border: 1px solid silver;
 }
+
+.RichEditorHeader, .RichEditorCenteredHeader {
+    text-transform: uppercase;
+}
+
+.RichEditorCenteredHeader {
+    text-align: center;
+}
