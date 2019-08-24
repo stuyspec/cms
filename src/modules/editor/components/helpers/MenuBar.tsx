@@ -14,6 +14,8 @@ import { EditorState, Transaction, TextSelection } from 'prosemirror-state';
 
 import { LinkDialog } from './LinkDialog';
 
+import { dialogs } from '../extensions/dialogs/dialogs';
+
 //Marks are used in ProseMirror to change the appearance or metadata
 //of the nodes that compose editor state. These include bold and italic marks.
 const boldMark = schema.marks.strong;
@@ -57,6 +59,7 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
     const { state, dispatch } = editorView;
 
     const [linkDialogOpen, setLinkDialogOpen] = React.useState(false);
+    const [lineChartDialogOpen, setLineChartDialogOpen] = React.useState(false);
 
     //Determines whether mark is currently active at cursor or in selection.
     const shouldBoldBeChecked = shouldBeChecked(editorView, boldMark);
@@ -66,24 +69,29 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
     //If the selection is a TextSelection, it contains text.
     const selectionIsText = state.selection instanceof TextSelection;
 
+    //onMouseDown={(e) => { e.preventDefault(); editorView.focus() }}
+
     return (
-        <div onMouseDown={(e) => { e.preventDefault(); editorView.focus() }} className="MenuBarToolbar">
+        <div className="MenuBarToolbar">
             <MenuButton
                 icon="format_bold"
+                title="Bold"
                 onClick={() => { toggleBold(state, dispatch); }}
                 checked={shouldBoldBeChecked}
                 disabled={!(selectionIsText || shouldBoldBeChecked)}
             />
             <MenuButton
                 icon="format_italic"
+                title="Italic"
                 onClick={() => { toggleItalic(state, dispatch); }}
                 checked={shouldItalicBeChecked}
                 disabled={!(selectionIsText || shouldItalicBeChecked)}
             />
             <MenuButton
                 icon="link"
-                onClick={() => { 
-                    if(shouldLinkBeChecked) {
+                title="Link"
+                onClick={() => {
+                    if (shouldLinkBeChecked) {
                         toggleLink(state, dispatch);
                     }
                     else setLinkDialogOpen(true);
@@ -95,8 +103,8 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                 open={linkDialogOpen}
                 onClose={(result) => {
                     setLinkDialogOpen(false);
-                    if(result) {
-                        toggleMark(linkMark, {href: result.href})(state, dispatch);
+                    if (result) {
+                        toggleMark(linkMark, { href: result.href })(state, dispatch);
                     }
                 }}
                 initialHref=""
@@ -109,17 +117,30 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                 <MenuItem onClick={() => setBlockHeading(state, dispatch)}>Heading</MenuItem>
                 <MenuItem onClick={() => setBlockCenteredHeading(state, dispatch)}>Centered Heading</MenuItem>
             </SimpleMenu>
+
+            <AddExtensionDialog
+                type="LineChartExtension"
+                name="Line Chart"
+                state={state}
+                dispatch={dispatch}
+                open={lineChartDialogOpen}
+                onClose={() => setLineChartDialogOpen(false)}
+            />
+
             <SimpleMenu handle={<button type="button" className="MenuBarTextButton">Insert⏷</button>} >
                 <MenuItem onClick={() => insertHorizontalRule(state, dispatch)}>Horizontal Rule</MenuItem>
+                <MenuItem onClick={() => setLineChartDialogOpen(true)}>Line Chart</MenuItem>
             </SimpleMenu>
             <MenuDivider />
             <MenuButton
                 icon="undo"
+                title="Undo"
                 onClick={() => { undo(state, dispatch) }}
                 disabled={undoDepth(state) == 0}
             />
             <MenuButton
                 icon="redo"
+                title="Redo"
                 onClick={() => { redo(state, dispatch) }}
                 disabled={redoDepth(state) == 0}
             />
@@ -129,9 +150,10 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
 
 interface IMenuButtonProps {
     icon: string,
+    title?: string,
     onClick?: () => any,
     checked?: boolean,
-    disabled?: boolean,
+    disabled?: boolean
 }
 
 const MenuButton: React.FunctionComponent<IMenuButtonProps> = (props) => {
@@ -139,8 +161,10 @@ const MenuButton: React.FunctionComponent<IMenuButtonProps> = (props) => {
         <IconButton
             {...props}
             type="button"
+            title={props.title}
             ripple={false}
             className={props.checked && !props.disabled ? "CheckedMenuBarButton" : undefined}
+            onMouseDown={(e) => e.preventDefault()}
         />
     )
 }
@@ -149,3 +173,36 @@ const MenuButton: React.FunctionComponent<IMenuButtonProps> = (props) => {
 const MenuDivider: React.FunctionComponent<{}> = ({ }) => (
     <div className="MenuBarDivider" />
 )
+
+interface IAddItemProps {
+    type: string,
+    name: string,
+    state: EditorState,
+    dispatch: (tr: Transaction<any>) => void,
+    open: boolean,
+    onClose: () => any
+}
+
+const AddExtensionDialog: React.FC<IAddItemProps> = ({ type, name, state, dispatch, open, onClose }) => {
+    const Dialog = dialogs.get(type);
+
+    if (!Dialog) {
+        console.error(`Could not find dialog with type ${type}.`)
+        return null;
+    }
+
+    return (
+        <Dialog open={open} onSubmit={(e) => {
+            onClose()
+            if (e === null) {
+                ;
+            }
+            else {
+                insertNode(schema.node(schema.nodes.article_extension, {
+                    type,
+                    props: JSON.stringify(e)
+                }))(state, dispatch)
+            }
+        }} />
+    )
+}
