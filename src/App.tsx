@@ -1,4 +1,5 @@
 import 'material-components-web/dist/material-components-web.min.css';
+import '@rmwc/data-table/data-table.css';
 
 import * as React from 'react';
 import { Provider } from 'react-redux';
