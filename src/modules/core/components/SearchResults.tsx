@@ -15,7 +15,7 @@ import {
     DataTableRow
 } from '@rmwc/data-table';
 
-import styles from './SearchResults.module.css';
+import { createUseStyles } from 'react-jss';
 
 const cardPadding = {
     marginBottom: "10px"
@@ -25,12 +25,21 @@ interface IProps {
     results: Array<ISearchResults | undefined>
 }
 
+const useStyles = createUseStyles({
+    Header: {
+        display: "flex",
+        flexDirection: "row"
+    }
+})
+
 export const SearchResults: React.FunctionComponent<IProps> = ({ results }) => {
+    const styles = useStyles();
+
     const [isListView, setIsListView] = React.useState(true);
 
     return (
         <>
-            <div className={styles.header}>
+            <div className={styles.Header}>
                 <Typography use="headline3"><b>Search Results</b></Typography>
                 <IconButton
                     icon={isListView ? "view_stream" : "view_list"}
