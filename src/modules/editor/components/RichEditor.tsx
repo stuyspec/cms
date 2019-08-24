@@ -5,6 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import { MenuBar } from './helpers/MenuBar';
+import { Extension } from './extensions/Extension';
 
 interface IProps {
     editorState: EditorState,
@@ -24,12 +25,35 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
     }
 
     public render() {
+        const editor = document.getElementById("RichEditorId");
+        const extensions = [];
+        
+        if (editor) {
+            const extensionElements = editor.getElementsByTagName("article-extension");
+            if (extensionElements) {
+                for (let i = 0; i < extensionElements.length; i++) {
+                    const type = extensionElements[i].getAttribute("type");
+                    const props = extensionElements[i].getAttribute("props");
+                    if (type && props) {
+                        extensions.push(
+                            <Extension
+                                type={type}
+                                props={props}
+                                root={extensionElements[i]}
+                            />
+                        )
+                    }
+                }
+            }
+        }
+
         // Render just an empty div which is then used as a container for an
         // EditorView instance.
         return (
             <div>
-                { this.state.editorView != null ? <MenuBar editorView={this.state.editorView} /> : null }
-                <div ref={this.createEditorView} className="RichEditor" />
+                {this.state.editorView != null ? <MenuBar editorView={this.state.editorView} /> : null}
+                <div ref={this.createEditorView} className="RichEditor" id="RichEditorId" />
+                {extensions}
             </div>
         );
     }
@@ -40,12 +64,12 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
         }
     }
 
-    public componentWillReceiveProps(nextProps: Readonly<IProps>) {
+    public componentDidUpdate(prevProps: Readonly<IProps>) {
         // In case we receive new EditorState through props — we apply it to the
         // EditorView instance.
         if (this.state.editorView) {
-            if (nextProps.editorState !== this.props.editorState) {
-                this.state.editorView.updateState(nextProps.editorState);
+            if (prevProps.editorState !== this.props.editorState) {
+                this.state.editorView.updateState(this.props.editorState);
             }
         }
     }
@@ -66,10 +90,12 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
 
     private createEditorView = (element: HTMLDivElement | null): any => {
         if (element !== null) {
-            this.setState({editorView: new EditorView(element, {
-                state: this.props.editorState,
-                dispatchTransaction: this.dispatchTransaction,
-            })})
+            this.setState({
+                editorView: new EditorView(element, {
+                    state: this.props.editorState,
+                    dispatchTransaction: this.dispatchTransaction,
+                })
+            })
         }
     };
 
@@ -82,7 +108,5 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
         }
         this.props.onEditorState(editorState);
     };
-
-
 
 }
