@@ -1,37 +1,88 @@
 import * as React from 'react';
 
 import { Typography } from '@rmwc/typography';
-import { ArticleCard, } from './ArticleCard';
+import { IconButton } from '@rmwc/icon-button';
+import { ArticleCard } from './ArticleCard';
+import { ArticleListItem } from './ArticleListItem';
+
+import { ISearchResults } from '../queryHelpers';
+import {
+    DataTable,
+    DataTableHead,
+    DataTableHeadCell,
+    DataTableBody,
+    DataTableContent,
+    DataTableRow
+} from '@rmwc/data-table';
+
+import styles from './SearchResults.module.css';
 
 const cardPadding = {
     marginBottom: "10px"
 }
 
-interface IResults {
-    searchable: {
-        id: string,
-        title: string,
-        preview?: string,
-        slug: string,
-        contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-        section: { permalink: string }
-    }
-}
-
 interface IProps {
-    results: Array<IResults | undefined>
+    results: Array<ISearchResults | undefined>
 }
 
-export const SearchResults: React.SFC<IProps> = ({ results }) => (
-    <>
-        <Typography use="headline3"><b>Search Results</b></Typography>
-        {
-            results.map(a => a ?
-                <div style={cardPadding} key={a.searchable.id}>
-                    <ArticleCard data={a.searchable} />
-                </div>
-                : undefined
-            )
-        }
-    </>
-)
+export const SearchResults: React.FunctionComponent<IProps> = ({ results }) => {
+    const [isListView, setIsListView] = React.useState(true);
+
+    return (
+        <>
+            <div className={styles.header}>
+                <Typography use="headline3"><b>Search Results</b></Typography>
+                <IconButton
+                    icon={isListView ? "view_stream" : "view_list"}
+                    onClick={() => setIsListView(!isListView)}
+                    title={isListView ? "Stream view" : "List view"}
+                />
+            </div>
+            <SearchResultsItems isListView={isListView} results={results} />
+        </>
+    )
+
+
+}
+
+interface ISearchResultsProps {
+    isListView: boolean
+    results: Array<ISearchResults | undefined>
+}
+
+const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isListView, results }) => {
+    if (isListView) {
+        return (
+            <DataTable>
+                <DataTableContent>
+                    <DataTableHead>
+                        <DataTableRow>
+                            <DataTableHeadCell>Title</DataTableHeadCell>
+                            <DataTableHeadCell>Volume</DataTableHeadCell>
+                            <DataTableHeadCell>Issue</DataTableHeadCell>
+                            <DataTableHeadCell>Section</DataTableHeadCell>
+                            <DataTableHeadCell alignEnd>Date</DataTableHeadCell>
+                        </DataTableRow>
+                    </DataTableHead>
+                    <DataTableBody>
+                        {
+                            results.map(a => a ? <ArticleListItem data={a.searchable} key={a.searchable.id} /> : null)
+                        }
+                    </DataTableBody>
+                </DataTableContent>
+            </DataTable>
+        )
+    }
+    else return (
+        <>
+            {
+                results.map(a => a ?
+                    <div style={cardPadding} key={a.searchable.id}>
+                        <ArticleCard data={a.searchable} />
+                    </div>
+                    : null
+                )
+            }
+        </>
+    );
+}

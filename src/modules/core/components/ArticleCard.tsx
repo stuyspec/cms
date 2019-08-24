@@ -7,18 +7,10 @@ import { Card, CardActions, CardActionButtons, CardActionButton, CardPrimaryActi
 import { Typography } from '@rmwc/typography';
 
 import { ContributorChip } from './ContributorChip';
+import { IArticleData } from '../queryHelpers';
 
 interface IProps {
     data: IArticleData
-}
-
-interface IArticleData {
-    id: string,
-    title: string,
-    preview?: string,
-    slug: string,
-    contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-    section: { permalink: string }
 }
 
 export const ArticleCard: React.SFC<IProps> = ({ data }) => (
