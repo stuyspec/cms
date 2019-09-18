@@ -8,6 +8,7 @@ import { Typography } from '@rmwc/typography';
 
 import { ContributorChip } from './ContributorChip';
 import { IArticleData } from '../queryHelpers';
+import { ChipSet } from '@rmwc/chip';
 
 interface IProps {
     data: IArticleData
@@ -23,18 +24,20 @@ export const ArticleCard: React.SFC<IProps> = ({ data }) => (
                 <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
                     {data.preview || ""}
                 </Typography>
-                {
-                    data.contributors
-                        ? data.contributors.map((c) =>
-                            <ContributorChip
-                                slug={c.slug}
-                                firstName={c.first_name || undefined}
-                                lastName={c.last_name || undefined}
-                                key={c.slug} deletable={false}
-                            />
-                        )
-                        : <></>
-                }
+                <ChipSet>
+                    {
+                        data.contributors
+                            ? data.contributors.map((c) =>
+                                <ContributorChip
+                                    slug={c.slug}
+                                    firstName={c.first_name || undefined}
+                                    lastName={c.last_name || undefined}
+                                    key={c.slug} deletable={false}
+                                />
+                            )
+                            : <></>
+                    }
+                </ChipSet>
             </div>
         </CardPrimaryAction>
         <CardActions>
