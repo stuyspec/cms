@@ -27,6 +27,8 @@ export const nodes = {
     article_extension: {
         attrs: { type: { default: "" }, props: { default: "{}" } },
         group: "block",
+        draggable: true,
+        selectable: true,
         toDOM(node: Node): DOMOutputSpec {
             return ["article-extension", { type: node.attrs.type, props: node.attrs.props }]
         },
