@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export interface ISearchData {
-    searchArticles: Array<({
+    searchArticles?: Array<({
         searchable: IArticleData
     } | undefined)>
 }
@@ -10,7 +10,7 @@ export interface ISearchVariables {
     query: string
 }
 
-export const SEARCH_QUERY = gql`
+export const ARTICLE_SEARCH_QUERY = gql`
 query SearchQuery($query: String!) {
     searchArticles(query: $query) {
         searchable {
@@ -34,6 +34,32 @@ query SearchQuery($query: String!) {
         }
     }
 }`
+
+export const DRAFT_SEARCH_QUERY = gql`
+query DraftQuery($query: String!) {
+    searchUnpublishedArticles(query: $query) {
+        searchable {
+            id
+            title
+            preview
+            slug
+            volume
+            issue
+            created_at
+            contributors {
+                slug
+                first_name
+                last_name
+            }
+            section {
+                permalink
+                id
+                name
+            }
+        }
+    }
+}
+`
 
 export interface IArticleData {
     id: string,

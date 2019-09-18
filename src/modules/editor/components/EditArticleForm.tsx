@@ -73,7 +73,8 @@ mutation updateArticle(
     $outquotes: [String!],
     $volume: Int,
     $issue: Int,
-    $contributors: [Int!]!) {
+    $contributors: [Int!]!,
+    $is_published: Boolean) {
         updateArticle(
             id: $id
             title: $title, 
@@ -84,7 +85,8 @@ mutation updateArticle(
             outquotes: $outquotes,
             volume: $volume,
             issue: $issue,
-            contributors: $contributors
+            contributors: $contributors,
+            is_published: $is_published
         ) {            
             id
             title
@@ -107,12 +109,13 @@ interface IVariables {
     outquotes?: string[],
     volume?: number,
     issue?: number,
-    contributors: number[]
+    contributors: number[],
+    is_published: boolean
 }
 
 class UpdateArticleMutation extends Mutation<IData, IVariables> { }
 
-const EditArticleUnconnected: React.SFC<any> = ({ slug, dispatch }) => {
+const EditArticleUnconnected: React.SFC<any> = ({ slug, publish, dispatch }) => {
     return (
         <ApolloConsumer>
             {
@@ -161,6 +164,7 @@ const EditArticleUnconnected: React.SFC<any> = ({ slug, dispatch }) => {
                                                                             volume: parseInt(state.volume, 10),
                                                                             issue: parseInt(state.issue, 10),
                                                                             contributors: userIDs,
+                                                                            is_published: publish
                                                                         }
                                                                     })
                                                                 }}

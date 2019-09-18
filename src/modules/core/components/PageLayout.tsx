@@ -37,7 +37,8 @@ export const PageLayout: React.FC<IPageLayoutProps> = ({ children }) => {
                 </DrawerHeader>
                 <DrawerContent>
                     <List>
-                        <ListItem tag="a" href="/">Articles</ListItem>
+                        <ListItem tag="a" href="/">Drafts</ListItem>
+                        <ListItem tag="a" href="/articles">Articles</ListItem>
                     </List>
                 </DrawerContent>
             </Drawer>

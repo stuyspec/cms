@@ -1,5 +1,4 @@
 import * as React from 'react';
-import './ArticlesHome.css';
 
 import { Redirect } from 'react-router-dom';
 
@@ -9,7 +8,6 @@ import { Snackbar } from '@rmwc/snackbar';
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
 
-import gql from 'graphql-tag';
 import { ApolloConsumer } from 'react-apollo';
 
 import { connect } from 'react-redux';
@@ -17,7 +15,7 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
-import { ISearchData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
+import { ISearchData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
 
@@ -47,7 +45,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
 
     public render() {
         if (this.state.redirectCreateArticle) {
-            return <Redirect to="/article/new" push={true} />
+            return <Redirect to="/draft/new" push={true} />
         }
         return (
             <>
@@ -61,7 +59,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                                         value={this.state.searchQuery}
                                         onEnter={async () => {
                                             const results = await client.query<ISearchData, ISearchVariables>({
-                                                query: ARTICLE_SEARCH_QUERY,
+                                                query: DRAFT_SEARCH_QUERY,
                                                 variables: {
                                                     query: this.state.searchQuery
                                                 }
@@ -85,13 +83,13 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                 <Snackbar
                     open={this.props.createArticleSucceeded}
                     onClose={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
-                    message="The article was successfully created."
+                    message="The draft was successfully created."
                     timeout={2000}
                 />
                 <Snackbar
                     open={this.props.updateArticleSucceeded}
                     onClose={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
-                    message="The article was successfully updated."
+                    message="The draft was successfully updated."
                     timeout={2000}
                 />
             </>
@@ -107,4 +105,4 @@ function mapStateToProps(state: IState) {
     }
 }
 
-export const ArticlesHome = connect(mapStateToProps, null)(withPageLayout(ArticlesHomeUnconnected));
+export const DraftsHome = connect(mapStateToProps, null)(withPageLayout(ArticlesHomeUnconnected));
