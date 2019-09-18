@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
-import { ISearchData, ISearchVariables, SEARCH_QUERY } from '../queryHelpers';
+import { ISearchData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
 
@@ -61,7 +61,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                                         value={this.state.searchQuery}
                                         onEnter={async () => {
                                             const results = await client.query<ISearchData, ISearchVariables>({
-                                                query: SEARCH_QUERY,
+                                                query: ARTICLE_SEARCH_QUERY,
                                                 variables: {
                                                     query: this.state.searchQuery
                                                 }
@@ -76,7 +76,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchArticles} /> : null
+                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} /> : null
                     }
                 </div>
                 <div className="ArticlesHomeFab">

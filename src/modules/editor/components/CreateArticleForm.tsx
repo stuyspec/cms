@@ -31,7 +31,8 @@ mutation createArticle(
     $outquotes: [String!],
     $volume: Int!,
     $issue: Int!,
-    $contributors: [Int!]!) {
+    $contributors: [Int!]!,
+    $is_published: Boolean) {
         createArticle(
             title: $title, 
             section_id: $section_id, 
@@ -41,7 +42,8 @@ mutation createArticle(
             outquotes: $outquotes,
             volume: $volume,
             issue: $issue,
-            contributors: $contributors
+            contributors: $contributors,
+            is_published: $is_published
         ) {            
             id
             title
@@ -63,7 +65,8 @@ interface IVariables {
     outquotes?: string[],
     volume: number,
     issue: number,
-    contributors: number[]
+    contributors: number[],
+    is_published: boolean
 }
 
 class CreateArticleMutation extends Mutation<IData, IVariables> { };
@@ -83,7 +86,8 @@ const initialArticleState = {
     )
 }
 
-const CreateArticleUnconnected: React.SFC<any> = (props) => {
+const CreateArticleUnconnected: React.FC<any> = (props) => {
+    console.log(props)
     return (
         <>
             <FormStateNotification />
@@ -111,6 +115,7 @@ const CreateArticleUnconnected: React.SFC<any> = (props) => {
                                             volume: parseInt(state.volume, 10),
                                             issue: parseInt(state.issue, 10),
                                             contributors: userIDs,
+                                            is_published: props.publish
                                         },
                                     });
                                 }}

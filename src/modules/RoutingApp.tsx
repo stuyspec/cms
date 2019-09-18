@@ -8,6 +8,7 @@ import { withPageLayout } from './core/withPageLayout';
 
 import { SignInPage } from './accounts/components/SignInPage';
 import { ArticlesHome } from './core/components/ArticlesHome';
+import { DraftsHome } from './core/components/DraftsHome';
 
 import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
@@ -30,19 +31,38 @@ export const RoutingApp = ({ }) => (
                 exact={true}
                 auth={PermissionLevel.Admin}
                 key="/"
+                component={DraftsHome}
+            />
+             <AuthorizedRoute
+                path="/articles"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/articles"
                 component={ArticlesHome}
             />
             <AuthorizedRoute
                 path="/article/new"
                 auth={PermissionLevel.Admin}
                 key={Date.now().toString() + "article/new"}
-                component={CreateArticleForm}
+                render={() => <CreateArticleForm publish={true} />}
             />
             <AuthorizedRoute
                 path="/article/edit/:slug"
                 auth={PermissionLevel.Admin}
                 key={Date.now().toString() + "article/edit"}
-                render={({match}) => <EditArticleForm slug={match.params.slug} />}
+                render={({match}) => <EditArticleForm slug={match.params.slug} publish={true} />}
+            />
+            <AuthorizedRoute
+                path="/draft/new"
+                auth={PermissionLevel.Admin}
+                key={Date.now().toString() + "draft/new"}
+                render={() => <CreateArticleForm publish={false} />}
+            />
+            <AuthorizedRoute
+                path="/article/edit/:slug"
+                auth={PermissionLevel.Admin}
+                key={Date.now().toString() + "draft/edit"}
+                render={({match}) => <EditArticleForm slug={match.params.slug} publish={false} />}
             />
             <Route
                 path="*"
