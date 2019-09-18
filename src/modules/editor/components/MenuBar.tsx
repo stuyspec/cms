@@ -1,5 +1,4 @@
 import * as React from 'react';
-import './EditorHelpers.css'
 
 import { IconButton } from '@rmwc/icon-button';
 import { SimpleMenu, MenuItem } from '@rmwc/menu';
@@ -9,12 +8,39 @@ import { toggleMark, setBlockType } from 'prosemirror-commands';
 import { MarkType, Node } from 'prosemirror-model';
 import { undo, undoDepth, redo, redoDepth } from 'prosemirror-history';
 
-import { schema } from '../../schema';
-import { EditorState, Transaction, TextSelection } from 'prosemirror-state';
+import { schema } from '../schema';
+import { EditorState, Transaction, TextSelection, NodeSelection } from 'prosemirror-state';
 
-import { LinkDialog } from './LinkDialog';
+import { LinkDialog } from './helpers/LinkDialog';
 
-import { dialogs } from '../extensions/dialogs/dialogs';
+import { dialogs } from './extensions/dialogs';
+
+import { createUseStyles } from 'react-jss';
+
+const useStyles = createUseStyles({
+    Toolbar: {
+        height: "40px",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        border: "1px solid silver",
+        borderBottom: "none",
+    },
+    Divider: {
+        width: "12px",
+    },
+    TextButton: {
+        background: "none",
+        border: "none",
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        fontSize: "15px",
+    },
+    CheckedButton: {
+        backgroundColor: "gainsboro",
+        borderRadius: "4px",
+    }
+})
 
 //Marks are used in ProseMirror to change the appearance or metadata
 //of the nodes that compose editor state. These include bold and italic marks.
@@ -56,15 +82,30 @@ function insertNode(node: Node) {
 const insertHorizontalRule = insertNode(schema.node(schema.nodes.horizontal_rule));
 
 export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
+    const styles = useStyles();
+
     const { state, dispatch } = editorView;
 
     const [linkDialogOpen, setLinkDialogOpen] = React.useState(false);
-    const [lineChartDialogOpen, setLineChartDialogOpen] = React.useState(false);
+    
+
+    const [currentExtensionInfo, setCurrentExtensionInfo] = React.useState<IExtensionInfo | undefined>(undefined);
+    const [shouldEditBeVisible, setShouldEditBeVisible] = React.useState(false);
 
     //Determines whether mark is currently active at cursor or in selection.
     const shouldBoldBeChecked = shouldBeChecked(editorView, boldMark);
     const shouldItalicBeChecked = shouldBeChecked(editorView, italicMark);
     const shouldLinkBeChecked = shouldBeChecked(editorView, linkMark);
+
+    if (state.selection instanceof NodeSelection) {
+        const { node } = state.selection as NodeSelection;
+        if (node.type.name === 'article_extension' && !shouldEditBeVisible) {
+            setShouldEditBeVisible(true)
+        }
+    }
+    else if (shouldEditBeVisible) {
+        setShouldEditBeVisible(false)
+    }
 
     //If the selection is a TextSelection, it contains text.
     const selectionIsText = state.selection instanceof TextSelection;
@@ -72,7 +113,7 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
     //onMouseDown={(e) => { e.preventDefault(); editorView.focus() }}
 
     return (
-        <div className="MenuBarToolbar">
+        <div className={styles.Toolbar}>
             <MenuButton
                 icon="format_bold"
                 title="Bold"
@@ -99,7 +140,8 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                 checked={shouldLinkBeChecked}
                 disabled={!selectionIsText || state.selection.to == state.selection.from}
             />
-            <LinkDialog
+            {!linkDialogOpen || (
+                <LinkDialog
                 open={linkDialogOpen}
                 onClose={(result) => {
                     setLinkDialogOpen(false);
@@ -109,9 +151,10 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                 }}
                 initialHref=""
             />
+            )}
             <MenuDivider />
             <SimpleMenu handle={
-                <button type="button" className="MenuBarTextButton">Type⏷</button>
+                <button type="button" className={styles.TextButton}>Type⏷</button>
             }>
                 <MenuItem onClick={() => setBlockParagraph(state, dispatch)}>Plain</MenuItem>
                 <MenuItem onClick={() => setBlockHeading(state, dispatch)}>Heading</MenuItem>
@@ -119,17 +162,17 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
             </SimpleMenu>
 
             <AddExtensionDialog
-                type="LineChartExtension"
-                name="Line Chart"
+                extensionInfo={currentExtensionInfo}
                 state={state}
                 dispatch={dispatch}
-                open={lineChartDialogOpen}
-                onClose={() => setLineChartDialogOpen(false)}
+                onClose={() => setCurrentExtensionInfo(undefined)}
             />
 
-            <SimpleMenu handle={<button type="button" className="MenuBarTextButton">Insert⏷</button>} >
+            <SimpleMenu handle={<button type="button" className={styles.TextButton}>Insert⏷</button>} >
                 <MenuItem onClick={() => insertHorizontalRule(state, dispatch)}>Horizontal Rule</MenuItem>
-                <MenuItem onClick={() => setLineChartDialogOpen(true)}>Line Chart</MenuItem>
+                <MenuItem onClick={() => setCurrentExtensionInfo({type: 'LineChartExtension'})}>Line Chart</MenuItem>
+                <MenuItem onClick={() => setCurrentExtensionInfo({type: 'BarChartExtension'})}>Bar Chart</MenuItem>
+                <MenuItem onClick={() => setCurrentExtensionInfo({type: 'PieChartExtension'})}>Pie Chart</MenuItem>
             </SimpleMenu>
             <MenuDivider />
             <MenuButton
@@ -140,10 +183,29 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
             />
             <MenuButton
                 icon="redo"
-                title="Redo"
+                title="Redo
+                "
                 onClick={() => { redo(state, dispatch) }}
                 disabled={redoDepth(state) == 0}
             />
+            {!shouldEditBeVisible || (
+                <>
+                <MenuDivider />
+                <MenuButton
+                icon="edit"
+                title="Edit selected item"
+                onClick={() => {
+                    const { node } = state.selection as NodeSelection;
+                    if (!currentExtensionInfo) {
+                        setCurrentExtensionInfo({
+                            type: node.attrs['type'],
+                            props: node.attrs['props']
+                        })
+                    }
+                }}
+                />
+                </>
+            )}
         </div>
     );
 }
@@ -157,52 +219,72 @@ interface IMenuButtonProps {
 }
 
 const MenuButton: React.FunctionComponent<IMenuButtonProps> = (props) => {
+    const styles = useStyles();
+
     return (
         <IconButton
             {...props}
             type="button"
             title={props.title}
             ripple={false}
-            className={props.checked && !props.disabled ? "CheckedMenuBarButton" : undefined}
+            className={props.checked && !props.disabled ? styles.CheckedButton : undefined}
             onMouseDown={(e) => e.preventDefault()}
         />
     )
 }
 
 //Divides logical sections in the menu.
-const MenuDivider: React.FunctionComponent<{}> = ({ }) => (
-    <div className="MenuBarDivider" />
-)
+const MenuDivider: React.FunctionComponent<{}> = ({ }) => {
+    const styles = useStyles();
+
+    return (
+        <div className={styles.Divider} />
+    )
+}
 
 interface IAddItemProps {
-    type: string,
-    name: string,
+    extensionInfo?: IExtensionInfo
     state: EditorState,
     dispatch: (tr: Transaction<any>) => void,
-    open: boolean,
     onClose: () => any
 }
 
-const AddExtensionDialog: React.FC<IAddItemProps> = ({ type, name, state, dispatch, open, onClose }) => {
-    const Dialog = dialogs.get(type);
+const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, dispatch, onClose }) => {
+    if (!!extensionInfo) {
+        const { type, props } = extensionInfo;
+        const Dialog = dialogs.get(type);
 
     if (!Dialog) {
-        console.error(`Could not find dialog with type ${type}.`)
+        console.error(`Could not find dialog with type ${extensionInfo.type}.`)
         return null;
     }
 
-    return (
-        <Dialog open={open} onSubmit={(e) => {
-            onClose()
-            if (e === null) {
-                ;
-            }
-            else {
-                insertNode(schema.node(schema.nodes.article_extension, {
-                    type,
-                    props: JSON.stringify(e)
-                }))(state, dispatch)
-            }
-        }} />
-    )
+    try {
+        const parsedProps = props ? JSON.parse(props) : undefined
+        return (
+            <Dialog open={!!extensionInfo} props={parsedProps} onSubmit={(e) => {
+                onClose()
+                if (e === null) {
+                    ;
+                }
+                else {
+                    insertNode(schema.node(schema.nodes.article_extension, {
+                        type,
+                        props: JSON.stringify(e)
+                    }))(state, dispatch)
+                }
+            }} />
+        )
+    }
+    catch(e) {
+        console.error(`Failed to parse props ${props} for type ${type}`);
+        return null;
+    }
+    }
+    else return null;
+}
+
+interface IExtensionInfo {
+    type: string, 
+    props?: string
 }

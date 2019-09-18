@@ -4,7 +4,7 @@ import './RichEditor.css';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { MenuBar } from './helpers/MenuBar';
+import { MenuBar } from './MenuBar';
 import { Extension } from './extensions/Extension';
 
 interface IProps {
