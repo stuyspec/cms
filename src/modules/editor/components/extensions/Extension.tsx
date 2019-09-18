@@ -15,12 +15,15 @@ type IHelperProps = {
 
 const useStyles = createUseStyles({
     Extension: {
-        maxWidth: "60%"
+        width: "60%"
     },
     ExtensionContainer: {
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        // allow outline to be set by Prosemirror
+        outline: "inherit",
+        width: "100%"
     }
 })
 
