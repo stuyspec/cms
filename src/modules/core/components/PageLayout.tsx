@@ -1,28 +1,47 @@
 import * as React from 'react';
 import './PageLayout.css';
+import '@material/toolbar/dist/mdc.toolbar.css';
 
 import { SignOutButton } from "./SignOutButton";
 
-import { SimpleTopAppBar } from '@rmwc/top-app-bar';
+import { Toolbar, ToolbarTitle, ToolbarRow, ToolbarSection, ToolbarIcon } from '@rmwc/toolbar';
+import { Drawer, DrawerHeader, DrawerTitle, DrawerContent } from '@rmwc/drawer';
+import { List, ListItem } from '@rmwc/list';
+import { IconButton } from '@rmwc/icon-button';
 
 interface IPageLayoutProps {
     children: React.ReactNode
 }
 
-const onNavigate = () => {
-    //TODO: set up navigation menu
-}
+export const PageLayout: React.FC<IPageLayoutProps> = ({ children }) => {
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-export const PageLayout: React.SFC<IPageLayoutProps> = ({ children }) => (
-    <div>
-        <div className="AppBar">
-            <SimpleTopAppBar
-                title="CMS"
-                fixed={true}
-                navigationIcon={onNavigate}
-                endContent={<SignOutButton />}
-            />
+    return (
+        <div>
+            <div className="AppBar">
+                <Toolbar fixed={true}>
+                    <ToolbarRow>
+                        <ToolbarSection alignStart={true}>
+                            <ToolbarIcon icon="menu" onClick={() => setDrawerOpen(true)} />
+                            <ToolbarTitle>CMS</ToolbarTitle>
+                        </ToolbarSection>
+                        <ToolbarSection alignEnd={true}>
+                            <SignOutButton />
+                        </ToolbarSection>
+                    </ToolbarRow>
+                </Toolbar>
+            </div>
+            <Drawer modal={true} open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+                <DrawerHeader>
+                    <DrawerTitle>CMS</DrawerTitle>
+                </DrawerHeader>
+                <DrawerContent>
+                    <List>
+                        <ListItem tag="a" href="/">Articles</ListItem>
+                    </List>
+                </DrawerContent>
+            </Drawer>
+            {children}
         </div>
-        {children}
-    </div>
-)
+    )
+}
