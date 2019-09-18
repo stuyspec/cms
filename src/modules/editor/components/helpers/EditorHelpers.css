@@ -4,32 +4,6 @@
     margin-top: 20px;
 }
 
-.MenuBarToolbar {
-    height: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: 1px solid silver;
-    border-bottom: none;
-}
-
-.CheckedMenuBarButton{
-    background-color: gainsboro;
-    border-radius: 4px;
-}
-
-.MenuBarDivider {
-    width: 12px;
-}
-
-.MenuBarTextButton {
-    background: none;
-    border: none;
-    font-family: Roboto;
-    font-weight: bold;
-    font-size: 15px;
-}
-
 .LinkDialogTextBox {
     padding-top: 5px;
 }
