@@ -147,7 +147,7 @@ const selectedStyle = {
 }
 
 const ContributorCell: React.SFC<IContributorProps> = (data) => (
-    <DataTableRow style={data.selected ? selectedStyle : undefined} onClick={e => data.onSelect(data.user.slug)}>
+    <DataTableRow selected={data.selected} onClick={e => data.onSelect(data.user.slug)}>
         <DataTableCell>{(data.user.first_name || "") + " " + (data.user.last_name || "")}</DataTableCell>
         <DataTableCell alignEnd={true}>{data.user.email}</DataTableCell>
     </DataTableRow>

@@ -7,18 +7,11 @@ import { Card, CardActions, CardActionButtons, CardActionButton, CardPrimaryActi
 import { Typography } from '@rmwc/typography';
 
 import { ContributorChip } from './ContributorChip';
+import { IArticleData } from '../queryHelpers';
+import { ChipSet } from '@rmwc/chip';
 
 interface IProps {
     data: IArticleData
-}
-
-interface IArticleData {
-    id: string,
-    title: string,
-    preview?: string,
-    slug: string,
-    contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-    section: { permalink: string }
 }
 
 export const ArticleCard: React.SFC<IProps> = ({ data }) => (
@@ -31,18 +24,20 @@ export const ArticleCard: React.SFC<IProps> = ({ data }) => (
                 <Typography use="body1" tag="div" theme="textSecondaryOnBackground">
                     {data.preview || ""}
                 </Typography>
-                {
-                    data.contributors
-                        ? data.contributors.map((c) =>
-                            <ContributorChip
-                                slug={c.slug}
-                                firstName={c.first_name || undefined}
-                                lastName={c.last_name || undefined}
-                                key={c.slug} deletable={false}
-                            />
-                        )
-                        : <></>
-                }
+                <ChipSet>
+                    {
+                        data.contributors
+                            ? data.contributors.map((c) =>
+                                <ContributorChip
+                                    slug={c.slug}
+                                    firstName={c.first_name || undefined}
+                                    lastName={c.last_name || undefined}
+                                    key={c.slug} deletable={false}
+                                />
+                            )
+                            : <></>
+                    }
+                </ChipSet>
             </div>
         </CardPrimaryAction>
         <CardActions>

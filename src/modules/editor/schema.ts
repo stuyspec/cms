@@ -1,5 +1,4 @@
 import { Schema, Node, DOMOutputSpec, Mark, ParseRule } from "prosemirror-model"
-import { notDeepEqual } from "assert";
 
 // :: Object
 // [Specs](#model.NodeSpec) for the nodes defined in this schema.
@@ -23,6 +22,24 @@ export const nodes = {
         group: "block",
         parseDOM: [{ tag: "hr" }],
         toDOM(_: Node): DOMOutputSpec { return ["hr"] }
+    },
+
+    article_extension: {
+        attrs: { type: { default: "" }, props: { default: "{}" } },
+        group: "block",
+        draggable: true,
+        selectable: true,
+        toDOM(node: Node): DOMOutputSpec {
+            return ["article-extension", { type: node.attrs.type, props: node.attrs.props }]
+        },
+        parseDOM: [{
+            tag: "article-extension[type][props]",
+            getAttrs(dom: string | HTMLElement) {
+                return (dom as HTMLElement).getAttribute
+                    ? { type: (dom as HTMLElement).getAttribute("type"), props: (dom as HTMLElement).getAttribute("props") }
+                    : {}
+            }
+        }] as ParseRule[]
     },
 
     // :: NodeSpec A heading textblock, with a `level` attribute that

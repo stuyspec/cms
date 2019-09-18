@@ -17,50 +17,14 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
+import { ISearchData, ISearchVariables, SEARCH_QUERY } from '../queryHelpers';
+
 import { withPageLayout } from '../withPageLayout';
-
-interface IData {
-    searchArticles: Array<({
-        searchable: {
-            id: string,
-            title: string,
-            preview?: string,
-            slug: string,
-            contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-            section: { permalink: string }
-        }
-    } | undefined)>
-}
-
-interface IVariables {
-    query: string
-}
-
-const SEARCH_QUERY = gql`
-query SearchQuery($query: String!) {
-    searchArticles(query: $query) {
-        searchable {
-            id
-            title
-            preview
-            slug
-            contributors {
-                slug
-                first_name
-                last_name
-            }
-            section {
-                permalink
-                id
-            }
-        }
-    }
-}`
 
 const initialState = {
     searchQuery: "",
     redirectCreateArticle: false,
-    data: undefined as IData | undefined,
+    data: undefined as ISearchData | undefined,
 }
 
 class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
@@ -96,7 +60,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                                         onChange={this.onSearchChange}
                                         value={this.state.searchQuery}
                                         onEnter={async () => {
-                                            const results = await client.query<IData, IVariables>({
+                                            const results = await client.query<ISearchData, ISearchVariables>({
                                                 query: SEARCH_QUERY,
                                                 variables: {
                                                     query: this.state.searchQuery

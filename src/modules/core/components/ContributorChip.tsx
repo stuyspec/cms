@@ -1,4 +1,5 @@
 import * as React from 'react';
+import '@material/chips/dist/mdc.chips.css';
 import { Chip } from '@rmwc/chip';
 import { CircularProgress } from '@rmwc/circular-progress';
 import gql from 'graphql-tag';
