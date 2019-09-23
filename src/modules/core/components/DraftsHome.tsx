@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
 import { Snackbar } from '@rmwc/snackbar';
+import { Typography } from '@rmwc/typography';
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -54,27 +55,30 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                         {
                             (client) => {
                                 return (
-                                    <SearchBar
-                                        onChange={this.onSearchChange}
-                                        value={this.state.searchQuery}
-                                        onEnter={async () => {
-                                            const results = await client.query<ISearchData, ISearchVariables>({
-                                                query: DRAFT_SEARCH_QUERY,
-                                                variables: {
-                                                    query: this.state.searchQuery
-                                                }
-                                            })
-                                            this.setState({
-                                                data: results.data
-                                            })
-                                        }}
-                                    />
+                                    <>
+                                        <Typography use="headline1">Drafts</Typography>
+                                        <SearchBar
+                                            onChange={this.onSearchChange}
+                                            value={this.state.searchQuery}
+                                            onEnter={async () => {
+                                                const results = await client.query<ISearchData, ISearchVariables>({
+                                                    query: DRAFT_SEARCH_QUERY,
+                                                    variables: {
+                                                        query: this.state.searchQuery
+                                                    }
+                                                })
+                                                this.setState({
+                                                    data: results.data
+                                                })
+                                            }}
+                                        />
+                                    </>
                                 )
                             }
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} /> : null
+                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} type={'draft'} /> : null
                     }
                 </div>
                 <div className="ArticlesHomeFab">

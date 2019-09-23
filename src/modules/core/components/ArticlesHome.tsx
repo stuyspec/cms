@@ -20,6 +20,7 @@ import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../edit
 import { ISearchData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
+import { Typography } from '@rmwc/typography';
 
 const initialState = {
     searchQuery: "",
@@ -56,27 +57,30 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                         {
                             (client) => {
                                 return (
-                                    <SearchBar
-                                        onChange={this.onSearchChange}
-                                        value={this.state.searchQuery}
-                                        onEnter={async () => {
-                                            const results = await client.query<ISearchData, ISearchVariables>({
-                                                query: ARTICLE_SEARCH_QUERY,
-                                                variables: {
-                                                    query: this.state.searchQuery
-                                                }
-                                            })
-                                            this.setState({
-                                                data: results.data
-                                            })
-                                        }}
-                                    />
+                                    <>
+                                        <Typography use="headline1">Articles</Typography>
+                                        <SearchBar
+                                            onChange={this.onSearchChange}
+                                            value={this.state.searchQuery}
+                                            onEnter={async () => {
+                                                const results = await client.query<ISearchData, ISearchVariables>({
+                                                    query: ARTICLE_SEARCH_QUERY,
+                                                    variables: {
+                                                        query: this.state.searchQuery
+                                                    }
+                                                })
+                                                this.setState({
+                                                    data: results.data
+                                                })
+                                            }}
+                                        />
+                                    </>
                                 )
                             }
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} /> : null
+                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} type='article' /> : null
                     }
                 </div>
                 <div className="ArticlesHomeFab">
