@@ -11,10 +11,11 @@ import { IArticleData } from '../queryHelpers';
 import { ChipSet } from '@rmwc/chip';
 
 interface IProps {
-    data: IArticleData
+    data: IArticleData,
+    type?: string
 }
 
-export const ArticleCard: React.SFC<IProps> = ({ data }) => (
+export const ArticleCard: React.SFC<IProps> = ({ data, type }) => (
     <Card className="ArticleCard">
         <CardPrimaryAction>
             <div style={{ padding: "10px" }}>
@@ -50,7 +51,7 @@ export const ArticleCard: React.SFC<IProps> = ({ data }) => (
                             </CardActionButton>
                 <CardActionButton
                     tag="a"
-                    href={"/article/edit/" + data.slug}>Edit</CardActionButton>
+                    href={`/${type || 'article'}/edit/` + data.slug}>Edit</CardActionButton>
             </CardActionButtons>
         </CardActions>
     </Card>

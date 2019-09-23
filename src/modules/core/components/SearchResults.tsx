@@ -22,7 +22,8 @@ const cardPadding = {
 }
 
 interface IProps {
-    results: Array<ISearchResults | undefined>
+    results: Array<ISearchResults | undefined>,
+    type: string
 }
 
 const useStyles = createUseStyles({
@@ -32,7 +33,7 @@ const useStyles = createUseStyles({
     }
 })
 
-export const SearchResults: React.FunctionComponent<IProps> = ({ results }) => {
+export const SearchResults: React.FunctionComponent<IProps> = ({ results, type }) => {
     const styles = useStyles();
 
     const [isListView, setIsListView] = React.useState(true);
@@ -47,7 +48,7 @@ export const SearchResults: React.FunctionComponent<IProps> = ({ results }) => {
                     title={isListView ? "Stream view" : "List view"}
                 />
             </div>
-            <SearchResultsItems isListView={isListView} results={results} />
+            <SearchResultsItems isListView={isListView} results={results} type={type} />
         </>
     )
 
@@ -55,11 +56,12 @@ export const SearchResults: React.FunctionComponent<IProps> = ({ results }) => {
 }
 
 interface ISearchResultsProps {
-    isListView: boolean
-    results: Array<ISearchResults | undefined>
+    isListView: boolean,
+    results: Array<ISearchResults | undefined>,
+    type: string
 }
 
-const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isListView, results }) => {
+const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isListView, results, type }) => {
     if (isListView) {
         return (
             <DataTable>
@@ -87,7 +89,7 @@ const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isLi
             {
                 results.map(a => a ?
                     <div style={cardPadding} key={a.searchable.id}>
-                        <ArticleCard data={a.searchable} />
+                        <ArticleCard data={a.searchable} type={type} />
                     </div>
                     : null
                 )
