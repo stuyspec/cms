@@ -77,7 +77,7 @@ const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isLi
                     </DataTableHead>
                     <DataTableBody>
                         {
-                            results.map(a => a ? <ArticleListItem data={a.searchable} key={a.searchable.id} /> : null)
+                            results.map(a => a ? <ArticleListItem data={a.searchable} type={type} key={a.searchable.id} /> : null)
                         }
                     </DataTableBody>
                 </DataTableContent>
