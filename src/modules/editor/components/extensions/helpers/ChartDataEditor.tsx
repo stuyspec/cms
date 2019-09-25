@@ -128,8 +128,8 @@ export const ChartDataEditor: React.FC<IProps> = ({datasets, labels, triggerRere
     )
 }
 
-export function numToString(num: number | undefined): string {
-    if (Object.is(num, NaN) || num === undefined) {
+export function numToString(num: number | undefined | null): string {
+    if (Object.is(num, NaN) || num === undefined || num === null) {
         return ""
     }
     else return num.toString(10)
