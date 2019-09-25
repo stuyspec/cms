@@ -1,7 +1,13 @@
 import gql from 'graphql-tag';
 
-export interface ISearchData {
+export interface ISearchArticlesData {
     searchArticles?: Array<({
+        searchable: IArticleData
+    } | undefined)>
+}
+
+export interface ISearchDraftsData {
+    searchUnpublishedArticles?: Array<({
         searchable: IArticleData
     } | undefined)>
 }
