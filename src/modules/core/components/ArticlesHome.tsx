@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
-import { ISearchData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
+import { ISearchArticlesData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
 import { Typography } from '@rmwc/typography';
@@ -25,7 +25,7 @@ import { Typography } from '@rmwc/typography';
 const initialState = {
     searchQuery: "",
     redirectCreateArticle: false,
-    data: undefined as ISearchData | undefined,
+    data: undefined as ISearchArticlesData | undefined,
 }
 
 class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
@@ -63,7 +63,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                                             onChange={this.onSearchChange}
                                             value={this.state.searchQuery}
                                             onEnter={async () => {
-                                                const results = await client.query<ISearchData, ISearchVariables>({
+                                                const results = await client.query<ISearchArticlesData, ISearchVariables>({
                                                     query: ARTICLE_SEARCH_QUERY,
                                                     variables: {
                                                         query: this.state.searchQuery

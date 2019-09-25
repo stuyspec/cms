@@ -16,14 +16,14 @@ import { connect } from 'react-redux';
 import { IState } from '../../state';
 import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
-import { ISearchData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
+import { ISearchDraftsData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
 
 const initialState = {
     searchQuery: "",
     redirectCreateArticle: false,
-    data: undefined as ISearchData | undefined,
+    data: undefined as ISearchDraftsData | undefined,
 }
 
 class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
@@ -61,7 +61,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                                             onChange={this.onSearchChange}
                                             value={this.state.searchQuery}
                                             onEnter={async () => {
-                                                const results = await client.query<ISearchData, ISearchVariables>({
+                                                const results = await client.query<ISearchDraftsData, ISearchVariables>({
                                                     query: DRAFT_SEARCH_QUERY,
                                                     variables: {
                                                         query: this.state.searchQuery
@@ -78,7 +78,7 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchArticles || []} type={'draft'} /> : null
+                        this.state.data ? <SearchResults results={this.state.data.searchUnpublishedArticles || []} type={'draft'} /> : null
                     }
                 </div>
                 <div className="ArticlesHomeFab">
