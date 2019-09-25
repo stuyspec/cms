@@ -59,7 +59,7 @@ export const RoutingApp = ({ }) => (
                 render={() => <CreateArticleForm publish={false} />}
             />
             <AuthorizedRoute
-                path="/article/edit/:slug"
+                path="/draft/edit/:slug"
                 auth={PermissionLevel.Admin}
                 key={Date.now().toString() + "draft/edit"}
                 render={({match}) => <EditArticleForm slug={match.params.slug} publish={false} />}
