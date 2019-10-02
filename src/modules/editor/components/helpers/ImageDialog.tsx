@@ -21,10 +21,10 @@ mutation CreateMedium($title: String!, $article_id: Int!, $user_id: Int!, $capti
 
 interface IVariables {
     title: string,
-    article_id: number, 
-    user_id: number, 
-    caption?: string, 
-    attachment_b64: string, 
+    article_id: number,
+    user_id: number,
+    caption?: string,
+    attachment_b64: string,
     media_type: string
 }
 
@@ -38,6 +38,18 @@ import { Select } from "@rmwc/select";
 import { Button } from '@rmwc/button';
 
 import { ContributorsField } from './ContributorsField';
+import { createUseStyles } from "react-jss";
+import { typeIncompatibleAnonSpreadMessage } from "graphql/validation/rules/PossibleFragmentSpreads";
+
+const useStyles = createUseStyles({
+    DialogForm: {
+        display: "flex",
+        flexDirection: "column"
+    },
+    Input: {
+        marginTop: "10px"
+    }
+})
 
 interface IImageDialogProps {
     articleId: string
@@ -45,7 +57,9 @@ interface IImageDialogProps {
     onClose: () => any
 }
 
-export const ImageDialog: React.FunctionComponent<IImageDialogProps> = ({ articleId, open, onClose }) => {
+export const ImageDialog: React.FC<IImageDialogProps> = ({ articleId, open, onClose }) => {
+    const styles = useStyles();
+
     const [title, setTitle] = React.useState("");
     const [caption, setCaption] = React.useState("");
     const [contributors, setContributors] = React.useState<string[]>([]);
@@ -54,10 +68,10 @@ export const ImageDialog: React.FunctionComponent<IImageDialogProps> = ({ articl
     const [dataURL, setDataURL] = React.useState("");
 
     const reader = new FileReader();
-    reader.onloadend = (e) => {setDataURL(reader.result as string)}
+    reader.onloadend = (e) => { setDataURL(reader.result as string) }
 
     const handleClose = (e: string) => {
-        switch(e) {
+        switch (e) {
             case "cancel":
                 setTitle("");
                 setCaption("");
@@ -78,55 +92,75 @@ export const ImageDialog: React.FunctionComponent<IImageDialogProps> = ({ articl
                             media_type: imageType
                         }
                     }).then(e => {
-                        if(e.data) alert(`Successfully uploaded medium # ${e.data.id}`)
+                        if (e.data) alert(`Successfully uploaded medium # ${e.data.id}`)
                         else alert(`Failed to upload with errors: ${e.errors}`);
                     })
                 })
                 break;
         }
         onClose();
-    } 
+    }
 
     return (
         <Dialog
             open={open}
-            onClose={e => {handleClose(e.detail.action || "")}}
             preventOutsideDismiss={true}
         >
             <DialogTitle>Upload Image</DialogTitle>
             <DialogContent>
-                <form style={{display: "flex", flexDirection: "column"}}>
-                    <TextField label="Title" required={true} value={title} onChange={(e) => setTitle(e.currentTarget.value)} />
-                    <TextField label="Caption" value={caption} onChange={(e) => setCaption(e.currentTarget.value)} />
-                    <Select 
-                        label="Type"  
-                        enhanced={true} 
-                        value={imageType} 
-                        onChange={e => setImageType(e.currentTarget.value)} 
-                        options={[{label: "Photo", value: "photo"}, {label: "Art", value: "illustration"}]}
+                <form className={styles.DialogForm}>
+                    <TextField
+                        label="Title"
+                        required={true}
+                        outlined={true}
+                        value={title}
+                        onChange={(e) => setTitle(e.currentTarget.value)}
+                        className={styles.Input}
                     />
-                    <ContributorsField value={contributors} onChange={contributors => setContributors(contributors)} />
-                    <input 
-                        type="file" 
+                    <TextField
+                        label="Caption"
+                        value={caption}
+                        outlined={true}
+                        onChange={(e) => setCaption(e.currentTarget.value)}
+                        className={styles.Input}
+                    />
+                    <Select
+                        label="Type"
+                        enhanced={true}
+                        outlined={true}
+                        value={imageType}
+                        required={true}
+                        onChange={e => setImageType(e.currentTarget.value)}
+                        options={[{ label: "Photo", value: "photo" }, { label: "Art", value: "illustration" }]}
+                        className={styles.Input}
+                    />
+                    <ContributorsField
+                        value={contributors}
+                        onChange={contributors => setContributors(contributors)}
+                        max={1}
+                    />
+                    <input
+                        type="file"
                         accept=".jpg, .jpeg, .png"
                         required={true}
-                        value={file} 
+                        value={file}
                         onChange={e => {
-                            setFile(e.currentTarget.value); 
-                            if(e.target.files && e.target.files.length > 0) {
+                            setFile(e.currentTarget.value);
+                            if (e.target.files && e.target.files.length > 0) {
                                 reader.readAsDataURL(e.target.files![0])
                             }
                             else setDataURL("");
-                        }} 
+                        }}
+                        className={styles.Input}
                     />
                     {
-                        dataURL ? <img src={dataURL} height={200}/> : undefined
+                        dataURL ? <img src={dataURL} height={200} /> : undefined
                     }
                 </form>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => {handleClose("cancel")}}>Cancel</Button>
-                <Button action="accept" onClick={() => {handleClose("cancel")}}>Upload</Button>
+                <Button onClick={() => { handleClose("cancel") }}>Cancel</Button>
+                <Button action="accept" onClick={() => { handleClose("cancel") }}>Upload</Button>
             </DialogActions>
         </Dialog>
     )
