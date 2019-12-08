@@ -9,6 +9,17 @@ import { IProps } from '@stuyspec/article_extensions/dist/PieChartExtension';
 import { numToString } from './helpers/ChartDataEditor';
 import { IExtensionDialogProps } from './dialogs';
 
+import {
+    DataTable,
+    DataTableContent,
+    DataTableBody,
+    DataTableHead,
+    DataTableHeadCell,
+    DataTableRow,
+    DataTableCell
+} from '@rmwc/data-table';
+import { IconButton } from '@rmwc/icon-button';
+
 const useStyles = createUseStyles({
     TextFieldContainer: {
         display: "flex",
@@ -31,17 +42,6 @@ const useStyles = createUseStyles({
         flexDirection: "row"
     }
 })
-
-import {
-    DataTable,
-    DataTableContent,
-    DataTableBody,
-    DataTableHead,
-    DataTableHeadCell,
-    DataTableRow,
-    DataTableCell
-} from '@rmwc/data-table';
-import { IconButton } from '@rmwc/icon-button';
 
 export const PieChartDialog: React.FC<IExtensionDialogProps> = ({ props, open, onSubmit }) => {
     const styles = useStyles();
@@ -68,14 +68,14 @@ export const PieChartDialog: React.FC<IExtensionDialogProps> = ({ props, open, o
             onClose={e => {
                 console.log(e)
                 if (e.detail.action === "accept") {
-                    const submitData: IProps = {
+                    const props: IProps = {
                         data,
                         title,
                         chartOptions: {
                             doughnut
                         }
                     }
-                    onSubmit(submitData)
+                    onSubmit({props})
                 }
                 else {
                     onSubmit(null)

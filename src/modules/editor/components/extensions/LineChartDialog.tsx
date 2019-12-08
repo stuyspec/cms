@@ -75,7 +75,7 @@ export const LineChartDialog: React.FC<IExtensionDialogProps> = ({ props, open, 
                             d.data[i] = parseFloat(d.data[i])
                         }
                     })
-                    const data: IProps = {
+                    const props: IProps = {
                         title,
                         xAxisLabel,
                         yAxisLabel,
@@ -91,7 +91,7 @@ export const LineChartDialog: React.FC<IExtensionDialogProps> = ({ props, open, 
                             smoothCurves
                         }
                     }
-                    onSubmit(data)
+                    onSubmit({props})
                 }
                 else {
                     onSubmit(null)
