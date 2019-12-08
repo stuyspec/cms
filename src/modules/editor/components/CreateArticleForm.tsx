@@ -32,8 +32,7 @@ mutation createArticle(
     $volume: Int!,
     $issue: Int!,
     $contributors: [Int!]!,
-    $is_published: Boolean,
-    $media_ids: [Int!]) {
+    $is_published: Boolean) {
         createArticle(
             title: $title, 
             section_id: $section_id, 
@@ -44,8 +43,7 @@ mutation createArticle(
             volume: $volume,
             issue: $issue,
             contributors: $contributors,
-            is_published: $is_published,
-            media_ids: $media_ids
+            is_published: $is_published
         ) {            
             id
             title
@@ -68,8 +66,7 @@ interface IVariables {
     volume: number,
     issue: number,
     contributors: number[],
-    is_published: boolean,
-    media_ids: number[]
+    is_published: boolean
 }
 
 class CreateArticleMutation extends Mutation<IData, IVariables> { };
@@ -81,7 +78,6 @@ const initialArticleState = {
     section: "",
     focus: "",
     contributors: [] as string[],
-    media: [],
     editorState: EditorState.create(
         {
             schema,
@@ -119,8 +115,7 @@ const CreateArticleUnconnected: React.FC<any> = (props) => {
                                             volume: parseInt(state.volume, 10),
                                             issue: parseInt(state.issue, 10),
                                             contributors: userIDs,
-                                            is_published: props.publish,
-                                            media_ids: state.media.map(m => parseInt(m.id))
+                                            is_published: props.publish
                                         },
                                     });
                                 }}
