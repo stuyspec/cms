@@ -280,10 +280,7 @@ const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, med
                 onMediumAdd={onMediumAdd} 
                 onSubmit={(e) => {
                     onClose()
-                    if (e === null) {
-                        ;
-                    }
-                    else {
+                    if (e !== null) {
                         insertNode(schema.node(schema.nodes.article_extension, {
                             type,
                             props: JSON.stringify(e.props ?? null),
