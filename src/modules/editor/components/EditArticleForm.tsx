@@ -7,19 +7,17 @@ import { FormStateNotification } from './FormStateNotification';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
-import { ImageDialog } from './helpers/ImageDialog';
-
 import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 
 import { stringToEditorState, editorStateToString } from '../serializeState';
-import { queryAccountIDs } from '../queryHelpers';
+import { queryAccountIDs, IMedium } from '../queryHelpers';
 
 
 import { schema } from '../schema';
+import { MEDIUM_EXTENSION_INFO_FRAGMENT } from '../queryHelpers';
 
 import { withPageLayout } from '../../core/withPageLayout';
-import { Button } from '@rmwc/button';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -37,8 +35,12 @@ query articleBySlug($slug: String!) {
             slug
         }
         created_at
+        media {
+            ...MediumExtensionInfo
+        }
     }
 }
+${MEDIUM_EXTENSION_INFO_FRAGMENT}
 `
 
 interface IArticleData {
@@ -55,7 +57,8 @@ interface IArticleData {
         contributors?: Array<{
             slug: string
         }>,
-        created_at?: string
+        created_at?: string,
+        media?: IMedium[]
     }
 }
 
@@ -77,7 +80,8 @@ mutation updateArticle(
     $volume: Int,
     $issue: Int,
     $contributors: [Int!]!,
-    $is_published: Boolean) {
+    $is_published: Boolean,
+    $media_ids: [Int!]) {
         updateArticle(
             id: $id
             title: $title, 
@@ -89,17 +93,22 @@ mutation updateArticle(
             volume: $volume,
             issue: $issue,
             contributors: $contributors,
-            is_published: $is_published
+            is_published: $is_published,
+            media_ids: $media_ids
         ) {            
             id
             title
+            media {
+                ...MediumExtensionInfo
+            }
         }
     }
+    ${MEDIUM_EXTENSION_INFO_FRAGMENT}
 `
 
 interface IData {
     id: string,
-    title: string
+    title: string,
 }
 
 interface IVariables {
@@ -113,13 +122,13 @@ interface IVariables {
     volume?: number,
     issue?: number,
     contributors: number[],
-    is_published: boolean
+    is_published: boolean,
+    media_ids: number[]
 }
 
 class UpdateArticleMutation extends Mutation<IData, IVariables> { }
 
 const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
-    const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
     return (
         <ApolloConsumer>
             {
@@ -144,13 +153,14 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                                             <FormStateNotification />
                                                             <ArticleFormBase
                                                                 initialState={{
-                                                                    title: data!.articleBySlug!.title,
-                                                                    volume: data!.articleBySlug!.volume.toString(),
-                                                                    issue: data!.articleBySlug!.issue.toString(),
-                                                                    section: data!.articleBySlug!.section.id.toString(),
-                                                                    focus: data!.articleBySlug!.preview || "",
-                                                                    contributors: data!.articleBySlug!.contributors ?
-                                                                        data!.articleBySlug!.contributors!.map(c => c.slug) : [],
+                                                                    title: data.articleBySlug!.title,
+                                                                    volume: data.articleBySlug!.volume.toString(),
+                                                                    issue: data.articleBySlug!.issue.toString(),
+                                                                    section: data.articleBySlug!.section.id.toString(),
+                                                                    focus: data.articleBySlug!.preview || "",
+                                                                    contributors: data.articleBySlug!.contributors ?
+                                                                        data.articleBySlug!.contributors!.map(c => c.slug) : [],
+                                                                    media: data.articleBySlug!.media ?? [],
                                                                     editorState: stringToEditorState(data!.articleBySlug!.content, schema)
                                                                 }}
                                                                 onPost={async (state) => {
@@ -168,17 +178,12 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                                                             volume: parseInt(state.volume, 10),
                                                                             issue: parseInt(state.issue, 10),
                                                                             contributors: userIDs,
-                                                                            is_published: publish
+                                                                            is_published: publish,
+                                                                            media_ids: state.media.map(m => parseInt(m.id))
                                                                         }
                                                                     })
                                                                 }}
                                                                 postLabel="Edit"
-                                                            />
-                                                            <Button onClick={() => setImageDialogOpen(true)}>Upload Image</Button>
-                                                            <ImageDialog 
-                                                                articleId={data!.articleBySlug!.id} 
-                                                                open={imageDialogOpen}
-                                                                onClose={() => setImageDialogOpen(false)}
                                                             />
                                                         </>
                                                     )

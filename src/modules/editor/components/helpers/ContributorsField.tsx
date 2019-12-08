@@ -31,7 +31,7 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
 
         return (
             <div className="EditorField">
-                <Typography use="caption">Contributors</Typography>
+                <Typography use="caption">{this.props.max == 1 ? "Contributor" : "Contributors"}</Typography>
                 <div>
                     {
                         this.props.value.map(c => <ContributorChip
