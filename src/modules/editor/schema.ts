@@ -25,18 +25,22 @@ export const nodes = {
     },
 
     article_extension: {
-        attrs: { type: { default: "" }, props: { default: "{}" } },
+        attrs: { type: { default: "" }, props: { default: "{}" }, media: { default: "[]" } },
         group: "block",
         draggable: true,
         selectable: true,
         toDOM(node: Node): DOMOutputSpec {
-            return ["article-extension", { type: node.attrs.type, props: node.attrs.props }]
+            return ["article-extension", { type: node.attrs.type, props: node.attrs.props, media: node.attrs.media }]
         },
         parseDOM: [{
             tag: "article-extension[type][props]",
             getAttrs(dom: string | HTMLElement) {
                 return (dom as HTMLElement).getAttribute
-                    ? { type: (dom as HTMLElement).getAttribute("type"), props: (dom as HTMLElement).getAttribute("props") }
+                    ? {
+                        type: (dom as HTMLElement).getAttribute("type"),
+                        props: (dom as HTMLElement).getAttribute("props"),
+                        media: (dom as HTMLElement).getAttribute("media")
+                    }
                     : {}
             }
         }] as ParseRule[]
