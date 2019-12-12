@@ -43,7 +43,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
         return (
             <form onSubmit={(e) => {
                 e.preventDefault();
-                sortByFeatured(this.state.media)
+                sortMediaByFeatured(this.state.media)
                 this.props.onPost(this.state); 
             }}>
                 <button disabled={true} className="ArticleFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
@@ -146,11 +146,11 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
 
 //used to move featured media to front of media list in sort
 //this means featured media will show up on front page first
-const sortByFeatured = (media: IMedium[]) => {
-    media.sort(sortByFeaturedSorter)
+const sortMediaByFeatured = (media: IMedium[]) => {
+    media.sort(sortByFeatured)
 }
 
-const sortByFeaturedSorter = (a: IMedium, b: IMedium) => {
+const sortByFeatured = (a: IMedium, b: IMedium) => {
     if(a.is_featured == b.is_featured) {
         return 0;
     }
