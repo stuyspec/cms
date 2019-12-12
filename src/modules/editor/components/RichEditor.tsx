@@ -6,10 +6,13 @@ import { EditorView } from 'prosemirror-view';
 
 import { MenuBar } from './MenuBar';
 import { Extension } from './extensions/Extension';
+import { IMedium } from '../queryHelpers';
 
 interface IProps {
     editorState: EditorState,
     onEditorState: (state: EditorState) => any,
+    media: IMedium[],
+    onMediumAdd: (m: IMedium) => any
 }
 
 const defaultState = {
@@ -27,19 +30,23 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
     public render() {
         const editor = document.getElementById("RichEditorId");
         const extensions = [];
-        
+
         if (editor) {
             const extensionElements = editor.getElementsByTagName("article-extension");
             if (extensionElements) {
                 for (let i = 0; i < extensionElements.length; i++) {
                     const type = extensionElements[i].getAttribute("type");
                     const props = extensionElements[i].getAttribute("props");
+                    const media = extensionElements[i].getAttribute("media")
                     if (type && props) {
                         extensions.push(
                             <Extension
                                 type={type}
                                 props={props}
                                 root={extensionElements[i]}
+                                media={media ?? undefined}
+                                allMedia={this.props.media}
+                                key={i}
                             />
                         )
                     }
@@ -51,7 +58,11 @@ export class RichEditor extends React.Component<IProps, typeof defaultState> {
         // EditorView instance.
         return (
             <div>
-                {this.state.editorView != null ? <MenuBar editorView={this.state.editorView} /> : null}
+                {
+                    this.state.editorView != null
+                        ? <MenuBar editorView={this.state.editorView} media={this.props.media} onMediumAdd={this.props.onMediumAdd} />
+                        : null
+                }
                 <div ref={this.createEditorView} className="RichEditor" id="RichEditorId" />
                 {extensions}
             </div>

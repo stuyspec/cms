@@ -1,16 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { extensions, IExtensionProps } from '@stuyspec/article_extensions';
+import { extensions } from '@stuyspec/article_extensions';
 import { createUseStyles } from 'react-jss';
 
-export interface IExtensionProps {
-    props: any,
-}
+import { IMedium } from '../../queryHelpers';
 
-type IHelperProps = {
+type IHelperProps =  {
     type: string,
     props: string,
+    media?: IMedium[]
 };
 
 const useStyles = createUseStyles({
@@ -27,25 +26,24 @@ const useStyles = createUseStyles({
     }
 })
 
-const ExtensionHelper: React.FC<IHelperProps> = ({ type, props, ...rest }) => {
+export const ExtensionHelper: React.FC<IHelperProps> = ({type, props, media}) => {
     const styles = useStyles();
 
     let propsObj;
     try {
         propsObj = JSON.parse(props);
     }
-    catch (e) {
+    catch(e) {
         console.error(`Unable to parse props "${props}" in article extension of type ${type} (in Extension).`)
         return null;
     }
 
-    const allExtensions = new Map(extensions)
-    const SelectedExtension = allExtensions.get(type);
+    const SelectedExtension = extensions.get(type);
     if (SelectedExtension) {
         return (
             <div className={styles.ExtensionContainer}>
                 <div className={styles.Extension}>
-                    <SelectedExtension props={propsObj} {...rest} />
+                    <SelectedExtension props={propsObj} media={media} />
                 </div>
             </div>
         )
@@ -56,12 +54,25 @@ const ExtensionHelper: React.FC<IHelperProps> = ({ type, props, ...rest }) => {
     }
 }
 
-type IProps = {
+interface IProps {
     type: string,
     props: string,
+    media?: string,
+    allMedia: IMedium[] | null,
     root: Element,
 };
 
-export function Extension({ root, ...rest }: IProps) {
-    return ReactDOM.createPortal(<ExtensionHelper {...rest} />, root);
+export function Extension({root, media, allMedia, type, ...rest}: IProps)  {
+    let mediaIds: number[];
+    try {
+        mediaIds = media ? JSON.parse(media) ?? [] : [];
+    }
+    catch(e) {
+        console.error(`Unable to parse media "${media}" in article extension of type ${type} (in Extension).`)
+        return null;
+    }
+
+    const mediaObjs = mediaIds.includes && allMedia ? allMedia.filter((m: any) => mediaIds.includes(parseInt(m.id))) : undefined
+
+    return ReactDOM.createPortal(<ExtensionHelper media={mediaObjs} type={type} {...rest} />, root);
 }

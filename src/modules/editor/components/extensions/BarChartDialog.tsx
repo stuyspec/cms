@@ -84,7 +84,7 @@ export const BarChartDialog: React.FC<IExtensionDialogProps> = ({ props, open, o
                             datasets: resultDatasets
                         },
                     }
-                    onSubmit(data)
+                    onSubmit({props: data})
                 }
                 else {
                     onSubmit(null)

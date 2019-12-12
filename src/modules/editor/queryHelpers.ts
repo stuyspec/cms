@@ -34,3 +34,69 @@ export async function queryAccountIDs(slugs: string[], client: ApolloClient<any>
     )
     return userIDs;
 }
+
+export interface IMedium {
+    id: string,
+    attachment_url: string,
+    medium_attachment_url: string,
+    thumb_attachment_url: string,
+    media_type: string,
+    caption?: string,
+    title: string,
+    is_featured: boolean,
+    user: {
+        slug: string,
+        first_name: string,
+        last_name: string
+    }
+}
+
+export interface IMediumVariables {
+    title: string, 
+    caption: string,
+    is_featured: boolean,
+    user_id: number,
+    media_type: string,
+    attachment_b64: string
+}
+
+export const MEDIUM_EXTENSION_INFO_FRAGMENT = gql`
+fragment MediumExtensionInfo on Medium {
+    id
+    attachment_url
+    medium_attachment_url
+    thumb_attachment_url
+    media_type
+    caption
+    title
+    is_featured
+    user {
+        slug
+        first_name
+        last_name
+    }
+}
+`
+
+export const CREATE_MEDIUM_MUTATION = gql`
+mutation createMedium(
+    $title: String!, 
+    $caption: String!,
+    $is_featured: Boolean!,
+    $user_id: Int!,
+    $media_type: String!,
+    $attachment_b64: String!
+) {
+    createMedium(
+        title: $title, 
+        caption: $caption,
+        is_featured: $is_featured,
+        user_id: $user_id,
+        media_type: $media_type,
+        attachment_b64: $attachment_b64
+    ) {
+        ...MediumExtensionInfo
+    }
+}
+${MEDIUM_EXTENSION_INFO_FRAGMENT}
+`;

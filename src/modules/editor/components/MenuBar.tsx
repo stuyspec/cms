@@ -16,6 +16,7 @@ import { LinkDialog } from './helpers/LinkDialog';
 import { dialogs } from './extensions/dialogs';
 
 import { createUseStyles } from 'react-jss';
+import { IMedium } from '../queryHelpers';
 
 const useStyles = createUseStyles({
     Toolbar: {
@@ -59,7 +60,9 @@ const setBlockHeading = setBlockType(schema.nodes.heading, { level: 5 });
 const setBlockCenteredHeading = setBlockType(schema.nodes.heading, { level: 4 });
 
 interface IProps {
-    editorView: EditorView
+    editorView: EditorView,
+    media: IMedium[],
+    onMediumAdd: (medium: IMedium) => any
 }
 
 //Determines whether a mark is present in the current selection or cursor position.
@@ -81,7 +84,7 @@ function insertNode(node: Node) {
 
 const insertHorizontalRule = insertNode(schema.node(schema.nodes.horizontal_rule));
 
-export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
+export const MenuBar: React.FunctionComponent<IProps> = ({ editorView, media, onMediumAdd: onMediumAdd }) => {
     const styles = useStyles();
 
     const { state, dispatch } = editorView;
@@ -164,6 +167,8 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
             <AddExtensionDialog
                 extensionInfo={currentExtensionInfo}
                 state={state}
+                media={media}
+                onMediumAdd={onMediumAdd}
                 dispatch={dispatch}
                 onClose={() => setCurrentExtensionInfo(undefined)}
             />
@@ -173,6 +178,7 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                 <MenuItem onClick={() => setCurrentExtensionInfo({type: 'LineChartExtension'})}>Line Chart</MenuItem>
                 <MenuItem onClick={() => setCurrentExtensionInfo({type: 'BarChartExtension'})}>Bar Chart</MenuItem>
                 <MenuItem onClick={() => setCurrentExtensionInfo({type: 'PieChartExtension'})}>Pie Chart</MenuItem>
+                <MenuItem onClick={() => setCurrentExtensionInfo({type: 'MediaExtension'})}>Media</MenuItem>
             </SimpleMenu>
             <MenuDivider />
             <MenuButton
@@ -199,7 +205,8 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView }) => {
                     if (!currentExtensionInfo) {
                         setCurrentExtensionInfo({
                             type: node.attrs['type'],
-                            props: node.attrs['props']
+                            props: node.attrs['props'],
+                            mediaIds: node.attrs['media']
                         })
                     }
                 }}
@@ -246,12 +253,14 @@ interface IAddItemProps {
     extensionInfo?: IExtensionInfo
     state: EditorState,
     dispatch: (tr: Transaction<any>) => void,
-    onClose: () => any
+    onClose: () => any,
+    media: IMedium[],
+    onMediumAdd: (m: IMedium) => any
 }
 
-const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, dispatch, onClose }) => {
+const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, media, onMediumAdd, dispatch, onClose }) => {
     if (!!extensionInfo) {
-        const { type, props } = extensionInfo;
+        const { type, props, mediaIds } = extensionInfo;
         const Dialog = dialogs.get(type);
 
     if (!Dialog) {
@@ -261,23 +270,29 @@ const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, dis
 
     try {
         const parsedProps = props ? JSON.parse(props) : undefined
+        const parsedMediaIds = mediaIds ? JSON.parse(mediaIds) : []
         return (
-            <Dialog open={!!extensionInfo} props={parsedProps} onSubmit={(e) => {
-                onClose()
-                if (e === null) {
-                    ;
-                }
-                else {
-                    insertNode(schema.node(schema.nodes.article_extension, {
-                        type,
-                        props: JSON.stringify(e)
-                    }))(state, dispatch)
-                }
-            }} />
+            <Dialog 
+                open={!!extensionInfo} 
+                props={parsedProps} 
+                allMedia={media}
+                mediaIds={parsedMediaIds} 
+                onMediumAdd={onMediumAdd} 
+                onSubmit={(e) => {
+                    onClose()
+                    if (e !== null) {
+                        insertNode(schema.node(schema.nodes.article_extension, {
+                            type,
+                            props: JSON.stringify(e.props ?? null),
+                            media: JSON.stringify(e.media ?? null)
+                        }))(state, dispatch)
+                    }
+                }} 
+            />
         )
     }
     catch(e) {
-        console.error(`Failed to parse props ${props} for type ${type}`);
+        console.error(`Failed to parse props ${props} and/or media ${mediaIds} for type ${type}`);
         return null;
     }
     }
@@ -286,5 +301,6 @@ const AddExtensionDialog: React.FC<IAddItemProps> = ({ extensionInfo, state, dis
 
 interface IExtensionInfo {
     type: string, 
-    props?: string
+    props?: string,
+    mediaIds?: string
 }

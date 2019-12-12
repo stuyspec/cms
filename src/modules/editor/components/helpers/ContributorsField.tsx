@@ -10,6 +10,8 @@ import { Typography } from '@rmwc/typography';
 interface IProps {
     value: string[],
     onChange: (val: string[]) => any,
+    //maximum number of contributors allowed
+    max?: number
 }
 
 const initialState = {
@@ -23,9 +25,13 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
     }
 
     public render() {
+        const addIcon = this.props.max === undefined || this.props.value.length < this.props.max
+            ? <IconButton icon="add" type="button" onClick={this.onAddClick} />
+            : null;
+
         return (
             <div className="EditorField">
-            <Typography use="caption">Contributors</Typography>
+                <Typography use="caption">{this.props.max == 1 ? "Contributor" : "Contributors"}</Typography>
                 <div>
                     {
                         this.props.value.map(c => <ContributorChip
@@ -35,7 +41,7 @@ export class ContributorsField extends React.Component<IProps, typeof initialSta
                             onDelete={slug => this.props.onChange(this.props.value.filter(elem => elem !== slug))}
                         />)
                     }
-                    <IconButton icon="add" type="button" onClick={this.onAddClick} />
+                    {addIcon}
                     <ContributorDialog open={this.state.dialogOpen} onClose={this.onDialogClose} />
                 </div>
             </div>
