@@ -77,7 +77,9 @@ const initialArticleState = {
     issue: "",
     section: "",
     focus: "",
+    date: new Date().toISOString(),
     contributors: [] as string[],
+    media: [],
     editorState: EditorState.create(
         {
             schema,
