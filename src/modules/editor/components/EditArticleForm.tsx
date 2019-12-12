@@ -158,13 +158,11 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                                                     issue: data.articleBySlug!.issue.toString(),
                                                                     section: data.articleBySlug!.section.id.toString(),
                                                                     focus: data.articleBySlug!.preview || "",
-                                                                    date: data.articleBySlug!.created_at ?? new Date().toISOString(),
                                                                     contributors: data.articleBySlug!.contributors ?
                                                                         data.articleBySlug!.contributors!.map(c => c.slug) : [],
                                                                     media: data.articleBySlug!.media ?? [],
                                                                     editorState: stringToEditorState(data!.articleBySlug!.content, schema)
                                                                 }}
-                                                                allowBackdate={publish}
                                                                 onPost={async (state) => {
                                                                     const userIDs = await queryAccountIDs(state.contributors, client)
                                                                     mutate({
