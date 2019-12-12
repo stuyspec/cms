@@ -77,7 +77,9 @@ const initialArticleState = {
     issue: "",
     section: "",
     focus: "",
+    date: new Date().toISOString(),
     contributors: [] as string[],
+    media: [],
     editorState: EditorState.create(
         {
             schema,
@@ -102,6 +104,7 @@ const CreateArticleUnconnected: React.FC<any> = (props) => {
                             <ArticleFormBase
                                 initialState={initialArticleState}
                                 postLabel="Post"
+                                allowBackdate={props.publish}
                                 onPost={async (state) => {
                                     const userIDs = await queryAccountIDs(state.contributors, client);
                                     mutate({
@@ -110,7 +113,7 @@ const CreateArticleUnconnected: React.FC<any> = (props) => {
                                             section_id: parseInt(state.section, 10),
                                             content: editorStateToString(state.editorState),
                                             summary: state.focus,
-                                            created_at: new Date().toISOString(),
+                                            created_at: state.date,
                                             outquotes: [],
                                             volume: parseInt(state.volume, 10),
                                             issue: parseInt(state.issue, 10),
