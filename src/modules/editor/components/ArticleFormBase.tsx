@@ -9,7 +9,6 @@ import { NumberField } from './helpers/NumberField';
 import { FocusField } from './helpers/FocusField';
 import { ContributorsField } from './helpers/ContributorsField';
 import { SectionField } from './helpers/SectionField';
-import { DateField } from './helpers/DateField';
 import { FeaturedMediaField } from './helpers/FeaturedMediaField';
 
 import { Button } from '@rmwc/button';
@@ -22,16 +21,14 @@ interface IState {
     section: string,
     focus: string,
     contributors: string[],
-    date: string,
     media: IMedium[],
-    editorState: EditorState,
+    editorState: EditorState
 }
 
 interface IProps {
     initialState: IState
     onPost: (state: IState) => any,
-    postLabel: string,
-    allowBackdate: boolean
+    postLabel: string
 }
 
 //renders the form fields and buttons necessary for creating/editing article data.
@@ -46,8 +43,8 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
         return (
             <form onSubmit={(e) => {
                 e.preventDefault();
-                sortByFeatured(this.state.media)
-                this.props.onPost(this.state);
+                sortMediaByFeatured(this.state.media)
+                this.props.onPost(this.state); 
             }}>
                 <button disabled={true} className="ArticleFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
                 <div>
@@ -79,11 +76,6 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         value={this.state.focus}
                         onChange={this.handleFocusChange}
                         label="Focus sentence"
-                    />
-                    <DateField
-                        display={this.props.allowBackdate}
-                        value={this.state.date}
-                        onChange={this.handleDateChange}
                     />
                     <FeaturedMediaField media={this.state.media} onMediumAdd={this.handleMediumChange} />
                     <ContributorsField value={this.state.contributors} onChange={this.handleContributorsChange} />
@@ -133,12 +125,6 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
         })
     }
 
-    private handleDateChange = (date: string) => {
-        this.setState({
-            date
-        })
-    }
-
     private handleContributorsChange = (contributors: string[]) => {
         this.setState({
             contributors
@@ -160,12 +146,12 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
 
 //used to move featured media to front of media list in sort
 //this means featured media will show up on front page first
-const sortByFeatured = (media: IMedium[]) => {
-    media.sort(sortByFeaturedSorter)
+const sortMediaByFeatured = (media: IMedium[]) => {
+    media.sort(sortByFeatured)
 }
 
-const sortByFeaturedSorter = (a: IMedium, b: IMedium) => {
-    if (a.is_featured == b.is_featured) {
+const sortByFeatured = (a: IMedium, b: IMedium) => {
+    if(a.is_featured == b.is_featured) {
         return 0;
     }
     return a.is_featured ? 1 : -1;
