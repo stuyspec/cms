@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
 import { Snackbar } from '@rmwc/snackbar';
+import { snackbarQueue } from '../../snackbarQueue';
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -50,6 +51,20 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
         if (this.state.redirectCreateArticle) {
             return <Redirect to="/article/new" push={true} />
         }
+	if (this.props.createArticleSucceeded) {
+            snackbarQueue.notify({
+                title:'The article was successfully created.',
+                onClose:() => this.props.dispatch(setCreateArticleSucceeded.call(null)),
+                timeout:2000
+            })
+        }
+        else if (this.props.updateArticleSucceeded) {
+            snackbarQueue.notify({
+                title:'The article was successfully updated.',
+                onClose:() => this.props.dispatch(setUpdateArticleSucceeded.call(null)),
+                timeout:2000
+            })
+        }
         return (
             <>
                 <div className="ArticlesHomeContainer">
@@ -86,18 +101,6 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                 <div className="ArticlesHomeFab">
                     <Fab icon="add" onClick={this.onFabClick} />
                 </div>
-                <Snackbar
-                    open={this.props.createArticleSucceeded}
-                    onClose={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
-                    message="The article was successfully created."
-                    timeout={2000}
-                />
-                <Snackbar
-                    open={this.props.updateArticleSucceeded}
-                    onClose={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
-                    message="The article was successfully updated."
-                    timeout={2000}
-                />
             </>
         )
 

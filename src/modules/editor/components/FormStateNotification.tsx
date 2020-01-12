@@ -10,27 +10,27 @@ import { Snackbar } from '@rmwc/snackbar';
 
 import { connect } from 'react-redux';
 
+import { snackbarQueue } from '../../snackbarQueue';
+
 const FormStateUnconnected: React.SFC<any> = (props) => {
     if (props.createArticleSucceeded || props.updateArticleSucceeded) {
         return <Redirect to="/" push={true} />
     }
-
-    return (
-        <>
-            <Snackbar
-                open={props.createArticleSucceeded === false}
-                onClose={() => props.dispatch(setCreateArticleSucceeded.call(null))}
-                message="Failed to publish article."
-                timeout={2000}
-            />
-            <Snackbar
-                open={props.updateArticleSucceeded === false}
-                onClose={() => props.dispatch(setUpdateArticleSucceeded.call(null))}
-                message="Failed to edit article."
-                timeout={2000}
-            />
-        </>
-    )
+    else if (props.createArticleSucceeded === false) {
+        snackbarQueue.notify({
+            title: 'Failed to publish article',
+            onClose: () => props.dispatch(setCreateArticleSucceeded.call(null)),
+            timeout: 2000,
+        })
+    }
+    else if (props.updateArticleSucceeded === false) {
+        snackbarQueue.notify({
+            title: 'Failed to edit article',
+            onClose: () => props.dispatch(setCreateArticleSucceeded.call(null)),
+            timeout: 2000,
+        })
+    }
+    return (<></>)
 }
 
 function mapStateToProps(state: IState) {
