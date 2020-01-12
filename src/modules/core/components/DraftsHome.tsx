@@ -15,7 +15,6 @@ import { ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 
 import { IState } from '../../state';
-import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
 import { ISearchDraftsData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
 
@@ -52,14 +51,12 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
         if (this.props.createArticleSucceeded) {
             snackbarQueue.notify({
                 title:'The draft was successfully created.',
-                onClose:() => this.props.dispatch(setCreateArticleSucceeded.call(null)),
                 timeout:2000
             })
         }
         else if (this.props.updateArticleSucceeded) {
             snackbarQueue.notify({
                 title:'The draft was successfully updated.',
-                onClose:() => this.props.dispatch(setUpdateArticleSucceeded.call(null)),
                 timeout:2000
             })
         }

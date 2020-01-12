@@ -16,7 +16,6 @@ import { ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 
 import { IState } from '../../state';
-import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
 import { ISearchArticlesData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
@@ -54,14 +53,12 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
 	if (this.props.createArticleSucceeded) {
             snackbarQueue.notify({
                 title:'The article was successfully created.',
-                onClose:() => this.props.dispatch(setCreateArticleSucceeded.call(null)),
                 timeout:2000
             })
         }
         else if (this.props.updateArticleSucceeded) {
             snackbarQueue.notify({
                 title:'The article was successfully updated.',
-                onClose:() => this.props.dispatch(setUpdateArticleSucceeded.call(null)),
                 timeout:2000
             })
         }
