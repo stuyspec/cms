@@ -4,8 +4,6 @@ import './ArticlesHome.css';
 import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
-import { Snackbar } from '@rmwc/snackbar';
-import { snackbarQueue } from '../../snackbarQueue';
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -49,18 +47,6 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
     public render() {
         if (this.state.redirectCreateArticle) {
             return <Redirect to="/article/new" push={true} />
-        }
-	if (this.props.createArticleSucceeded) {
-            snackbarQueue.notify({
-                title:'The article was successfully created.',
-                timeout:2000
-            })
-        }
-        else if (this.props.updateArticleSucceeded) {
-            snackbarQueue.notify({
-                title:'The article was successfully updated.',
-                timeout:2000
-            })
         }
         return (
             <>

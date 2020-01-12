@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { setUpdateArticleSucceeded } from '../actions';
-import { FormStateNotification } from './FormStateNotification';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
@@ -18,6 +17,8 @@ import { schema } from '../schema';
 import { MEDIUM_EXTENSION_INFO_FRAGMENT } from '../queryHelpers';
 
 import { withPageLayout } from '../../core/withPageLayout';
+
+import { snackbarQueue } from '../../snackbarQueue';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -143,14 +144,13 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                     return (
                                         <UpdateArticleMutation
                                             mutation={ARTICLE_MUTATION}
-                                            onError={(error) => dispatch(setUpdateArticleSucceeded.call(false))}
-                                            onCompleted={(result) => dispatch(setUpdateArticleSucceeded.call(true))}
+                                            onError={() => snackbarQueue.notify({title: `Failed to update ${publish ? 'article' : 'draft'}.`, timeout: 2000})}
+                                            onCompleted={() => snackbarQueue.notify({title: `Successfully updated ${publish ? 'article' : 'draft'}.`, timeout: 2000})}
                                         >
                                             {
                                                 (mutate) =>
                                                     (
                                                         <>
-                                                            <FormStateNotification />
                                                             <ArticleFormBase
                                                                 initialState={{
                                                                     title: data.articleBySlug!.title,
