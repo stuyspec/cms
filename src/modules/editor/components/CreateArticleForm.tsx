@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { connect } from 'react-redux';
 
-import { snackbarQueue } from '../../snackbarQueue';
+import { setCreateArticleSucceeded } from '../actions';
 
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
@@ -15,6 +15,9 @@ import { editorStateToString } from '../serializeState';
 import { queryAccountIDs } from '../queryHelpers';
 
 import { ArticleFormBase } from './ArticleFormBase';
+
+import { FormStateNotification } from './FormStateNotification';
+import { snackbarQueue } from '../../snackbarQueue';
 
 import { withPageLayout } from '../../core/withPageLayout';
 
@@ -87,12 +90,24 @@ const initialArticleState = {
 }
 
 const CreateArticleUnconnected: React.FC<any> = (props) => {
+    console.log(props)
     return (
         <>
+            <FormStateNotification />
             <CreateArticleMutation
                 mutation={ARTICLE_MUTATION}
-                onError={() => snackbarQueue.notify({title: `Failed to create ${props.publish ? 'article' : 'draft'}.`, timeout: 2000})}
-                onCompleted={() => snackbarQueue.notify({title: `Successfully created ${props.publish ? 'article' : 'draft'}.`, timeout: 2000})}
+                onError={(error) => {snackbarQueue.notify({
+                        title: `Failed to create ${props.publish ? 'article' : 'draft'}.`, 
+                        timeout: 2000
+                    })
+                    props.dispatch(setCreateArticleSucceeded.call(false))
+                }}
+                onCompleted={(data) => {snackbarQueue.notify({
+                        title: `Successfully created ${props.publish ? 'article' : 'draft'}.`, 
+                        timeout: 2000
+                    })
+                    props.dispatch(setCreateArticleSucceeded.call(true))
+                }}
             >
                 {(mutate) => (
                     <ApolloConsumer>
@@ -128,4 +143,3 @@ const CreateArticleUnconnected: React.FC<any> = (props) => {
 }
 
 export const CreateArticleForm = connect(null, null)(withPageLayout(CreateArticleUnconnected));
-

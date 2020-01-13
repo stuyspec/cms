@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { setUpdateArticleSucceeded } from '../actions';
+import { FormStateNotification } from './FormStateNotification';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
@@ -144,13 +145,24 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                     return (
                                         <UpdateArticleMutation
                                             mutation={ARTICLE_MUTATION}
-                                            onError={() => snackbarQueue.notify({title: `Failed to update ${publish ? 'article' : 'draft'}.`, timeout: 2000})}
-                                            onCompleted={() => snackbarQueue.notify({title: `Successfully updated ${publish ? 'article' : 'draft'}.`, timeout: 2000})}
+                                            onError={(error) => {snackbarQueue.notify({
+                                                title: `Failed to create ${publish ? 'article' : 'draft'}.`, 
+                                                timeout: 2000
+                                            })
+                                                dispatch(setUpdateArticleSucceeded.call(false))
+                                            }}
+                                            onCompleted={(result) => {snackbarQueue.notify({
+                                                title: `Successfully created ${publish ? 'article' : 'draft'}.`, 
+                                                timeout: 2000
+                                            })
+                                                dispatch(setUpdateArticleSucceeded.call(true))
+                                            }}
                                         >
                                             {
                                                 (mutate) =>
                                                     (
                                                         <>
+                                                            <FormStateNotification />
                                                             <ArticleFormBase
                                                                 initialState={{
                                                                     title: data.articleBySlug!.title,
