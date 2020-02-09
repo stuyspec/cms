@@ -11,8 +11,12 @@ import { ArticlesHome } from './core/components/ArticlesHome';
 import { DraftsHome } from './core/components/DraftsHome';
 import { UsersHome } from './core/components/UsersHome';
 
+
 import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
+
+import { CreateUserForm } from './profile/components/CreateUserForm';
+import { EditUserForm } from './profile/components/EditUserForm';
 
 import { NotFound } from './core/components/NotFound';
 
@@ -71,6 +75,13 @@ export const RoutingApp = ({ }) => (
                 auth={PermissionLevel.Admin}
                 key="/users"
                 component={UsersHome}
+            />
+            <AuthorizedRoute
+                path="/users/new"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/users/new"
+                render={() => <CreateUserForm/>}
             />
             <Route
                 path="*"

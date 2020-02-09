@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { Fab } from '@rmwc/fab';
 
 import { SearchBar } from './SearchBar';
-import { SearchResults } from './SearchResults';
+import { UserSearchResults } from './UserSearchResults';
 
 import gql from 'graphql-tag';
 import { ApolloConsumer } from 'react-apollo';
@@ -78,7 +78,7 @@ class UsersHomeUnconnected extends React.Component<any, typeof initialState> {
                         }
                     </ApolloConsumer>
                     {
-                        //this.state.data ? <SearchResults isListView={false} results={this.state.data.searchUsers || []} type='users' /> : null
+                        this.state.data ? <UserSearchResults results={this.state.data.userByFirstName || []} type='users' /> : null
                     }
                 </div>
                 <div className="UsersHomeFab">

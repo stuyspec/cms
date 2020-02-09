@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './ArticleForm.css';
+import './UserForm.css';
 
 import { EditorState } from "prosemirror-state";
 
@@ -15,12 +15,9 @@ import { Button } from '@rmwc/button';
 import { IMedium } from '../queryHelpers';
 
 interface IState {
-    title: string,
-    volume: string,
-    issue: string,
-    section: string,
-    focus: string,
-    contributors: string[],
+    first_name: string,
+    last_name: string,
+    email: string,
     media: IMedium[],
     editorState: EditorState
 }
@@ -31,9 +28,9 @@ interface IProps {
     postLabel: string
 }
 
-//renders the form fields and buttons necessary for creating/editing article data.
-//base for Create/EditArticleForm
-export class ArticleFormBase extends React.Component<IProps, IState> {
+//renders the form fields and buttons necessary for creating/editing user data.
+//base for Create/EditUserForm
+export class UserFormBase extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = props.initialState;
@@ -46,7 +43,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                 sortMediaByFeatured(this.state.media)
                 this.props.onPost(this.state); 
             }}>
-                <button disabled={true} className="ArticleFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
+                <button disabled={true} className="UserFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
                 <div>
                     <FocusField
                         value={this.state.title}
@@ -54,7 +51,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         label="Title"
                         required={true}
                     />
-                    <div className="ArticleFormHorizontal">
+                    <div className="UserFormHorizontal">
                         <NumberField
                             value={this.state.volume}
                             onChange={this.handleVolumeChange}
@@ -79,7 +76,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                     />
                     <FeaturedMediaField media={this.state.media} onMediumAdd={this.handleMediumChange} />
                     <ContributorsField value={this.state.contributors} onChange={this.handleContributorsChange} />
-                    <div className="ArticleFormCenter">
+                    <div className="UserFormCenter">
                         <RichEditor
                             editorState={this.state.editorState}
                             onEditorState={this.handleEditorChange}
