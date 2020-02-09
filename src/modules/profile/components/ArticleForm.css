@@ -1,0 +1,12 @@
+.ArticleFormHorizontal {
+    display: flex;
+}
+
+.ArticleFormCenter {
+    display: flex;
+    justify-content: center;
+}
+
+.ArticleFormDisableAutoSubmitButton {
+    display: none;
+}

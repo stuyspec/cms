@@ -16,6 +16,24 @@ export interface ISearchVariables {
     query: string
 }
 
+export interface ISearchUsersData {
+    searchUsers?: Array<({
+        searchable: IUserData
+    } | undefined)>
+}
+
+export const USER_SEARCH_QUERY = gql`
+query UserQuery($query: String!) {
+    searchUsers(query: $query) {
+        searchable {
+            slug
+            first_name
+            last_name
+            email
+        }
+    }
+}`
+
 export const ARTICLE_SEARCH_QUERY = gql`
 query SearchQuery($query: String!) {
     searchArticles(query: $query) {
@@ -77,6 +95,13 @@ export interface IArticleData {
     created_at?: string
     contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
     section: { permalink: string, id: string, name: string }
+}
+
+export interface IUserData {
+    slug: string,
+    first_name: string,
+    last_name: string,
+    email: string
 }
 
 export interface ISearchResults {

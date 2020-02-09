@@ -9,6 +9,7 @@ import { withPageLayout } from './core/withPageLayout';
 import { SignInPage } from './accounts/components/SignInPage';
 import { ArticlesHome } from './core/components/ArticlesHome';
 import { DraftsHome } from './core/components/DraftsHome';
+import { UsersHome } from './core/components/UsersHome';
 
 import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
@@ -63,6 +64,13 @@ export const RoutingApp = ({ }) => (
                 auth={PermissionLevel.Admin}
                 key={Date.now().toString() + "draft/edit"}
                 render={({match}) => <EditArticleForm slug={match.params.slug} publish={false} />}
+            />
+            <AuthorizedRoute
+                path="/users"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/users"
+                component={UsersHome}
             />
             <Route
                 path="*"
