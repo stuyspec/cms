@@ -37,9 +37,6 @@ interface IUserData {
         first_name: string,
         last_name: string,
         email: string,
-        profile_picture_file_name?: string,
-        profile_picture_content_type?: string,
-        profile_picture_file_size?: string,
         profile_picture_updated_at?: string
     }
 }
