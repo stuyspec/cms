@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import { setUpdateArticleSucceeded } from '../actions';
+import { setUpdateUserSucceeded } from '../actions';
 import { FormStateNotification } from './FormStateNotification';
 
-import { ArticleFormBase } from './ArticleFormBase';
+import { UserFormBase } from './UserFormBase';
 
 import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
@@ -13,149 +13,96 @@ import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import { stringToEditorState, editorStateToString } from '../serializeState';
 import { queryAccountIDs, IMedium } from '../queryHelpers';
 
-
 import { schema } from '../schema';
-import { MEDIUM_EXTENSION_INFO_FRAGMENT } from '../queryHelpers';
 
 import { withPageLayout } from '../../core/withPageLayout';
 
 import { snackbarQueue } from '../../snackbarQueue';
 
-const ARTICLE_QUERY = gql`
-query articleBySlug($slug: String!) {
-    articleBySlug(slug: $slug) {
-        id
-        title
-        content
-        volume
-        issue
-        section {
-            id
-        }
-        preview
-        contributors {
-            slug
-        }
-        created_at
-        media {
-            ...MediumExtensionInfo
-        }
+const USER_QUERY = gql`
+query ($slug: String!) {
+    userByFirstName(first_name: $slug) {
+        first_name
+        last_name
+        email
+        profile_picture_file_name
+        profile_picture_content_type
+        profile_picture_file_size
+        profile_picture_updated_at
     }
-}
-${MEDIUM_EXTENSION_INFO_FRAGMENT}
-`
+}`
 
-interface IArticleData {
-    articleBySlug?: {
-        id: string,
-        title: string,
-        content: string,
-        volume: number,
-        issue: number,
-        section: {
-            id: string
-        },
-        preview?: string,
-        contributors?: Array<{
-            slug: string
-        }>,
-        created_at?: string,
-        media?: IMedium[]
+interface IUserData {
+    userByFirstName?: {
+        first_name: string,
+        last_name: string,
+        email: string,
+        profile_picture_file_name?: string,
+        profile_picture_content_type?: string,
+        profile_picture_file_size?: string,
+        profile_picture_updated_at?: string
     }
 }
 
-interface IArticleVariables {
+interface IUserVariables {
     slug: string
 }
 
-class ArticleQuery extends Query<IArticleData, IArticleVariables> { }
+class UserQuery extends Query<IUserData, IUserVariables> { }
 
-const ARTICLE_MUTATION = gql`
-mutation updateArticle(
-    $id: ID!
-    $title: String!,
-    $section_id: Int!,
-    $content: String!,
-    $summary: String,
-    $created_at: String,
-    $outquotes: [String!],
-    $volume: Int,
-    $issue: Int,
-    $contributors: [Int!]!,
-    $is_published: Boolean,
-    $media_ids: [Int!]) {
-        updateArticle(
-            id: $id
-            title: $title, 
-            section_id: $section_id, 
-            content: $content, 
-            summary: $summary, 
-            created_at: $created_at, 
-            outquotes: $outquotes,
-            volume: $volume,
-            issue: $issue,
-            contributors: $contributors,
-            is_published: $is_published,
-            media_ids: $media_ids
-        ) {            
-            id
-            title
-            media {
-                ...MediumExtensionInfo
-            }
-        }
-    }
-    ${MEDIUM_EXTENSION_INFO_FRAGMENT}
-`
+const USER_MUTATION = gql`
+mutation updateUser(
+    $first_name: String!
+    $last_name: String!,
+    $email: String!,
+    $profile_picture_file_name: String,
+    $profile_picture_content_type: String,
+    $profile_picture_file_size: String,
+    $profile_picture_updated_at: String,
+)`
 
 interface IData {
-    id: string,
-    title: string,
+    first_name: string,
 }
 
 interface IVariables {
-    id: string,
-    title: string,
-    section_id: number,
-    content: string,
-    summary?: string,
-    created_at?: string,
-    outquotes?: string[],
-    volume?: number,
-    issue?: number,
-    contributors: number[],
-    is_published: boolean,
-    media_ids: number[]
+    first_name: string,
+    last_name: string,
+    email: string,
+    profile_picture_file_name?: string,
+    profile_picture_content_type?: string,
+    profile_picture_file_size?: string,
+    profile_picture_updated_at?: string,
 }
 
-class UpdateArticleMutation extends Mutation<IData, IVariables> { }
+class UpdateUserMutation extends Mutation<IData, IVariables> { }
 
-const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
+const EditUserUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
     return (
         <ApolloConsumer>
             {
                 (client) => (
-                    <ArticleQuery query={ARTICLE_QUERY} variables={{ slug }}>
+                    <UserQuery query={USER_QUERY} variables={{ slug }}>
                         {
                             ({ loading, data }) => {
                                 if (loading) {
                                     return "Loading"
                                 }
-                                if (data && data.articleBySlug) {
+                                if (data) {
                                     return (
-                                        <UpdateArticleMutation
-                                            mutation={ARTICLE_MUTATION}
+                                        <UpdateUserMutation
+                                            mutation={USER_MUTATION}
                                             onError={(error) => {snackbarQueue.notify({
-                                                title: `Failed to create ${publish ? 'article' : 'draft'}.`, 
+                                                title: `Failed to create ${publish ? 'user' : 'draft'}.`, 
                                                 timeout: 2000
                                             })
-                                                dispatch(setUpdateArticleSucceeded.call(false))
+                                                dispatch(setUpdateUserSucceeded.call(false))
                                             }}
                                             onCompleted={(result) => {snackbarQueue.notify({
-                                                title: `Successfully created ${publish ? 'article' : 'draft'}.`, 
+                                                title: `Successfully created ${publish ? 'user' : 'draft'}.`, 
                                                 timeout: 2000
                                             })
-                                                dispatch(setUpdateArticleSucceeded.call(true))
+                                                dispatch(setUpdateUserSucceeded.call(true))
                                             }}
                                         >
                                             {
@@ -163,35 +110,20 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                                     (
                                                         <>
                                                             <FormStateNotification />
-                                                            <ArticleFormBase
+                                                            <UserFormBase
                                                                 initialState={{
-                                                                    title: data.articleBySlug!.title,
-                                                                    volume: data.articleBySlug!.volume.toString(),
-                                                                    issue: data.articleBySlug!.issue.toString(),
-                                                                    section: data.articleBySlug!.section.id.toString(),
-                                                                    focus: data.articleBySlug!.preview || "",
-                                                                    contributors: data.articleBySlug!.contributors ?
-                                                                        data.articleBySlug!.contributors!.map(c => c.slug) : [],
-                                                                    media: data.articleBySlug!.media ?? [],
-                                                                    editorState: stringToEditorState(data!.articleBySlug!.content, schema)
+                                                                    first_name: data.userByFirstName!.first_name,
+                                                                    last_name: data.userByFirstName!.last_name,
+                                                                    email: data.userByFirstName!.email,
+                                                                    media: data.userByFirstName!.attachment,
                                                                 }}
                                                                 onPost={async (state) => {
-                                                                    const userIDs = await queryAccountIDs(state.contributors, client)
                                                                     mutate({
                                                                         variables: {
-                                                                            id: data!.articleBySlug!.id,
-                                                                            title: state.title,
-                                                                            section_id: parseInt(state.section, 10),
-                                                                            content: editorStateToString(state.editorState),
-                                                                            summary: state.focus,
-                                                                            created_at: data!.articleBySlug!.created_at
-                                                                                || new Date().toISOString(),
-                                                                            outquotes: [],
-                                                                            volume: parseInt(state.volume, 10),
-                                                                            issue: parseInt(state.issue, 10),
-                                                                            contributors: userIDs,
-                                                                            is_published: publish,
-                                                                            media_ids: state.media.map(m => parseInt(m.id))
+                                                                            first_name: data!.userByFirstName!.first_name,
+                                                                            last_name: state.last_name,
+                                                                            email: state.email,
+                                                                            media: state.media
                                                                         }
                                                                     })
                                                                 }}
@@ -200,20 +132,20 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                                         </>
                                                     )
                                             }
-                                        </UpdateArticleMutation>
+                                        </UpdateUserMutation>
                                     )
                                 }
                                 if (data) {
-                                    return "No article with provided slug exists."
+                                    return "No user with provided slug exists."
                                 }
                                 return "Data error."
                             }
                         }
-                    </ArticleQuery>
+                    </UserQuery>
                 )
             }
         </ApolloConsumer>
     )
 }
 
-export const EditArticleForm = connect(null, null)(withPageLayout(EditArticleUnconnected));
+export const EditUserForm = connect(null, null)(withPageLayout(EditUserUnconnected));
