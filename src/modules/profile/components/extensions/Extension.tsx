@@ -4,12 +4,12 @@ import * as ReactDOM from 'react-dom';
 import { extensions } from '@stuyspec/article_extensions';
 import { createUseStyles } from 'react-jss';
 
-import { IMedium } from '../../queryHelpers';
+import { IUserData } from '../../queryHelpers';
 
 type IHelperProps =  {
     type: string,
     props: string,
-    media?: IMedium[]
+    media?: IUserData
 };
 
 const useStyles = createUseStyles({
@@ -58,7 +58,7 @@ interface IProps {
     type: string,
     props: string,
     media?: string,
-    allMedia: IMedium[] | null,
+    allMedia: IUserData.profile_picture | null,
     root: Element,
 };
 

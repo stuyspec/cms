@@ -2,20 +2,26 @@ import gql from 'graphql-tag';
 import { ApolloClient } from 'apollo-client';
 
 const USER_QUERY = gql`
-query userIDBySlug($slug: String!) {
-    userBySlug(slug: $slug) {
-        id
+query userByFirstName($slug: String!) {
+    userByFirstName(first_name: $slug) {
+        first_name
     }
 }`;
 
-interface IUserData {
-    userBySlug?: {
-        id: string
-    }
+export interface IUserData {
+    first_name: string,
+    last_name: string,
+    email: string,
+    attachment_url: string,
+    medium_attachment_url: string,
+    thumb_attachment_url: string
 }
 
-interface IUserVariables {
-    slug: string
+export interface IUserVariables {
+    first_name: string,
+    last_name: string,
+    email: string,
+    profile_picture: string
 }
 
 export async function queryAccountIDs(slugs: string[], client: ApolloClient<any>): Promise<number[]> {
@@ -25,34 +31,40 @@ export async function queryAccountIDs(slugs: string[], client: ApolloClient<any>
             variables: { slug }
         }))
     );
-    const userIDs: number[] = [];
+    const userNames: number[] = [];
     results.forEach(r => {
-        if (r.data && r.data.userBySlug) {
-            userIDs.push(parseInt(r.data.userBySlug.id, 10));
+        if (r.data && r.data.userByFirstName) {
+            userNames.push(parseInt(r.data.first_name, 10));
         }
     }
     )
-    return userIDs;
+    return userNames;
 }
 
-export interface IMedium {
-    id: string,
-    attachment_url: string,
-    medium_attachment_url: string,
-    thumb_attachment_url: string,
-    media_type: string,
-    title: string,
-}
+export const USER_EXTENSION_INFO_FRAGMENT = gql`
+fragment UserExtensionInfo on User {
+    first_name
+    last_name
+    email
+    profile_url
+    medium_attachment_url
+    thumb_attachment_url
+}`
 
-export interface IMediumVariables {
-    user_id: number,
-    media_type: string,
-    attachment_b64: string
-}
 
-export const CREATE_MEDIUM_MUTATION = gql`
-mutation createProfilePicture(
-    media_type: $media_type,
-    attachment_b64: $attachment_b64
-)
-`;
+export const CREATE_USER_MUTATION = gql`
+mutation updateUser(
+    first_name: String!,
+    last_name: String!,
+    email: String!,
+    profile_picture: String
+) {
+    updateUser(
+        first_name: $first_name,
+        last_name: $last_name,
+        email: $email,
+        profile_picture: $profile_picture
+    ) {
+        ...UserExtensionInfo
+    }
+}`;

@@ -33,21 +33,17 @@ mutation createUser(
 interface IData {
     first_name: string,
     last_name: string,
-    email: string
-}
-
-interface IVariables {
-    first_name: string,
-    last_name: string,
     email: string,
+    profile_picture: string
 }
 
-class CreateUserMutation extends Mutation<IData, IVariables> { };
+class CreateUserMutation extends Mutation<IData> { };
 
 const initialUserState = {
     first_name: "",
     last_name: "",
     email: "",
+    profile_picture: ""
 }
 
 const CreateUserUnconnected: React.FC<any> = (props) => {
@@ -81,7 +77,8 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                                         variables: {
                                             first_name: state.first_name,
                                             last_name: state.last_name,
-                                            email: state.email
+                                            email: state.email,
+                                            profile_picture: state.profile_picture
                                         },
                                     });
                                 }}

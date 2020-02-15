@@ -13,21 +13,19 @@ import { createUseStyles } from "react-jss";
 
 import { snackbarQueue } from '../../../../snackbarQueue';
 import { ContributorsField } from '../../helpers/ContributorsField';
-import { CREATE_MEDIUM_MUTATION } from '../../../queryHelpers';
+import { CREATE_USER_MUTATION } from '../../../queryHelpers';
 import classes from "*.module.css";
 
 
 interface IVariables {
-    title: string,
-    user_id: number,
-    caption?: string,
-    attachment_b64: string,
-    media_type: string,
-    is_featured: boolean
+    first_name: string,
+    last_name: number,
+    email: string,
+    profile_picture: string,
 }
 
 interface IData {
-    id: string
+    first_name: string
 }
 
 const useStyles = createUseStyles({
@@ -54,10 +52,6 @@ interface IProps {
 export const MediumDialog: React.FC<IProps> = ({ open, onClose, initialData, isFeatured }) => {
     const styles = useStyles();
 
-    const [title, setTitle] = React.useState(initialData?.title ?? "");
-    const [caption, setCaption] = React.useState(initialData?.caption ?? "");
-    const [contributors, setContributors] = React.useState<string[]>(initialData?.user_id ? [initialData.user_id.toString()] : []);
-    const [imageType, setImageType] = React.useState(initialData?.media_type ?? "");
     const [file, setFile] = React.useState("");
     const [dataURL, setDataURL] = React.useState(initialData?.attachment_b64 ?? "");
     const [uploading, setUploading] = React.useState(false);

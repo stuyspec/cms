@@ -11,7 +11,7 @@ import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 
 import { stringToEditorState, editorStateToString } from '../serializeState';
-import { queryAccountIDs, IMedium } from '../queryHelpers';
+import { queryAccountIDs } from '../queryHelpers';
 
 import { schema } from '../schema';
 
@@ -25,10 +25,7 @@ query ($slug: String!) {
         first_name
         last_name
         email
-        profile_picture_file_name
-        profile_picture_content_type
-        profile_picture_file_size
-        profile_picture_updated_at
+        profile_picture
     }
 }`
 
@@ -37,12 +34,16 @@ interface IUserData {
         first_name: string,
         last_name: string,
         email: string,
-        profile_picture_updated_at?: string
+        attachment_url: string,
+        medium_attachment_url: string,
+        thumb_attachment_url: string,
+        media_type: string
+        profile_picture: string
     }
 }
 
 interface IUserVariables {
-    slug: string
+    first_name: string
 }
 
 class UserQuery extends Query<IUserData, IUserVariables> { }
@@ -52,10 +53,7 @@ mutation updateUser(
     $first_name: String!
     $last_name: String!,
     $email: String!,
-    $profile_picture_file_name: String,
-    $profile_picture_content_type: String,
-    $profile_picture_file_size: String,
-    $profile_picture_updated_at: String,
+    $profile_picture: String 
 )`
 
 interface IData {
@@ -66,20 +64,17 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
-    profile_picture_file_name?: string,
-    profile_picture_content_type?: string,
-    profile_picture_file_size?: string,
-    profile_picture_updated_at?: string,
+    profile_picture: string
 }
 
 class UpdateUserMutation extends Mutation<IData, IVariables> { }
 
-const EditUserUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
+const EditUserUnconnected: React.FunctionComponent<any> = ({ first_name, dispatch }) => {
     return (
         <ApolloConsumer>
             {
                 (client) => (
-                    <UserQuery query={USER_QUERY} variables={{ slug }}>
+                    <UserQuery query={USER_QUERY} variables={{ first_name }}>
                         {
                             ({ loading, data }) => {
                                 if (loading) {
@@ -90,13 +85,13 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, pub
                                         <UpdateUserMutation
                                             mutation={USER_MUTATION}
                                             onError={(error) => {snackbarQueue.notify({
-                                                title: `Failed to create ${publish ? 'user' : 'draft'}.`, 
+                                                title: `Failed to update user.`, 
                                                 timeout: 2000
                                             })
                                                 dispatch(setUpdateUserSucceeded.call(false))
                                             }}
                                             onCompleted={(result) => {snackbarQueue.notify({
-                                                title: `Successfully created ${publish ? 'user' : 'draft'}.`, 
+                                                title: `Successfully updated user.`, 
                                                 timeout: 2000
                                             })
                                                 dispatch(setUpdateUserSucceeded.call(true))
@@ -112,7 +107,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, pub
                                                                     first_name: data.userByFirstName!.first_name,
                                                                     last_name: data.userByFirstName!.last_name,
                                                                     email: data.userByFirstName!.email,
-                                                                    media: data.userByFirstName!.attachment,
+                                                                    profile_picture: data.userByFirstName!.profile_picture,
                                                                 }}
                                                                 onPost={async (state) => {
                                                                     mutate({
@@ -120,7 +115,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, pub
                                                                             first_name: data!.userByFirstName!.first_name,
                                                                             last_name: state.last_name,
                                                                             email: state.email,
-                                                                            media: state.media
+                                                                            profile_picture: state.profile_picture
                                                                         }
                                                                     })
                                                                 }}
