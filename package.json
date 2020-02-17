@@ -5,7 +5,7 @@
   "homepage": "/cms",
   "dependencies": {
     "@aeaton/react-prosemirror": "^0.21.1",
-    "@stuyspec/article_extensions": "^1.0.10",
+    "@stuyspec/article_extensions": "^2.0.1",
     "@types/classnames": "^2.2.6",
     "@types/graphql": "^0.13.4",
     "@types/prosemirror-commands": "^1.0.1",
