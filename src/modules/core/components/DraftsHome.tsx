@@ -10,10 +10,6 @@ import { SearchResults } from './SearchResults';
 
 import { ApolloConsumer } from 'react-apollo';
 
-import { connect } from 'react-redux';
-
-import { IState } from '../../state';
-
 import { ISearchDraftsData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
@@ -24,8 +20,8 @@ const initialState = {
     data: undefined as ISearchDraftsData | undefined,
 }
 
-class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
-    constructor(props: Readonly<any>) {
+class DraftsHomeUnconnected extends React.Component<{}, typeof initialState> {
+    constructor(props: Readonly<{}>) {
         super(props);
         this.state = initialState;
     }
@@ -88,11 +84,4 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
     }
 }
 
-function mapStateToProps(state: IState) {
-    return {
-        createArticleSucceeded: state.editor.createArticleSucceeded,
-        updateArticleSucceeded: state.editor.updateArticleSucceeded
-    }
-}
-
-export const DraftsHome = connect(mapStateToProps, null)(withPageLayout(ArticlesHomeUnconnected));
+export const DraftsHome = withPageLayout(DraftsHomeUnconnected);
