@@ -4,7 +4,6 @@ import './ArticlesHome.css';
 import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
-import { Snackbar } from '@rmwc/snackbar';
 
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
@@ -15,7 +14,6 @@ import { ApolloConsumer } from 'react-apollo';
 import { connect } from 'react-redux';
 
 import { IState } from '../../state';
-import { setCreateArticleSucceeded, setUpdateArticleSucceeded } from '../../editor/actions';
 
 import { ISearchArticlesData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
@@ -86,18 +84,6 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
                 <div className="ArticlesHomeFab">
                     <Fab icon="add" onClick={this.onFabClick} />
                 </div>
-                <Snackbar
-                    open={this.props.createArticleSucceeded}
-                    onClose={() => this.props.dispatch(setCreateArticleSucceeded.call(null))}
-                    message="The article was successfully created."
-                    timeout={2000}
-                />
-                <Snackbar
-                    open={this.props.updateArticleSucceeded}
-                    onClose={() => this.props.dispatch(setUpdateArticleSucceeded.call(null))}
-                    message="The article was successfully updated."
-                    timeout={2000}
-                />
             </>
         )
 

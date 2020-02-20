@@ -1,14 +1,10 @@
 import * as React from 'react';
 
-import { connect } from 'react-redux';
-
-import { setUpdateArticleSucceeded } from '../actions';
-import { FormStateNotification } from './FormStateNotification';
-
 import { ArticleFormBase } from './ArticleFormBase';
 
 import gql from 'graphql-tag';
 import { Query, ApolloConsumer, Mutation } from 'react-apollo';
+import { Redirect } from 'react-router';
 
 import { stringToEditorState, editorStateToString } from '../serializeState';
 import { queryAccountIDs, IMedium } from '../queryHelpers';
@@ -18,6 +14,8 @@ import { schema } from '../schema';
 import { MEDIUM_EXTENSION_INFO_FRAGMENT } from '../queryHelpers';
 
 import { withPageLayout } from '../../core/withPageLayout';
+
+import { snackbarQueue } from '../../snackbarQueue';
 
 const ARTICLE_QUERY = gql`
 query articleBySlug($slug: String!) {
@@ -128,7 +126,15 @@ interface IVariables {
 
 class UpdateArticleMutation extends Mutation<IData, IVariables> { }
 
-const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, publish }) => {
+const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, publish }) => {
+    //if null, no redirect
+    //otherwise redirect to the url stored
+    const [redirectTo, setRedirectTo] = React.useState(null as string | null);
+
+    if (redirectTo !== null) {
+        return <Redirect to={redirectTo} />
+    }
+
     return (
         <ApolloConsumer>
             {
@@ -143,14 +149,24 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
                                     return (
                                         <UpdateArticleMutation
                                             mutation={ARTICLE_MUTATION}
-                                            onError={(error) => dispatch(setUpdateArticleSucceeded.call(false))}
-                                            onCompleted={(result) => dispatch(setUpdateArticleSucceeded.call(true))}
+                                            onError={(error) => {
+                                                snackbarQueue.notify({
+                                                    title: `Failed to edit ${publish ? 'article' : 'draft'}.`,
+                                                    timeout: 2000
+                                                })
+                                            }}
+                                            onCompleted={(result) => {
+                                                snackbarQueue.notify({
+                                                    title: `Successfully edited ${publish ? 'article' : 'draft'}.`,
+                                                    timeout: 2000
+                                                });
+                                                setRedirectTo(publish ? '/articles' : '')
+                                            }}
                                         >
                                             {
                                                 (mutate) =>
                                                     (
                                                         <>
-                                                            <FormStateNotification />
                                                             <ArticleFormBase
                                                                 initialState={{
                                                                     title: data.articleBySlug!.title,
@@ -204,4 +220,4 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, dispatch, 
     )
 }
 
-export const EditArticleForm = connect(null, null)(withPageLayout(EditArticleUnconnected));
+export const EditArticleForm = withPageLayout(EditArticleUnconnected);

@@ -1,9 +1,5 @@
 import * as React from "react";
 
-import { connect } from 'react-redux';
-
-import { setCreateArticleSucceeded } from '../actions';
-
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
 
@@ -16,9 +12,10 @@ import { queryAccountIDs } from '../queryHelpers';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
-import { FormStateNotification } from './FormStateNotification';
+import { snackbarQueue } from '../../snackbarQueue';
 
 import { withPageLayout } from '../../core/withPageLayout';
+import { Redirect } from "react-router";
 
 
 const ARTICLE_MUTATION = gql`
@@ -88,15 +85,30 @@ const initialArticleState = {
     )
 }
 
-const CreateArticleUnconnected: React.FC<any> = (props) => {
-    console.log(props)
+export const CreateArticleUnconnected: React.FC<any> = (props) => {
+    //if null, no redirect
+    //otherwise redirect to the url stored
+    const [redirectTo, setRedirectTo] = React.useState(null as string | null);
+
+    if (redirectTo !== null) {
+        return <Redirect to={redirectTo} />
+    }
+
     return (
         <>
-            <FormStateNotification />
             <CreateArticleMutation
                 mutation={ARTICLE_MUTATION}
-                onError={(error) => props.dispatch(setCreateArticleSucceeded.call(false))}
-                onCompleted={(data) => props.dispatch(setCreateArticleSucceeded.call(true))}
+                onError={(error) => {snackbarQueue.notify({
+                        title: `Failed to create ${props.publish ? 'article' : 'draft'}.`, 
+                        timeout: 2000
+                    })
+                }}
+                onCompleted={(data) => {snackbarQueue.notify({
+                        title: `Successfully created ${props.publish ? 'article' : 'draft'}.`, 
+                        timeout: 2000
+                    });
+                    setRedirectTo(props.publish ? '/articles' : '/')
+                }}
             >
                 {(mutate) => (
                     <ApolloConsumer>
@@ -131,5 +143,4 @@ const CreateArticleUnconnected: React.FC<any> = (props) => {
     )
 }
 
-export const CreateArticleForm = connect(null, null)(withPageLayout(CreateArticleUnconnected));
-
+export const CreateArticleForm = withPageLayout(CreateArticleUnconnected);

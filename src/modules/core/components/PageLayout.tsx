@@ -7,7 +7,6 @@ import { SignOutButton } from "./SignOutButton";
 import { Toolbar, ToolbarTitle, ToolbarRow, ToolbarSection, ToolbarIcon } from '@rmwc/toolbar';
 import { Drawer, DrawerHeader, DrawerTitle, DrawerContent } from '@rmwc/drawer';
 import { List, ListItem } from '@rmwc/list';
-import { IconButton } from '@rmwc/icon-button';
 
 interface IPageLayoutProps {
     children: React.ReactNode
