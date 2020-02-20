@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './EditorHelpers.css'
+import './UserHelpers.css'
 
 import { TextField } from '@rmwc/textfield';
 
@@ -11,22 +11,24 @@ interface IProps {
     required?: boolean
 }
 
-export const FocusField: React.SFC<IProps> = ({
+export const PasswordField: React.SFC<IProps> = ({
     value,
     onChange,
-    label,
     error,
+    label,
     required
 }) => {
     return (
         <TextField
-            className="EditorField"
+            className="UserField"
             value={value}
             onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value)}
             label={label}
             outlined={true}
             size={75}
             required={required}
+            type="Password"
+            minLength="8"
         />
     );
 };

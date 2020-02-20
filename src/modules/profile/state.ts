@@ -1,4 +1,4 @@
-//tracks whether a user's attempt to publish an article succeeded
+//tracks whether a user's attempt to create a user succeeded
 //null signifies no attempt, false a failed attempt, and true a successful one
 export interface IProfileState {
     createUserSucceeded: boolean | null,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './EditorHelpers.css';
+import './UserHelpers.css';
 
 import { TextField } from '@rmwc/textfield';
 
@@ -8,30 +8,26 @@ interface IProps {
     onChange: (s: string) => void,
     error?: string,
     label: string,
-    autoComplete?: string,
     required?: boolean
 }
 
-export const NumberField: React.SFC<IProps> = ({
+export const EmailField: React.SFC<IProps> = ({
     value,
     onChange,
-    label,
     error,
-    autoComplete,
+    label,
     required
 }) => {
     return (
         <TextField
-            className="EditorField"
+            className="UserField"
             value={value}
             onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value)}
-            outlined={true}
-            size={5}
             label={label}
-            autoComplete={autoComplete}
-            required={required}
-            pattern="\d*"
+            outlined={true}
+            size={75}
+            reqiured={required}
+            pattern="/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/"
         />
-    )
+    );
 };
-

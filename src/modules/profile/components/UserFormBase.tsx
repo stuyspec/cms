@@ -1,23 +1,17 @@
 import * as React from 'react';
-import './UserForm.css';
 
-import { EditorState } from "prosemirror-state";
-
-import { RichEditor } from "./RichEditor";
-
-import { NumberField } from './helpers/NumberField';
-import { FocusField } from './helpers/FocusField';
-import { ContributorsField } from './helpers/ContributorsField';
-import { SectionField } from './helpers/SectionField';
-import { FeaturedMediaField } from './helpers/FeaturedMediaField';
+import { NameField } from './helpers/NameField';
+import { EmailField } from './helpers/EmailField';
+import { PasswordField } from './helpers/PasswordField';
+import { ProfilePictureField } from './helpers/ProfilePictureField';
 
 import { Button } from '@rmwc/button';
-import { IMedium } from '../queryHelpers';
 
 interface IState {
     first_name: string,
     last_name: string,
     email: string,
+    password: string,
     profile_picture: string,
 }
 
@@ -27,8 +21,6 @@ interface IProps {
     postLabel: string
 }
 
-//renders the form fields and buttons necessary for creating/editing user data.
-//base for Create/EditUserForm
 export class UserFormBase extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -39,50 +31,38 @@ export class UserFormBase extends React.Component<IProps, IState> {
         return (
             <form onSubmit={(e) => {
                 e.preventDefault();
-                sortMediaByFeatured(this.state.media)
-                this.props.onPost(this.state); 
+                this.props.onPost(this.state);
             }}>
                 <button disabled={true} className="UserFormDisableAutoSubmitButton" type="submit">Hidden button to disable implicit submit</button>
                 <div>
-                    <FocusField
-                        value={this.state.title}
-                        onChange={this.handleTitleChange}
-                        label="Title"
+                    <NameField
+                        value={this.state.first_name}
+                        onChange={this.handleFirstNameChange}
+                        label="First Name"
                         required={true}
                     />
-                    <div className="UserFormHorizontal">
-                        <NumberField
-                            value={this.state.volume}
-                            onChange={this.handleVolumeChange}
-                            label="Volume"
-                            required={true}
-                        />
-                        <NumberField
-                            value={this.state.issue}
-                            onChange={this.handleIssueChange}
-                            label="Issue"
-                            required={true}
-                        />
-                    </div>
-                    <SectionField
-                        value={this.state.section}
-                        onChange={this.handleSectionChange}
+                    <NameField
+                        value={this.state.last_name}
+                        onChange={this.handleLastNameChange}
+                        label="Last Name"
+                        required={true}
                     />
-                    <FocusField
-                        value={this.state.focus}
-                        onChange={this.handleFocusChange}
-                        label="Focus sentence"
+                    <EmailField
+                        value={this.state.email}
+                        onChange={this.handleEmailChange}
+                        label="Email"
+                        required={true}
                     />
-                    <FeaturedMediaField media={this.state.media} onMediumAdd={this.handleMediumChange} />
-                    <ContributorsField value={this.state.contributors} onChange={this.handleContributorsChange} />
-                    <div className="UserFormCenter">
-                        <RichEditor
-                            editorState={this.state.editorState}
-                            onEditorState={this.handleEditorChange}
-                            media={this.state.media}
-                            onMediumAdd={this.handleMediumChange}
-                        />
-                    </div>
+                    <PasswordField
+                        value={this.state.password}
+                        onChange={this.handlePasswordChange}
+                        label="Temporary Password"
+                        required={true}
+                    />
+                    <ProfilePictureField
+                        value={this.state.profile_picture}
+                        onPFPChange={this.handlePFPChange}
+                    />
                 </div>
                 <Button>
                     {this.props.postLabel}
@@ -91,64 +71,29 @@ export class UserFormBase extends React.Component<IProps, IState> {
         )
     }
 
-    private handleTitleChange = (title: string) => {
+    private handleFirstNameChange = (first_name: string) => {
         this.setState({
-            title
+            first_name
         })
     }
-
-    private handleVolumeChange = (volume: string) => {
+    private handleLastNameChange = (last_name: string) => {
         this.setState({
-            volume
+            last_name
         })
     }
-
-    private handleIssueChange = (issue: string) => {
+    private handleEmailChange = (email: string) => {
         this.setState({
-            issue
+            email
         })
     }
-
-    private handleSectionChange = (section: string) => {
+    private handlePasswordChange = (password: string) => {
         this.setState({
-            section
+            password
         })
     }
-
-    private handleFocusChange = (focus: string) => {
+    private handlePFPChange = (m: string) => {
         this.setState({
-            focus
+            profile_picture
         })
     }
-
-    private handleContributorsChange = (contributors: string[]) => {
-        this.setState({
-            contributors
-        })
-    }
-
-    private handleEditorChange = (editorState: EditorState) => {
-        this.setState({
-            editorState
-        })
-    }
-
-    private handleMediumChange = (m: IMedium) => {
-        this.setState({
-            media: this.state.media.concat([m])
-        })
-    }
-}
-
-//used to move featured media to front of media list in sort
-//this means featured media will show up on front page first
-const sortMediaByFeatured = (media: IMedium[]) => {
-    media.sort(sortByFeatured)
-}
-
-const sortByFeatured = (a: IMedium, b: IMedium) => {
-    if(a.is_featured == b.is_featured) {
-        return 0;
-    }
-    return a.is_featured ? 1 : -1;
 }

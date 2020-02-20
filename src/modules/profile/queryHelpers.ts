@@ -13,8 +13,6 @@ export interface IUserData {
     last_name: string,
     email: string,
     attachment_url: string,
-    medium_attachment_url: string,
-    thumb_attachment_url: string
 }
 
 export interface IUserVariables {
@@ -47,24 +45,5 @@ fragment UserExtensionInfo on User {
     last_name
     email
     profile_url
-    medium_attachment_url
-    thumb_attachment_url
 }`
 
-
-export const CREATE_USER_MUTATION = gql`
-mutation updateUser(
-    first_name: String!,
-    last_name: String!,
-    email: String!,
-    profile_picture: String
-) {
-    updateUser(
-        first_name: $first_name,
-        last_name: $last_name,
-        email: $email,
-        profile_picture: $profile_picture
-    ) {
-        ...UserExtensionInfo
-    }
-}`;
