@@ -78,7 +78,7 @@ class UsersHomeUnconnected extends React.Component<any, typeof initialState> {
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <UserSearchResults results={this.state.data.searchUserBySlug || []} type='users' /> : null
+                        this.state.data ? <UserSearchResults results={this.state.data.searchUsers || []} type='users' /> : null
                     }
                 </div>
                 <div className="UsersHomeFab">

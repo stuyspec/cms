@@ -5,7 +5,8 @@ import { IconButton } from '@rmwc/icon-button';
 import { UserCard } from './UserCard';
 import { UserListItem } from './UserListItem';
 
-import { IUserSearchResults } from '../queryHelpers';
+import { IUserData } from '../queryHelpers';
+
 import {
     DataTable,
     DataTableHead,
@@ -22,7 +23,7 @@ const cardPadding = {
 }
 
 interface IProps {
-    results: Array<IUserSearchResults | undefined>,
+    results: Array<IUserData | undefined>,
     type: string
 }
 
@@ -57,11 +58,12 @@ export const UserSearchResults: React.FunctionComponent<IProps> = ({ results, ty
 
 interface IUserSearchResultsProps {
     isListView: boolean,
-    results: Array<IUserSearchResults | undefined>,
+    results: Array<IUserData | undefined>,
     type: string
 }
 
 const UserSearchResultsItems: React.FunctionComponent<IUserSearchResultsProps> = ({ isListView, results, type }) => {
+    console.log(results[0] ? results[0] : null);
     if (isListView) {
         return (
             <DataTable>
@@ -75,7 +77,7 @@ const UserSearchResultsItems: React.FunctionComponent<IUserSearchResultsProps> =
                     </DataTableHead>
                     <DataTableBody>
                         {
-                            results.map(a => a ? <UserListItem data={a.searchable} type={type} key={a.searchable.first_name} /> : null)
+                            results.map(a => a ? <UserListItem data={a} type={type} key={a.first_name}/> : null)
                         }
                     </DataTableBody>
                 </DataTableContent>
@@ -86,8 +88,8 @@ const UserSearchResultsItems: React.FunctionComponent<IUserSearchResultsProps> =
         <>
             {
                 results.map(a => a ?
-                    <div style={cardPadding} key={a.searchable.first_name}>
-                        <UserCard data={a.searchable} type={type} />
+                    <div style={cardPadding} key={a.first_name}>
+                        <UserCard data={a} type={type} />
                     </div>
                     : null
                 )
