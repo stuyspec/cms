@@ -91,7 +91,7 @@ export class UserFormBase extends React.Component<IProps, IState> {
             password
         })
     }
-    private handlePFPChange = (m: string) => {
+    private handlePFPChange = (profile_picture: string) => {
         this.setState({
             profile_picture
         })

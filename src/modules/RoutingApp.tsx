@@ -16,7 +16,7 @@ import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
 
 import { CreateUserForm } from './profile/components/CreateUserForm';
-import { EditUserForm } from './profile/components/EditUserForm';
+//import { EditUserForm } from './profile/components/EditUserForm';
 
 import { NotFound } from './core/components/NotFound';
 

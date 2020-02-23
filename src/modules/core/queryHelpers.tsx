@@ -17,18 +17,17 @@ export interface ISearchVariables {
 }
 
 export interface ISearchUsersData {
-    userByFirstName?: Array<({
+    searchUserBySlug?: Array<({
         searchable: IUserData
     } | undefined)>
 }
 
 export const USER_SEARCH_QUERY = gql`
 query UserQuery($query: String!) {
-    userByFirstName(first_name: $query) {
+    searchUserBySlug(query: $query) {
         first_name
         last_name
         email
-        slug
     }
 }`
 
@@ -96,7 +95,6 @@ export interface IArticleData {
 }
 
 export interface IUserData {
-    slug: string,
     first_name: string,
     last_name: string,
     email: string

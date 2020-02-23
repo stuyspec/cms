@@ -26,7 +26,7 @@ export const NameField: React.SFC<IProps> = ({
             label={label}
             outlined={true}
             size={75}
-            reqiured={required}
+            required={required}
         />
     );
 };

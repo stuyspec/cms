@@ -28,7 +28,7 @@ export const PasswordField: React.SFC<IProps> = ({
             size={75}
             required={required}
             type="Password"
-            minLength="8"
+            minLength={8}
         />
     );
 };
