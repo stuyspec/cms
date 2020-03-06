@@ -13,7 +13,11 @@ export const UserListItem: React.FunctionComponent<IProps> = ({data, type}) => {
     //const articleDate = data.created_at ? new Date(data.created_at) : null;
     return (
         <DataTableRow>
-            <DataTableCell>{data.first_name}</DataTableCell>
+            <DataTableCell>
+                <a href={`/users/edit/${data.slug}`}>
+                    {data.first_name}
+                </a>
+            </DataTableCell>
             <DataTableCell>{data.last_name}</DataTableCell>
             <DataTableCell>{data.email}</DataTableCell>
         </DataTableRow>

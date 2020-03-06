@@ -15,7 +15,8 @@ export const ProfilePictureField: React.SFC<IProps> = ({
     error
 }) => {
     return (
-        <Button 
+        <Button
+            className="mdc-button"
             label="Upload Profile Picture" 
             icon="add" 
             type="file"

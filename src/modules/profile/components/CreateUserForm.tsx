@@ -43,8 +43,8 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
-    password: string,
-    password_confirmation: string,
+    password?: string,
+    password_confirmation?: string,
     profile_picture: string
 }
 
@@ -54,8 +54,10 @@ const initialUserState = {
     first_name: "",
     last_name: "",
     email: "",
-    password: "",
+    password: "Hello",
     password_confirmation: "",
+    isCreate: true,
+    profile_url: "",
     profile_picture: ""
 }
 
@@ -95,7 +97,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                                             email: state.email,
                                             password: state.password,
                                             password_confirmation: state.password,
-                                            profile_picture: state.profile_picture
+                                            profile_picture: state.profile_picture,
                                         }
                                     })
                                 }}

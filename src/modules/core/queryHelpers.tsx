@@ -20,7 +20,8 @@ export interface ISearchUsersData {
     searchUsers?: Array<({
         first_name: string,
         last_name: string,
-        email: string
+        email: string,
+        slug: string
     } | undefined)>
 }
 
@@ -30,6 +31,7 @@ query UserQuery($query: String!) {
         first_name
         last_name
         email
+        slug
     }
 }`
 
@@ -99,7 +101,8 @@ export interface IArticleData {
 export interface IUserData {
     first_name: string,
     last_name: string,
-    email: string
+    email: string,
+    slug: string
 }
 
 export interface ISearchResults {

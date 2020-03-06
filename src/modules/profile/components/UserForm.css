@@ -1,0 +1,12 @@
+.UserFormHorizontal {
+    display: flex;
+}
+
+.UserFormCenter {
+    display: flex;
+    justify-content: center;
+}
+
+.UserFormDisableAutoSubmitButton {
+    display: none;
+}

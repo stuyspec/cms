@@ -16,7 +16,7 @@ import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
 
 import { CreateUserForm } from './profile/components/CreateUserForm';
-//import { EditUserForm } from './profile/components/EditUserForm';
+import { EditUserForm } from './profile/components/EditUserForm';
 
 import { NotFound } from './core/components/NotFound';
 
@@ -80,8 +80,14 @@ export const RoutingApp = ({ }) => (
                 path="/users/new"
                 exact={true}
                 auth={PermissionLevel.Admin}
-                key="/users/new"
+                key={Date.now().toString() + "users/new"}
                 render={() => <CreateUserForm/>}
+            />
+            <AuthorizedRoute
+                path="/users/edit/:slug"
+                auth={PermissionLevel.Admin}
+                key={Date.now().toString() + "users/edit"}
+                render={({match}) => <EditUserForm slug={match.params.slug} />}
             />
             <Route
                 path="*"

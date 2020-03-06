@@ -9,6 +9,7 @@ interface IProps {
     error?: string,
     label: string,
     required?: boolean
+    disabled: boolean
 }
 
 export const PasswordField: React.SFC<IProps> = ({
@@ -16,7 +17,8 @@ export const PasswordField: React.SFC<IProps> = ({
     onChange,
     error,
     label,
-    required
+    required,
+    disabled
 }) => {
     return (
         <TextField
@@ -29,6 +31,7 @@ export const PasswordField: React.SFC<IProps> = ({
             required={required}
             type="Password"
             minLength={8}
+            disabled={disabled}
         />
     );
 };

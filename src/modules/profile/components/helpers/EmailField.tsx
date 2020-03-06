@@ -28,7 +28,7 @@ export const EmailField: React.SFC<IProps> = ({
             size={75}
             required={required}
             pattern=".*@.*"
-            autocomplete="Off"
+            autoComplete="false"
         />
     );
 };
