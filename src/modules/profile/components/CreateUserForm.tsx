@@ -1,0 +1,114 @@
+import * as React from "react";
+
+import gql from "graphql-tag";
+
+import { ApolloConsumer, Mutation } from 'react-apollo';
+
+import { UserFormBase } from './UserFormBase';
+
+import { snackbarQueue } from '../../snackbarQueue';
+
+import { withPageLayout } from '../../core/withPageLayout';
+import { Redirect } from "react-router";
+
+
+const USER_MUTATION = gql`
+mutation createUser(
+    $first_name: String!,
+    $last_name: String!,
+    $email: String!,
+    $password: String!,
+    $password_confirmation: String!,
+    $profile_picture: String
+) {
+    createUser(
+        first_name: $first_name,
+        last_name: $last_name,
+        email: $email,
+        password: $password,
+        password_confirmation: $password_confirmation,
+        profile_picture: $profile_picture
+    ) {
+        id
+        first_name
+    }
+}`;
+
+interface IData {
+    id: string,
+    first_name: string
+}
+
+interface IVariables {
+    first_name: string,
+    last_name: string,
+    email: string,
+    password?: string,
+    password_confirmation?: string,
+    profile_picture: string
+}
+
+class CreateUserMutation extends Mutation<IData, IVariables> { };
+
+const initialUserState = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "Hello",
+    password_confirmation: "",
+    isCreate: true,
+    profile_url: "",
+    profile_picture: ""
+}
+
+const CreateUserUnconnected: React.FC<any> = (props) => {
+    const [redirectTo, setRedirectTo] = React.useState(null as string | null);
+
+    if (redirectTo !== null) {
+        return <Redirect to={redirectTo} />
+    }
+
+    return (
+        <>
+            <CreateUserMutation 
+                mutation={USER_MUTATION}
+                onError={(error) => {snackbarQueue.notify({
+                    title: 'Failed to create user',
+                    timeout: 2000
+                    })
+                }}
+                onCompleted={(data) => {snackbarQueue.notify({
+                    title: 'Sucessfully created user',
+                    timeout: 2000
+                    })
+                }}
+            >
+                {(mutate) => (
+                    <ApolloConsumer>
+                        {(client) => (
+                            <UserFormBase
+                                initialState={initialUserState}
+                                postLabel="Create"
+                                onPost={async (state) => {
+                                    mutate({
+                                        variables: {
+                                            first_name: state.first_name,
+                                            last_name: state.last_name,
+                                            email: state.email,
+                                            password: state.password,
+                                            password_confirmation: state.password,
+                                            profile_picture: state.profile_picture,
+                                        }
+                                    })
+                                }}
+                            />
+                        )}
+                    </ApolloConsumer>
+                )}
+            </CreateUserMutation>
+        </>
+    )
+}
+
+export const CreateUserForm = withPageLayout(CreateUserUnconnected);
+                        

@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import { Typography } from '@rmwc/typography';
 import { IconButton } from '@rmwc/icon-button';
-import { ArticleCard } from './ArticleCard';
-import { ArticleListItem } from './ArticleListItem';
+import { UserCard } from './UserCard';
+import { UserListItem } from './UserListItem';
 
-import { ISearchResults } from '../queryHelpers';
+import { IUserData } from '../queryHelpers';
+
 import {
     DataTable,
     DataTableHead,
@@ -22,7 +23,7 @@ const cardPadding = {
 }
 
 interface IProps {
-    results: Array<ISearchResults | undefined>,
+    results: Array<IUserData | undefined>,
     type: string
 }
 
@@ -33,7 +34,7 @@ const useStyles = createUseStyles({
     }
 })
 
-export const SearchResults: React.FunctionComponent<IProps> = ({ results, type }) => {
+export const UserSearchResults: React.FunctionComponent<IProps> = ({ results, type }) => {
     const styles = useStyles();
 
     const [isListView, setIsListView] = React.useState(true);
@@ -48,36 +49,35 @@ export const SearchResults: React.FunctionComponent<IProps> = ({ results, type }
                     title={isListView ? "Stream view" : "List view"}
                 />
             </div>
-            <SearchResultsItems isListView={isListView} results={results} type={type} />
+            <UserSearchResultsItems isListView={isListView} results={results} type={type} />
         </>
     )
 
 
 }
 
-interface ISearchResultsProps {
+interface IUserSearchResultsProps {
     isListView: boolean,
-    results: Array<ISearchResults | undefined>,
+    results: Array<IUserData | undefined>,
     type: string
 }
 
-const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isListView, results, type }) => {
+const UserSearchResultsItems: React.FunctionComponent<IUserSearchResultsProps> = ({ isListView, results, type }) => {
+    console.log(results[0] ? results[0] : null);
     if (isListView) {
         return (
             <DataTable>
                 <DataTableContent>
                     <DataTableHead>
                         <DataTableRow>
-                            <DataTableHeadCell>Title</DataTableHeadCell>
-                            <DataTableHeadCell>Volume</DataTableHeadCell>
-                            <DataTableHeadCell>Issue</DataTableHeadCell>
-                            <DataTableHeadCell>Section</DataTableHeadCell>
-                            <DataTableHeadCell alignEnd>Date</DataTableHeadCell>
+                            <DataTableHeadCell>First</DataTableHeadCell>
+                            <DataTableHeadCell>Last</DataTableHeadCell>
+                            <DataTableHeadCell alignEnd>Email</DataTableHeadCell>
                         </DataTableRow>
                     </DataTableHead>
                     <DataTableBody>
                         {
-                            results.map(a => a ? <ArticleListItem data={a.searchable} type={type} key={a.searchable.id} /> : null)
+                            results.map(a => a ? <UserListItem data={a} type={type} key={a.first_name}/> : null)
                         }
                     </DataTableBody>
                 </DataTableContent>
@@ -88,8 +88,8 @@ const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isLi
         <>
             {
                 results.map(a => a ?
-                    <div style={cardPadding} key={a.searchable.id}>
-                        <ArticleCard data={a.searchable} type={type} />
+                    <div style={cardPadding} key={a.first_name}>
+                        <UserCard data={a} type={type} />
                     </div>
                     : null
                 )
