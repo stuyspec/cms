@@ -12,6 +12,7 @@ import { snackbarQueue } from '../../snackbarQueue';
 const USER_QUERY = gql`
 query userBySlug($slug: String!) {
     userBySlug(slug: $slug) {
+        id
         first_name
         last_name
         email
@@ -21,6 +22,7 @@ query userBySlug($slug: String!) {
 
 interface IUserData {
     userBySlug?: {
+        id: string,
         first_name: string,
         last_name: string,
         email: string,
@@ -40,9 +42,11 @@ mutation updateUser(
     $first_name: String!,
     $last_name: String!,
     $email: String!,
-    $profile_picture: String!,
+    $profile_picture: String,
+    $id: ID!,
     ) {
         updateUser(
+            id: $id,
             first_name: $first_name,
             last_name: $last_name,
             email: $email,
@@ -60,6 +64,7 @@ interface IData {
 }
 
 interface IVariables {
+    id: string,
     first_name: string,
     last_name: string,
     email: string,
@@ -120,10 +125,11 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                 onPost={async (state) => {
                                                                     mutate({
                                                                         variables: {
-                                                                            first_name: data.userBySlug!.first_name,
-                                                                            last_name: data.userBySlug!.last_name,
-                                                                            email: data.userBySlug!.email,
-                                                                            profile_picture: data.profile_picture
+                                                                            id: data.userBySlug!.id,
+                                                                            first_name: state.first_name,
+                                                                            last_name: state.last_name,
+                                                                            email: state.email,
+                                                                            profile_picture: state.profile_picture
                                                                         }
                                                                     })
                                                                 }}

@@ -38,7 +38,14 @@ export const RoutingApp = ({ }) => (
                 key="/"
                 component={DraftsHome}
             />
-             <AuthorizedRoute
+            <AuthorizedRoute
+                path="/cms"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/"
+                component={DraftsHome}
+            />
+            <AuthorizedRoute
                 path="/articles"
                 exact={true}
                 auth={PermissionLevel.Admin}
