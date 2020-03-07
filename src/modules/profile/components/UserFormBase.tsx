@@ -71,8 +71,9 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     />
                     <br/>
                     {password}
+                    <img src={this.state.profile_url}/>
                     <ProfilePictureField
-                        value={this.state.profile_url}
+                        value={this.state.profile_picture}
                         onPFPChange={this.handlePFPChange}
                     />
                 </div>

@@ -25,7 +25,8 @@ interface IUserData {
         last_name: string,
         email: string,
         profile_url: string,
-    }
+    },
+    profile_picture: string
 }
 
 interface IUserVariables {
@@ -62,7 +63,7 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
-    profile_url: string
+    profile_picture: string
 }
 
 class UpdateUserMutation extends Mutation<IData, IVariables> { }
@@ -122,7 +123,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                             first_name: data.userBySlug!.first_name,
                                                                             last_name: data.userBySlug!.last_name,
                                                                             email: data.userBySlug!.email,
-                                                                            profile_url: data.userBySlug!.profile_url
+                                                                            profile_picture: data.profile_picture
                                                                         }
                                                                     })
                                                                 }}

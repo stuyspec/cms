@@ -81,6 +81,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                     title: 'Sucessfully created user',
                     timeout: 2000
                     })
+                    setRedirectTo('/users')
                 }}
             >
                 {(mutate) => (
