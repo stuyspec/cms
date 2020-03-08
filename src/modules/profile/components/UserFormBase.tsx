@@ -15,7 +15,7 @@ interface IState {
     password: string,
     profile_url: string,
     isCreate: boolean,
-    profile_picture: string
+    profile_picture_b64: string
 }
 
 interface IProps {
@@ -72,8 +72,7 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     <br/>
                     {password}
                     <ProfilePictureField
-                        value={this.state.profile_url}
-                        profile_picture={this.state.profile_picture}
+                        profile_url={this.state.profile_url}
                         onPFPChange={this.handlePFPChange}
                     />
                 </div>
@@ -104,10 +103,10 @@ export class UserFormBase extends React.Component<IProps, IState> {
             password
         })
     }
-    private handlePFPChange = (profile_url: string, profile_picture: string) => {
+    private handlePFPChange = (profile_url: string, profile_picture_b64: string) => {
         this.setState({
             profile_url,
-            profile_picture
+            profile_picture_b64
         })
     }
 }

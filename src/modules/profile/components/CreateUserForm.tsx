@@ -19,7 +19,7 @@ mutation createUser(
     $email: String!,
     $password: String!,
     $password_confirmation: String!,
-    $profile_picture: String
+    $profile_picture_b64: String
 ) {
     createUser(
         first_name: $first_name,
@@ -27,7 +27,7 @@ mutation createUser(
         email: $email,
         password: $password,
         password_confirmation: $password_confirmation,
-        profile_picture: $profile_picture
+        profile_picture_b64: $profile_picture_b64
     ) {
         id
         first_name
@@ -45,7 +45,7 @@ interface IVariables {
     email: string,
     password?: string,
     password_confirmation?: string,
-    profile_picture: string
+    profile_picture_b64: string
 }
 
 class CreateUserMutation extends Mutation<IData, IVariables> { };
@@ -58,7 +58,7 @@ const initialUserState = {
     password_confirmation: "",
     isCreate: true,
     profile_url: "",
-    profile_picture: ""
+    profile_picture_b64: ""
 }
 
 const CreateUserUnconnected: React.FC<any> = (props) => {
@@ -98,7 +98,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                                             email: state.email,
                                             password: state.password,
                                             password_confirmation: state.password,
-                                            profile_picture: state.profile_picture,
+                                            profile_picture_b64: state.profile_picture_b64,
                                         }
                                     })
                                 }}

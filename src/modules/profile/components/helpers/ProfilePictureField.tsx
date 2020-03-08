@@ -7,20 +7,17 @@ import { snackbarQueue } from '../../../snackbarQueue';
 import '@material/button/dist/mdc.button.css';
 
 interface IProps {
-    value: string,
-    profile_picture: string,
+    profile_url: string,
     onPFPChange: (m: string, n: string) => void,
     error?: string
 }
 
 export const ProfilePictureField: React.SFC<IProps> = ({
-    value,
-    profile_picture,
+    profile_url,
     onPFPChange,
     error
 }) => {
-    const [dataURL, setDataURL] = React.useState(value ?? "");
-    const [file, setFile] = React.useState("");
+    const [file, setFile] = React.useState(profile_url ?? "");
     const reader = new FileReader();
     reader.onloadend = (e) => { 
         setFile(reader.result as string); 

@@ -28,7 +28,7 @@ interface IUserData {
         email: string,
         profile_url: string,
     },
-    profile_picture: string
+    profile_picture_b64: string
 }
 
 interface IUserVariables {
@@ -42,7 +42,7 @@ mutation updateUser(
     $first_name: String!,
     $last_name: String!,
     $email: String!,
-    $profile_picture: String,
+    $profile_picture_b64: String,
     $id: ID!,
     ) {
         updateUser(
@@ -50,7 +50,7 @@ mutation updateUser(
             first_name: $first_name,
             last_name: $last_name,
             email: $email,
-            profile_picture_b64: $profile_picture,
+            profile_picture_b64: $profile_picture_b64,
         ) {
             id
             first_name
@@ -68,7 +68,7 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
-    profile_picture: string
+    profile_picture_b64: string
 }
 
 class UpdateUserMutation extends Mutation<IData, IVariables> { }
@@ -120,7 +120,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                     profile_url: data.userBySlug!.profile_url,
                                                                     password: "",
                                                                     isCreate: false,
-                                                                    profile_picture: ""
+                                                                    profile_picture_b64: ""
                                                                 }}
                                                                 onPost={async (state) => {
                                                                     mutate({
@@ -129,7 +129,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                             first_name: state.first_name,
                                                                             last_name: state.last_name,
                                                                             email: state.email,
-                                                                            profile_picture: state.profile_picture
+                                                                            profile_picture_b64: state.profile_picture_b64
                                                                         }
                                                                     })
                                                                 }}
