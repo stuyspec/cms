@@ -71,9 +71,16 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     />
                     <br/>
                     {password}
+                    <br/>
+                    <img 
+                        style={{marginLeft: "1%"}} 
+                        src={this.state.profile_picture_b64 || 
+                             this.state.profile_url}
+                    />
+                    <br/>
                     <ProfilePictureField
-                        profile_url={this.state.profile_url}
                         onPFPChange={this.handlePFPChange}
+                        onPFPURLChange={this.handlePFPURLChange}
                     />
                 </div>
                 <Button>
@@ -103,10 +110,14 @@ export class UserFormBase extends React.Component<IProps, IState> {
             password
         })
     }
-    private handlePFPChange = (profile_url: string, profile_picture_b64: string) => {
+    private handlePFPChange = (profile_picture_b64: string) => {
         this.setState({
-            profile_url,
             profile_picture_b64
+        })
+    }
+    private handlePFPURLChange = (profile_url: string) => {
+        this.setState({
+            profile_url
         })
     }
 }
