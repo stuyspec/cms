@@ -50,7 +50,7 @@ mutation updateUser(
             first_name: $first_name,
             last_name: $last_name,
             email: $email,
-            profile_picture: $profile_picture,
+            profile_picture_b64: $profile_picture,
         ) {
             id
             first_name
