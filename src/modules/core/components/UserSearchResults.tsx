@@ -77,7 +77,7 @@ const UserSearchResultsItems: React.FunctionComponent<IUserSearchResultsProps> =
                     </DataTableHead>
                     <DataTableBody>
                         {
-                            results.map(a => a ? <UserListItem data={a} type={type} key={a.first_name}/> : null)
+                            results.map(a => a ? <UserListItem data={a} type={type} key={a.slug}/> : null)
                         }
                     </DataTableBody>
                 </DataTableContent>

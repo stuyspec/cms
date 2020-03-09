@@ -1,34 +1,33 @@
 import * as React from 'react';
-import './UserHelpers.css'
 
-import { TextField } from '@rmwc/textfield';
+import { Select } from '@rmwc/select';
 
 interface IProps {
-    value: string,
+    role: string,
     onChange: (s: string) => void,
     error?: string,
     label: string,
-    required?: boolean
+    required?: boolean,
 }
 
-export const PasswordField: React.SFC<IProps> = ({
-    value,
+export const RoleField: React.SFC<IProps> = ({
+    role,
     onChange,
     error,
     label,
     required
 }) => {
     return (
-        <TextField
+        <Select
             className="UserField"
-            value={value}
+            value={role}
             onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value)}
             label={label}
-            outlined={true}
-            size={75}
+            enhanced
+            outlined
+            options={["Contributor", "Illustrator", "Photographer"]}
             required={required}
-            type="Password"
-            minLength={8}
         />
     );
 };
+

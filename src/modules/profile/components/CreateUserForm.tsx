@@ -19,7 +19,8 @@ mutation createUser(
     $email: String!,
     $password: String!,
     $password_confirmation: String!,
-    $profile_picture_b64: String
+    $profile_picture_b64: String,
+    $role: String!
 ) {
     createUser(
         first_name: $first_name,
@@ -27,7 +28,8 @@ mutation createUser(
         email: $email,
         password: $password,
         password_confirmation: $password_confirmation,
-        profile_picture_b64: $profile_picture_b64
+        profile_picture_b64: $profile_picture_b64,
+        role: $role
     ) {
         id
         first_name
@@ -45,6 +47,7 @@ interface IVariables {
     email: string,
     password?: string,
     password_confirmation?: string,
+    role: string,
     profile_picture_b64: string
 }
 
@@ -57,6 +60,7 @@ const initialUserState = {
     password: "Hello",
     password_confirmation: "",
     isCreate: true,
+    role: "",
     profile_url: "",
     profile_picture_b64: ""
 }
@@ -98,6 +102,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                                             email: state.email,
                                             password: state.password,
                                             password_confirmation: state.password,
+                                            role: state.role,
                                             profile_picture_b64: state.profile_picture_b64,
                                         }
                                     })

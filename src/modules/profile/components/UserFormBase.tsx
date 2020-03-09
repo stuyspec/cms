@@ -4,6 +4,7 @@ import "./UserForm.css"
 import { NameField } from './helpers/NameField';
 import { EmailField } from './helpers/EmailField';
 import { PasswordField } from './helpers/PasswordField';
+import { RoleField } from './helpers/RoleField';
 import { ProfilePictureField } from './helpers/ProfilePictureField';
 
 import { Button } from '@rmwc/button';
@@ -14,6 +15,7 @@ interface IState {
     email: string,
     password: string,
     profile_url: string,
+    role: string,
     isCreate: boolean,
     profile_picture_b64: string
 }
@@ -38,7 +40,6 @@ export class UserFormBase extends React.Component<IProps, IState> {
                             onChange={this.handlePasswordChange}
                             label="Temporary Password"
                             required={this.state.isCreate}
-                            disabled={!this.state.isCreate}
                         /> 
                         <br/>
                     </div>;
@@ -71,6 +72,12 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     />
                     <br/>
                     {password}
+                    <RoleField
+                        role={this.state.role}
+                        onChange={this.handleRoleChange}
+                        label="Role"
+                        required={this.state.isCreate}
+                    />
                     <br/>
                     <img 
                         style={{marginLeft: "1%"}} 
@@ -108,6 +115,11 @@ export class UserFormBase extends React.Component<IProps, IState> {
     private handlePasswordChange = (password: string) => {
         this.setState({
             password
+        })
+    }
+    private handleRoleChange = (role: string) => {
+        this.setState({
+            role
         })
     }
     private handlePFPChange = (profile_picture_b64: string) => {

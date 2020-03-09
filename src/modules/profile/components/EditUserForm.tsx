@@ -43,6 +43,7 @@ mutation updateUser(
     $last_name: String!,
     $email: String!,
     $profile_picture_b64: String,
+    $role: String,
     $id: ID!,
     ) {
         updateUser(
@@ -50,6 +51,7 @@ mutation updateUser(
             first_name: $first_name,
             last_name: $last_name,
             email: $email,
+            role: $role,
             profile_picture_b64: $profile_picture_b64,
         ) {
             id
@@ -68,6 +70,7 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
+    role: string,
     profile_picture_b64: string
 }
 
@@ -119,6 +122,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                     email: data.userBySlug!.email,
                                                                     profile_url: data.userBySlug!.profile_url,
                                                                     password: "",
+                                                                    role: "",
                                                                     isCreate: false,
                                                                     profile_picture_b64: ""
                                                                 }}
@@ -129,6 +133,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                             first_name: state.first_name,
                                                                             last_name: state.last_name,
                                                                             email: state.email,
+                                                                            role: state.role,
                                                                             profile_picture_b64: state.profile_picture_b64
                                                                         }
                                                                     })
