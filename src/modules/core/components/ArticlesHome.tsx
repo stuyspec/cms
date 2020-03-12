@@ -8,12 +8,7 @@ import { Fab } from '@rmwc/fab';
 import { SearchBar } from './SearchBar';
 import { SearchResults } from './SearchResults';
 
-import gql from 'graphql-tag';
 import { ApolloConsumer } from 'react-apollo';
-
-import { connect } from 'react-redux';
-
-import { IState } from '../../state';
 
 import { ISearchArticlesData, ISearchVariables, ARTICLE_SEARCH_QUERY } from '../queryHelpers';
 
@@ -26,8 +21,8 @@ const initialState = {
     data: undefined as ISearchArticlesData | undefined,
 }
 
-class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> {
-    constructor(props: Readonly<any>) {
+class ArticlesHomeUnconnected extends React.Component<{}, typeof initialState> {
+    constructor(props: Readonly<{}>) {
         super(props);
         this.state = initialState;
     }
@@ -90,11 +85,4 @@ class ArticlesHomeUnconnected extends React.Component<any, typeof initialState> 
     }
 }
 
-function mapStateToProps(state: IState) {
-    return {
-        createArticleSucceeded: state.editor.createArticleSucceeded,
-        updateArticleSucceeded: state.editor.updateArticleSucceeded
-    }
-}
-
-export const ArticlesHome = connect(mapStateToProps, null)(withPageLayout(ArticlesHomeUnconnected));
+export const ArticlesHome = withPageLayout(ArticlesHomeUnconnected);

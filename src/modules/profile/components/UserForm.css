@@ -1,12 +1,12 @@
-.ArticleFormHorizontal {
+.UserFormHorizontal {
     display: flex;
 }
 
-.ArticleFormCenter {
+.UserFormCenter {
     display: flex;
     justify-content: center;
 }
 
-.ArticleFormDisableAutoSubmitButton {
+.UserFormDisableAutoSubmitButton {
     display: none;
 }

@@ -1,32 +1,33 @@
 import * as React from 'react';
-import './EditorHelpers.css'
 
-import { TextField } from '@rmwc/textfield';
+import { Select } from '@rmwc/select';
 
 interface IProps {
-    value: string,
+    role: string,
     onChange: (s: string) => void,
     error?: string,
     label: string,
-    required?: boolean
+    required?: boolean,
 }
 
-export const FocusField: React.SFC<IProps> = ({
-    value,
+export const RoleField: React.SFC<IProps> = ({
+    role,
     onChange,
-    label,
     error,
+    label,
     required
 }) => {
     return (
-        <TextField
-            className="EditorField"
-            value={value}
+        <Select
+            className="UserField"
+            value={role}
             onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value)}
             label={label}
-            outlined={true}
-            size={75}
+            enhanced
+            outlined
+            options={["Contributor", "Illustrator", "Photographer"]}
             required={required}
         />
     );
 };
+

@@ -1,27 +1,33 @@
 import * as React from 'react';
+import './UsersHome.css';
 
 import { Redirect } from 'react-router-dom';
 
 import { Fab } from '@rmwc/fab';
-import { Typography } from '@rmwc/typography';
 
 import { SearchBar } from './SearchBar';
-import { SearchResults } from './SearchResults';
+import { UserSearchResults } from './UserSearchResults';
 
+import gql from 'graphql-tag';
 import { ApolloConsumer } from 'react-apollo';
 
-import { ISearchDraftsData, ISearchVariables, DRAFT_SEARCH_QUERY } from '../queryHelpers';
+import { connect } from 'react-redux';
+
+import { IState } from '../../state';
+
+import { ISearchUsersData, ISearchVariables, USER_SEARCH_QUERY } from '../queryHelpers';
 
 import { withPageLayout } from '../withPageLayout';
+import { Typography } from '@rmwc/typography';
 
 const initialState = {
     searchQuery: "",
-    redirectCreateArticle: false,
-    data: undefined as ISearchDraftsData | undefined,
+    redirectCreateUsers: false,
+    data: undefined as ISearchUsersData | undefined,
 }
 
-class DraftsHomeUnconnected extends React.Component<{}, typeof initialState> {
-    constructor(props: Readonly<{}>) {
+class UsersHomeUnconnected extends React.Component<any, typeof initialState> {
+    constructor(props: Readonly<any>) {
         super(props);
         this.state = initialState;
     }
@@ -34,29 +40,29 @@ class DraftsHomeUnconnected extends React.Component<{}, typeof initialState> {
 
     public onFabClick = () => {
         this.setState({
-            redirectCreateArticle: true
+            redirectCreateUsers: true
         })
     }
 
     public render() {
-        if (this.state.redirectCreateArticle) {
-            return <Redirect to="/draft/new" push={true} />
+        if (this.state.redirectCreateUsers) {
+            return <Redirect to="/users/new" push={true} />
         }
         return (
             <>
-                <div className="ArticlesHomeContainer">
+                    <div className="UsersHomeContainer">
                     <ApolloConsumer>
                         {
                             (client) => {
                                 return (
                                     <>
-                                        <Typography use="headline1">Drafts</Typography>
+                                        <Typography use="headline1">Users</Typography>
                                         <SearchBar
                                             onChange={this.onSearchChange}
                                             value={this.state.searchQuery}
                                             onEnter={async () => {
-                                                const results = await client.query<ISearchDraftsData, ISearchVariables>({
-                                                    query: DRAFT_SEARCH_QUERY,
+                                                const results = await client.query<ISearchUsersData, ISearchVariables>({
+                                                    query: USER_SEARCH_QUERY,
                                                     variables: {
                                                         query: this.state.searchQuery
                                                     }
@@ -72,10 +78,10 @@ class DraftsHomeUnconnected extends React.Component<{}, typeof initialState> {
                         }
                     </ApolloConsumer>
                     {
-                        this.state.data ? <SearchResults results={this.state.data.searchUnpublishedArticles || []} type={'draft'} /> : null
+                        this.state.data ? <UserSearchResults results={this.state.data.searchUsers || []} type='users' /> : null
                     }
                 </div>
-                <div className="ArticlesHomeFab">
+                <div className="UsersHomeFab">
                     <Fab icon="add" onClick={this.onFabClick} />
                 </div>
             </>
@@ -84,4 +90,11 @@ class DraftsHomeUnconnected extends React.Component<{}, typeof initialState> {
     }
 }
 
-export const DraftsHome = withPageLayout(DraftsHomeUnconnected);
+function mapStateToProps(state: IState) {
+    return {
+        createUserSucceeded: state.profile.createUserSucceeded,
+        updateUserSucceeded: state.profile.updateUserSucceeded
+    }
+}
+
+export const UsersHome = connect(mapStateToProps, null)(withPageLayout(UsersHomeUnconnected));

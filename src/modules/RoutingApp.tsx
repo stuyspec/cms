@@ -9,9 +9,14 @@ import { withPageLayout } from './core/withPageLayout';
 import { SignInPage } from './accounts/components/SignInPage';
 import { ArticlesHome } from './core/components/ArticlesHome';
 import { DraftsHome } from './core/components/DraftsHome';
+import { UsersHome } from './core/components/UsersHome';
+
 
 import { CreateArticleForm } from './editor/components/CreateArticleForm';
 import { EditArticleForm } from './editor/components/EditArticleForm';
+
+import { CreateUserForm } from './profile/components/CreateUserForm';
+import { EditUserForm } from './profile/components/EditUserForm';
 
 import { NotFound } from './core/components/NotFound';
 
@@ -33,7 +38,14 @@ export const RoutingApp = ({ }) => (
                 key="/"
                 component={DraftsHome}
             />
-             <AuthorizedRoute
+            <AuthorizedRoute
+                path="/cms"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/"
+                component={DraftsHome}
+            />
+            <AuthorizedRoute
                 path="/articles"
                 exact={true}
                 auth={PermissionLevel.Admin}
@@ -63,6 +75,26 @@ export const RoutingApp = ({ }) => (
                 auth={PermissionLevel.Admin}
                 key={Date.now().toString() + "draft/edit"}
                 render={({match}) => <EditArticleForm slug={match.params.slug} publish={false} />}
+            />
+            <AuthorizedRoute
+                path="/users"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key="/users"
+                component={UsersHome}
+            />
+            <AuthorizedRoute
+                path="/users/new"
+                exact={true}
+                auth={PermissionLevel.Admin}
+                key={Date.now().toString() + "users/new"}
+                render={() => <CreateUserForm/>}
+            />
+            <AuthorizedRoute
+                path="/users/edit/:slug"
+                auth={PermissionLevel.Admin}
+                key={Date.now().toString() + "users/edit"}
+                render={({match}) => <EditUserForm slug={match.params.slug} />}
             />
             <Route
                 path="*"
