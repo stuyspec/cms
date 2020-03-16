@@ -16,7 +16,7 @@ query userBySlug($slug: String!) {
         first_name
         last_name
         email
-        profile_url
+        profile_pic_url
     }
 }`
 
@@ -26,7 +26,7 @@ interface IUserData {
         first_name: string,
         last_name: string,
         email: string,
-        profile_url: string,
+        profile_pic_url: string,
     },
     profile_picture_b64: string
 }
@@ -120,7 +120,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                     first_name: data.userBySlug!.first_name,
                                                                     last_name: data.userBySlug!.last_name,
                                                                     email: data.userBySlug!.email,
-                                                                    profile_url: data.userBySlug!.profile_url,
+                                                                    profile_pic_url: data.userBySlug!.profile_pic_url,
                                                                     password: "",
                                                                     role: "",
                                                                     isCreate: false,

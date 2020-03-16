@@ -6,7 +6,7 @@ import '@material/button/dist/mdc.button.css';
 
 interface IProps {
     onPFPChange: (profile_picture: string) => void,
-    onPFPURLChange: (profile_url: string) => void,
+    onPFPURLChange: (profile_pic_url: string) => void,
     error?: string
 }
 

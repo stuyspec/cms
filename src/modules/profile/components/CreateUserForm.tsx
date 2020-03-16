@@ -61,7 +61,7 @@ const initialUserState = {
     password_confirmation: "",
     isCreate: true,
     role: "",
-    profile_url: "",
+    profile_pic_url: "",
     profile_picture_b64: ""
 }
 

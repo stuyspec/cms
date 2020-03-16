@@ -14,7 +14,7 @@ interface IState {
     last_name: string,
     email: string,
     password: string,
-    profile_url: string,
+    profile_pic_url: string,
     role: string,
     isCreate: boolean,
     profile_picture_b64: string
@@ -80,9 +80,10 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     />
                     <br/>
                     <img 
-                        style={{marginLeft: "1%"}} 
+                        style={{marginLeft: "20px", marginTop:"5px"}} 
                         src={this.state.profile_picture_b64 || 
-                             this.state.profile_url}
+                            this.state.profile_pic_url}
+                        height={200}
                     />
                     <br/>
                     <ProfilePictureField
@@ -127,9 +128,9 @@ export class UserFormBase extends React.Component<IProps, IState> {
             profile_picture_b64
         })
     }
-    private handlePFPURLChange = (profile_url: string) => {
+    private handlePFPURLChange = (profile_pic_url: string) => {
         this.setState({
-            profile_url
+            profile_pic_url
         })
     }
 }
