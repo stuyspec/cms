@@ -9,6 +9,7 @@ import { exampleSetup } from "prosemirror-example-setup";
 
 import { editorStateToString } from '../serializeState';
 import { queryAccountIDs } from '../queryHelpers';
+import { MEDIUM_EXTENSION_INFO_FRAGMENT } from '../queryHelpers';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
@@ -29,7 +30,8 @@ mutation createArticle(
     $volume: Int!,
     $issue: Int!,
     $contributors: [Int!]!,
-    $is_published: Boolean) {
+    $is_published: Boolean
+    $media_ids: [Int!]) {
         createArticle(
             title: $title, 
             section_id: $section_id, 
@@ -41,11 +43,16 @@ mutation createArticle(
             issue: $issue,
             contributors: $contributors,
             is_published: $is_published
+            media_ids: $media_ids
         ) {            
             id
             title
+            media {
+                ...MediumExtensionInfo
+            }
         }
     }
+    ${MEDIUM_EXTENSION_INFO_FRAGMENT}
 `;
 
 interface IData {
@@ -63,7 +70,8 @@ interface IVariables {
     volume: number,
     issue: number,
     contributors: number[],
-    is_published: boolean
+    is_published: boolean,
+    media_ids: number[]
 }
 
 class CreateArticleMutation extends Mutation<IData, IVariables> { };
@@ -129,7 +137,8 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                                             volume: parseInt(state.volume, 10),
                                             issue: parseInt(state.issue, 10),
                                             contributors: userIDs,
-                                            is_published: props.publish
+                                            is_published: props.publish,
+                                            media_ids: state.media.map(m => parseInt(m.id))
                                         },
                                     });
                                 }}
