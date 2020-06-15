@@ -7,7 +7,7 @@ import { Query, ApolloConsumer, Mutation } from 'react-apollo';
 import { Redirect } from 'react-router';
 
 import { stringToEditorState, editorStateToString } from '../serializeState';
-import { queryAccountIDs, IMedium } from '../queryHelpers';
+import { queryAccountIDs, IMedium, querySectionIDs } from '../queryHelpers';
 
 
 import { schema } from '../schema';
@@ -25,7 +25,7 @@ query articleBySlug($slug: String!) {
         content
         volume
         issue
-        section {
+        sections {
             id
         }
         preview
@@ -48,9 +48,9 @@ interface IArticleData {
         content: string,
         volume: number,
         issue: number,
-        section: {
-            id: string
-        },
+        sections?: Array<{
+            slug: string
+        }>,
         preview?: string,
         contributors?: Array<{
             slug: string
@@ -70,7 +70,7 @@ const ARTICLE_MUTATION = gql`
 mutation updateArticle(
     $id: ID!
     $title: String!,
-    $section_id: Int!,
+    $section_ids: [Int!]!,
     $content: String!,
     $summary: String,
     $created_at: String,
@@ -83,7 +83,7 @@ mutation updateArticle(
         updateArticle(
             id: $id
             title: $title, 
-            section_id: $section_id, 
+            section_ids: $section_ids, 
             content: $content, 
             summary: $summary, 
             created_at: $created_at, 
@@ -112,7 +112,7 @@ interface IData {
 interface IVariables {
     id: string,
     title: string,
-    section_id: number,
+    section_ids: number[],
     content: string,
     summary?: string,
     created_at?: string,
@@ -172,7 +172,8 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, publish })
                                                                     title: data.articleBySlug!.title,
                                                                     volume: data.articleBySlug!.volume.toString(),
                                                                     issue: data.articleBySlug!.issue.toString(),
-                                                                    section: data.articleBySlug!.section.id.toString(),
+                                                                    sections: data.articleBySlug!.sections? 
+                                                                        data.articleBySlug!.sections!.map(s => s.slug) : [],
                                                                     focus: data.articleBySlug!.preview || "",
                                                                     contributors: data.articleBySlug!.contributors ?
                                                                         data.articleBySlug!.contributors!.map(c => c.slug) : [],
@@ -181,11 +182,12 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, publish })
                                                                 }}
                                                                 onPost={async (state) => {
                                                                     const userIDs = await queryAccountIDs(state.contributors, client)
+                                                                    const sectionIDs = await querySectionIDs(state.sections, client)
                                                                     mutate({
                                                                         variables: {
                                                                             id: data!.articleBySlug!.id,
                                                                             title: state.title,
-                                                                            section_id: parseInt(state.section, 10),
+                                                                            section_ids: sectionIDs,
                                                                             content: editorStateToString(state.editorState),
                                                                             summary: state.focus,
                                                                             created_at: data!.articleBySlug!.created_at

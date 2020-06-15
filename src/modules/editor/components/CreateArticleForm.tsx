@@ -8,7 +8,7 @@ import { EditorState } from "prosemirror-state";
 import { exampleSetup } from "prosemirror-example-setup";
 
 import { editorStateToString } from '../serializeState';
-import { queryAccountIDs } from '../queryHelpers';
+import { queryAccountIDs, querySectionIDs } from '../queryHelpers';
 
 import { ArticleFormBase } from './ArticleFormBase';
 
@@ -21,7 +21,7 @@ import { Redirect } from "react-router";
 const ARTICLE_MUTATION = gql`
 mutation createArticle(
     $title: String!,
-    $section_id: Int!,
+    $section_ids: [Int!]!,
     $content: String!,
     $summary: String,
     $created_at: String,
@@ -55,7 +55,7 @@ interface IData {
 
 interface IVariables {
     title: string,
-    section_id: number,
+    section_ids: number[],
     content: string,
     summary?: string,
     created_at?: string,
@@ -72,7 +72,7 @@ const initialArticleState = {
     title: "",
     volume: "",
     issue: "",
-    section: "",
+    sections: [] as string[],
     focus: "",
     date: new Date().toISOString(),
     contributors: [] as string[],
@@ -118,10 +118,11 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                                 postLabel="Post"
                                 onPost={async (state) => {
                                     const userIDs = await queryAccountIDs(state.contributors, client);
+                                    const sectionIDs = await querySectionIDs(state.sections, client);
                                     mutate({
                                         variables: {
                                             title: state.title,
-                                            section_id: parseInt(state.section, 10),
+                                            section_ids: sectionIDs,
                                             content: editorStateToString(state.editorState),
                                             summary: state.focus,
                                             created_at: new Date().toISOString(),

@@ -51,7 +51,7 @@ query SearchQuery($query: String!) {
                 first_name
                 last_name
             }
-            section {
+            sections {
                 permalink
                 id
                 name
@@ -76,7 +76,7 @@ query DraftQuery($query: String!) {
                 first_name
                 last_name
             }
-            section {
+            sections {
                 permalink
                 id
                 name
@@ -95,7 +95,7 @@ export interface IArticleData {
     issue: number,
     created_at?: string
     contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-    section: { permalink: string, id: string, name: string }
+    sections: { permalink: string, id: string, name: string }
 }
 
 export interface IUserData {

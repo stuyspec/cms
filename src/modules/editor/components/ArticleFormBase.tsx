@@ -8,7 +8,7 @@ import { RichEditor } from "./RichEditor";
 import { NumberField } from './helpers/NumberField';
 import { FocusField } from './helpers/FocusField';
 import { ContributorsField } from './helpers/ContributorsField';
-import { SectionField } from './helpers/SectionField';
+import { SectionsField } from './helpers/SectionsField';
 import { FeaturedMediaField } from './helpers/FeaturedMediaField';
 
 import { Button } from '@rmwc/button';
@@ -18,7 +18,7 @@ interface IState {
     title: string,
     volume: string,
     issue: string,
-    section: string,
+    sections: string[],
     focus: string,
     contributors: string[],
     media: IMedium[],
@@ -68,9 +68,9 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                             required={true}
                         />
                     </div>
-                    <SectionField
-                        value={this.state.section}
-                        onChange={this.handleSectionChange}
+                    <SectionsField
+                        value={this.state.sections}
+                        onChange={this.handleSectionsChange}
                     />
                     <FocusField
                         value={this.state.focus}
@@ -113,9 +113,9 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
         })
     }
 
-    private handleSectionChange = (section: string) => {
+    private handleSectionsChange = (sections: string[]) => {
         this.setState({
-            section
+            sections
         })
     }
 

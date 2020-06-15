@@ -16,7 +16,6 @@ export const ArticleListItem: React.FunctionComponent<IProps> = ({data, type}) =
             <DataTableCell><a href={`/${type}/edit/${data.slug}`}>{data.title}</a></DataTableCell>
             <DataTableCell>{data.volume}</DataTableCell>
             <DataTableCell>{data.issue}</DataTableCell>
-            <DataTableCell>{data.section.name}</DataTableCell>
             <DataTableCell alignEnd>{articleDate ? articleDate.toDateString() : "Unknown"}</DataTableCell>
         </DataTableRow>
     )

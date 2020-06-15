@@ -8,6 +8,13 @@ query userIDBySlug($slug: String!) {
     }
 }`;
 
+const SECTION_QUERY = gql`
+query sectionIDBySlug($slug: String!) {
+    sectionBySlug(slug: $slug) {
+        id
+    }
+}`;
+
 interface IUserData {
     userBySlug?: {
         id: string
@@ -15,6 +22,16 @@ interface IUserData {
 }
 
 interface IUserVariables {
+    slug: string
+}
+
+interface ISectionData {
+    sectionBySlug?: {
+        id: string
+    }
+}
+
+interface ISectionVariables {
     slug: string
 }
 
@@ -33,6 +50,23 @@ export async function queryAccountIDs(slugs: string[], client: ApolloClient<any>
     }
     )
     return userIDs;
+}
+
+export async function querySectionIDs(slugs: string[], client: ApolloClient<any>): Promise<number[]> {
+    const results = await Promise.all(
+        slugs.map(slug => client.query<ISectionData, ISectionVariables>({
+            query: SECTION_QUERY,
+            variables: { slug }
+        }))
+    );
+    const sectionIDs: number[] = [];
+    results.forEach(r => {
+        if (r.data && r.data.sectionBySlug) {
+            sectionIDs.push(parseInt(r.data.sectionBySlug.id, 10));
+        }
+    }
+    )
+    return sectionIDs;
 }
 
 export interface IMedium {
