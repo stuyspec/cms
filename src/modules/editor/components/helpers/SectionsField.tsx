@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Select } from '@rmwc/select';
-import { ContributorChip } from '../../../core/components/ContributorChip';
 
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import { Chip } from '@rmwc/chip';
+import { CircularProgress } from '@rmwc/circular-progress';
 
 const ALL_SECTIONS_QUERY = gql`
 query allSections {
@@ -60,17 +61,18 @@ export const SectionsField: React.FunctionComponent<IHelperProps> = ({ value, on
                                     invalid={isInvalid}
                                     onBlur={() => { setIsInvalid(!value); } }
                                     onChange={(evt: React.FormEvent<HTMLInputElement>) => {
-                                        if (value.includes(evt.currentTarget.value)) {
+                                        if (!value.includes(evt.currentTarget.value)) {
                                             onChange(value.concat([evt.currentTarget.value]));
                                         }
                                     }}
                                     
-                                />
-                                {value.map(s => <ContributorChip
-                                    slug={s}
+                                /><br/>
+                                {value.map(s => <Chip
+                                    icon="book"
+                                    label={options[s]}
                                     key={s}
-                                    deletable={true}
-                                    onDelete={slug => onChange(value.filter(elem => elem !== slug))}
+                                    trailingIcon={"close"}
+                                    onTrailingIconInteraction={() => onChange(value.filter(elem => elem !== s))}
                                     />)}
                             </div>
                         )

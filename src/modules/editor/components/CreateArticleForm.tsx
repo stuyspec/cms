@@ -32,7 +32,7 @@ mutation createArticle(
     $is_published: Boolean) {
         createArticle(
             title: $title, 
-            section_id: $section_id, 
+            section_ids: $section_ids, 
             content: $content, 
             summary: $summary, 
             created_at: $created_at, 

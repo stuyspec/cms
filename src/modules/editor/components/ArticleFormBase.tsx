@@ -114,6 +114,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
     }
 
     private handleSectionsChange = (sections: string[]) => {
+        console.log(sections);
         this.setState({
             sections
         })
