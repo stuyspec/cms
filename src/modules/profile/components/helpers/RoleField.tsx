@@ -29,9 +29,9 @@
             }
         }
         const [selected, setSelected] = React.useState({
-            contributor: false,
-            illustrator: false,
-            photographer: false
+            Contributor: false,
+            Illustrator: false,
+            Photographer: false
         });
     
         const toggleSelected = (key: keyof typeof selected) =>
@@ -48,32 +48,29 @@
                 <Chip 
                     type='button'
                     icon="insert_comment"
-                    selected={selected.contributor}
+                    selected={selected.Contributor}
                     checkmark
-                    onInteraction={() => select('contributor')}
+                    onInteraction={() => select('Contributor')}
                     label="Contributor"
                     key="contributor"
-                    value='contributor'
                 />
                 <Chip
                     type='button'
                     icon="palette"
-                    selected={selected.illustrator}
+                    selected={selected.Illustrator}
                     checkmark
-                    onInteraction={() => select('illustrator')}
+                    onInteraction={() => select('Illustrator')}
                     label="Illustrator"
                     key="illustrator"
-                    value='illustrator'
                 />
                 <Chip
                     type='button'
                     icon="camera_alt"
-                    selected={selected.photographer}
+                    selected={selected.Photographer}
                     checkmark
-                    onInteraction={() => select('photographer')}
+                    onInteraction={() => select("Photographer")}
                     label="Photographer"
                     key='photographer'
-                    value='photographer'
                 />
             </ChipSet>
         );

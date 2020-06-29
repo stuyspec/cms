@@ -20,7 +20,7 @@ mutation createUser(
     $password: String!,
     $password_confirmation: String!,
     $profile_picture_b64: String,
-    $role: [String]!
+    $role: [String!]!
 ) {
     createUser(
         first_name: $first_name,
