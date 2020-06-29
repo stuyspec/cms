@@ -15,9 +15,9 @@ interface IState {
     email: string,
     password: string,
     profile_pic_url: string,
-    role: string,
+    role: string[],
     isCreate: boolean,
-    profile_picture_b64: string
+    profile_picture_b64: string,
 }
 
 interface IProps {
@@ -31,7 +31,6 @@ export class UserFormBase extends React.Component<IProps, IState> {
         super(props);
         this.state = props.initialState;
     }
-
     public render() {
         let password = this.state.isCreate &&
                     <div>
@@ -74,9 +73,9 @@ export class UserFormBase extends React.Component<IProps, IState> {
                     {password}
                     <RoleField
                         role={this.state.role}
-                        onChange={this.handleRoleChange}
+                        onInteraction={this.handleRoleChange}
                         label="Role"
-                        required={this.state.isCreate}
+                        required={true}
                     />
                     <br/>
                     <img 
@@ -91,7 +90,7 @@ export class UserFormBase extends React.Component<IProps, IState> {
                         onPFPURLChange={this.handlePFPURLChange}
                     />
                 </div>
-                <Button>
+                <Button type='submit'>
                     {this.props.postLabel}
                 </Button>
             </form>
@@ -118,7 +117,7 @@ export class UserFormBase extends React.Component<IProps, IState> {
             password
         })
     }
-    private handleRoleChange = (role: string) => {
+    private handleRoleChange = (role: string[]) => {
         this.setState({
             role
         })

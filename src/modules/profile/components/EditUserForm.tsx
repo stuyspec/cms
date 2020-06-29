@@ -43,7 +43,7 @@ mutation updateUser(
     $last_name: String!,
     $email: String!,
     $profile_picture_b64: String,
-    $role: String,
+    $role: [String]!,
     $id: ID!,
     ) {
         updateUser(
@@ -70,7 +70,7 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
-    role: string,
+    role: string[],
     profile_picture_b64: string
 }
 
@@ -122,7 +122,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                     email: data.userBySlug!.email,
                                                                     profile_pic_url: data.userBySlug!.profile_pic_url,
                                                                     password: "",
-                                                                    role: "",
+                                                                    role: [""],
                                                                     isCreate: false,
                                                                     profile_picture_b64: ""
                                                                 }}

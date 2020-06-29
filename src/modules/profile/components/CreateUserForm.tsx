@@ -20,7 +20,7 @@ mutation createUser(
     $password: String!,
     $password_confirmation: String!,
     $profile_picture_b64: String,
-    $role: String!
+    $role: [String]!
 ) {
     createUser(
         first_name: $first_name,
@@ -47,7 +47,7 @@ interface IVariables {
     email: string,
     password?: string,
     password_confirmation?: string,
-    role: string,
+    role: string[],
     profile_picture_b64: string
 }
 
@@ -60,7 +60,7 @@ const initialUserState = {
     password: "Hello",
     password_confirmation: "",
     isCreate: true,
-    role: "",
+    role: [],
     profile_pic_url: "",
     profile_picture_b64: ""
 }
