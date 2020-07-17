@@ -18,7 +18,7 @@ interface IState {
     title: string,
     volume: string,
     issue: string,
-    sections: string[],
+    section: string[],
     focus: string,
     contributors: string[],
     media: IMedium[],
@@ -69,7 +69,7 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
                         />
                     </div>
                     <SectionsField
-                        value={this.state.sections}
+                        value={this.state.section}
                         onChange={this.handleSectionsChange}
                     />
                     <FocusField
@@ -113,10 +113,10 @@ export class ArticleFormBase extends React.Component<IProps, IState> {
         })
     }
 
-    private handleSectionsChange = (sections: string[]) => {
-        console.log(sections);
+    private handleSectionsChange = (section: string[]) => {
+        console.log(section);
         this.setState({
-            sections
+            section
         })
     }
 

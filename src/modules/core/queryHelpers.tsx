@@ -51,11 +51,6 @@ query SearchQuery($query: String!) {
                 first_name
                 last_name
             }
-            sections {
-                permalink
-                id
-                name
-            }
         }
     }
 }`
@@ -76,11 +71,6 @@ query DraftQuery($query: String!) {
                 first_name
                 last_name
             }
-            sections {
-                permalink
-                id
-                name
-            }
         }
     }
 }
@@ -95,7 +85,6 @@ export interface IArticleData {
     issue: number,
     created_at?: string
     contributors?: Array<{ first_name?: string, last_name?: string, slug: string }>,
-    sections: { permalink: string, id: string, name: string }
 }
 
 export interface IUserData {

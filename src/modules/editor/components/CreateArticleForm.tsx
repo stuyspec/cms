@@ -72,7 +72,7 @@ const initialArticleState = {
     title: "",
     volume: "",
     issue: "",
-    sections: [] as string[],
+    section: [] as string[],
     focus: "",
     date: new Date().toISOString(),
     contributors: [] as string[],
@@ -118,7 +118,7 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                                 postLabel="Post"
                                 onPost={async (state) => {
                                     const userIDs = await queryAccountIDs(state.contributors, client);
-                                    const sectionIDs = await querySectionIDs(state.sections, client);
+                                    const sectionIDs = await querySectionIDs(state.section, client);
                                     mutate({
                                         variables: {
                                             title: state.title,

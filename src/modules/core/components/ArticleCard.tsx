@@ -45,7 +45,7 @@ export const ArticleCard: React.SFC<IProps> = ({ data, type }) => (
             <CardActionButtons>
                 <CardActionButton
                     tag="a"
-                    href={STUY_SPEC_URL + data.sections.permalink + "/" + data.slug}
+                    href={STUY_SPEC_URL + data.sections[0].permalink + "/" + data.slug}
                 >
                     Open
                             </CardActionButton>

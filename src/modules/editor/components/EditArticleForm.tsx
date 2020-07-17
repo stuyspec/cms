@@ -25,7 +25,7 @@ query articleBySlug($slug: String!) {
         content
         volume
         issue
-        sections {
+        section {
             id
         }
         preview
@@ -48,7 +48,7 @@ interface IArticleData {
         content: string,
         volume: number,
         issue: number,
-        sections?: Array<{
+        section?: Array<{
             slug: string
         }>,
         preview?: string,
@@ -172,8 +172,8 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, publish })
                                                                     title: data.articleBySlug!.title,
                                                                     volume: data.articleBySlug!.volume.toString(),
                                                                     issue: data.articleBySlug!.issue.toString(),
-                                                                    sections: data.articleBySlug!.sections? 
-                                                                        data.articleBySlug!.sections!.map(s => s.slug) : [],
+                                                                    section: data.articleBySlug!.section? 
+                                                                        data.articleBySlug!.section!.map(s => s.slug) : [],
                                                                     focus: data.articleBySlug!.preview || "",
                                                                     contributors: data.articleBySlug!.contributors ?
                                                                         data.articleBySlug!.contributors!.map(c => c.slug) : [],
@@ -182,7 +182,7 @@ const EditArticleUnconnected: React.FunctionComponent<any> = ({ slug, publish })
                                                                 }}
                                                                 onPost={async (state) => {
                                                                     const userIDs = await queryAccountIDs(state.contributors, client)
-                                                                    const sectionIDs = await querySectionIDs(state.sections, client)
+                                                                    const sectionIDs = await querySectionIDs(state.section, client)
                                                                     mutate({
                                                                         variables: {
                                                                             id: data!.articleBySlug!.id,

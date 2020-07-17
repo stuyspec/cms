@@ -71,7 +71,6 @@ const SearchResultsItems: React.FunctionComponent<ISearchResultsProps> = ({ isLi
                             <DataTableHeadCell>Title</DataTableHeadCell>
                             <DataTableHeadCell>Volume</DataTableHeadCell>
                             <DataTableHeadCell>Issue</DataTableHeadCell>
-                            <DataTableHeadCell>Section</DataTableHeadCell>
                             <DataTableHeadCell alignEnd>Date</DataTableHeadCell>
                         </DataTableRow>
                     </DataTableHead>
