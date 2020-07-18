@@ -1,5 +1,6 @@
 # Content Management System
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+
 A CMS for the [Spectator website](https://stuyspec.com) built in [React](https://github.com/facebook/react) and [Typescript](https://www.typescriptlang.org/). The editor utilizes [ProseMirror](https://prosemirror.net/) to enable rich multimedia content.
 
 # Interface
