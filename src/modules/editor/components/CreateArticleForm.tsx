@@ -102,6 +102,13 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
         return <Redirect to={redirectTo} />
     }
 
+    function redirectToArticle() {
+        var title = document.getElementsByClassName("mdc-text-field__input")[0] as HTMLInputElement
+        var titleString = title.value.toLowerCase()
+        titleString = titleString.replace(/[^A-Z0-9]+/ig, "-")
+        return `/draft/edit/${titleString}`
+    }
+
     return (
         <>
             <CreateArticleMutation
@@ -115,7 +122,7 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                         title: `Successfully created ${props.publish ? 'article' : 'draft'}.`, 
                         timeout: 2000
                     });
-                    setRedirectTo(props.publish ? '/articles' : '/')
+                    setRedirectTo(props.publish ? '/articles' : redirectToArticle())
                 }}
             >
                 {(mutate) => (
