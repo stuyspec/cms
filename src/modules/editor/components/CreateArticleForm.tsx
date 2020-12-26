@@ -126,7 +126,7 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                                 postLabel="Post"
                                 onPost={async (state) => {
                                     const userIDs = await queryAccountIDs(state.contributors, client);
-                                    mutate({
+                                    await mutate({
                                         variables: {
                                             title: state.title,
                                             section_id: parseInt(state.section, 10),
@@ -140,7 +140,7 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                                             is_published: props.publish,
                                             media_ids: state.media.map(m => parseInt(m.id))
                                         },
-                                    });
+                                    })
                                 }}
                             />
                         )

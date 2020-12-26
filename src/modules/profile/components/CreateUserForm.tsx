@@ -53,11 +53,23 @@ interface IVariables {
 
 class CreateUserMutation extends Mutation<IData, IVariables> { };
 
+function passwordGenerator() {
+    let password = ""
+    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%"
+
+    var length = charset.length
+
+    for (var i = 0; i< 16; i++) {
+        password += charset.substr(Math.floor((Math.random() * length) + 1), 1);
+    }
+    return password
+}
+
 const initialUserState = {
     first_name: "",
     last_name: "",
     email: "",
-    password: "Hello",
+    password: passwordGenerator(),
     password_confirmation: "",
     isCreate: true,
     role: "",
@@ -82,7 +94,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                     })
                 }}
                 onCompleted={(data) => {snackbarQueue.notify({
-                    title: 'Sucessfully created user',
+                    title: 'Successfully created user',
                     timeout: 2000
                     })
                     setRedirectTo('/users')
@@ -95,7 +107,7 @@ const CreateUserUnconnected: React.FC<any> = (props) => {
                                 initialState={initialUserState}
                                 postLabel="Create"
                                 onPost={async (state) => {
-                                    mutate({
+                                    await mutate({
                                         variables: {
                                             first_name: state.first_name,
                                             last_name: state.last_name,
