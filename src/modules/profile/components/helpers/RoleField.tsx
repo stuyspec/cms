@@ -1,33 +1,77 @@
-import * as React from 'react';
+    import * as React from 'react';
 
-import { Select } from '@rmwc/select';
+    import {Chip} from '@rmwc/chip';
+    import {ChipIcon} from '@rmwc/chip';
+    import {ChipSet} from '@rmwc/chip';
+    
+    interface IProps {
+        onInteraction: (s: string[]) => void,
+        error?: string,
+        label: string,
+        required:boolean,
+        role: String[]
+    }
 
-interface IProps {
-    role: string,
-    onChange: (s: string) => void,
-    error?: string,
-    label: string,
-    required?: boolean,
-}
+    export const RoleField: React.FunctionComponent<IProps> = ({
+        role = [],
+    }) => {
 
-export const RoleField: React.SFC<IProps> = ({
-    role,
-    onChange,
-    error,
-    label,
-    required
-}) => {
-    return (
-        <Select
-            className="UserField"
-            value={role}
-            onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e.currentTarget.value)}
-            label={label}
-            enhanced
-            outlined
-            options={["Contributor", "Illustrator", "Photographer"]}
-            required={required}
-        />
-    );
-};
+        function select(value: any){
+            toggleSelected(value);
+            arrayEdit(value);
+        };
+        function arrayEdit(this: any, roles: string){
+            if(role.includes(roles)){
+                const index = role.indexOf(roles);
+                delete role[index]
+            } else{
+            role.push(roles);
+            }
+        }
+        const [selected, setSelected] = React.useState({
+            Contributor: false,
+            Illustrator: false,
+            Photographer: false
+        });
+    
+        const toggleSelected = (key: keyof typeof selected) =>
+            setSelected({
+                ...selected,
+                [key]: !selected[key]
+        });
 
+        return (
+            <ChipSet 
+            filter
+            style={{marginLeft: "1.5%", marginTop:"0.5%"}}
+            >
+                <Chip 
+                    type='button'
+                    icon="insert_comment"
+                    selected={selected.Contributor}
+                    checkmark
+                    onInteraction={() => select('Contributor')}
+                    label="Contributor"
+                    key="contributor"
+                />
+                <Chip
+                    type='button'
+                    icon="palette"
+                    selected={selected.Illustrator}
+                    checkmark
+                    onInteraction={() => select('Illustrator')}
+                    label="Illustrator"
+                    key="illustrator"
+                />
+                <Chip
+                    type='button'
+                    icon="camera_alt"
+                    selected={selected.Photographer}
+                    checkmark
+                    onInteraction={() => select("Photographer")}
+                    label="Photographer"
+                    key='photographer'
+                />
+            </ChipSet>
+        );
+    };
