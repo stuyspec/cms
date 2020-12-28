@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import './CreateArticleForm.css';
+
 import gql from "graphql-tag";
 import { Mutation, ApolloConsumer } from 'react-apollo';
 
@@ -17,6 +19,8 @@ import { snackbarQueue } from '../../snackbarQueue';
 
 import { withPageLayout } from '../../core/withPageLayout';
 import { Redirect } from "react-router";
+
+import swal from '@sweetalert/with-react'
 
 
 const ARTICLE_MUTATION = gql`
@@ -93,6 +97,8 @@ const initialArticleState = {
     )
 }
 
+let titleString: string | null = null
+
 export const CreateArticleUnconnected: React.FC<any> = (props) => {
     //if null, no redirect
     //otherwise redirect to the url stored
@@ -102,7 +108,21 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
         return <Redirect to={redirectTo} />
     }
 
-    return (
+    function articleLinker() {
+        var title = document.getElementsByClassName("mdc-text-field__input")[0] as HTMLInputElement
+        titleString = title.value.toLowerCase()
+        titleString = titleString.replace(/[^A-Z0-9]+/ig, "-")
+        titleString = `https://cms.stuyspec.com/draft/edit/${titleString}`
+        return titleString
+    }
+
+    function copyToClipboard() {
+        var link = document.getElementById("article-link") as HTMLInputElement
+        link.select()
+        document.execCommand('copy')
+    }
+
+return (
         <>
             <CreateArticleMutation
                 mutation={ARTICLE_MUTATION}
@@ -115,8 +135,33 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
                         title: `Successfully created ${props.publish ? 'article' : 'draft'}.`, 
                         timeout: 2000
                     });
-                    setRedirectTo(props.publish ? '/articles' : '/')
-                }}
+
+                    swal({
+                        icon: "success",
+                        buttons: {
+                            close: "Close",
+                        },
+                        closeOnClickOutside: false,
+                        content: (
+                            <div>
+                                <h1>Here is your article link!</h1>
+                                <input id="article-link" value={articleLinker()}/>
+                                <button onClick={copyToClipboard} id="copy-btn">Copy</button>
+                            </div>
+                        )
+                    }).then((value: any) => {
+                        if (value === 'close') {
+                            setRedirectTo(props.publish ? '/articles' : '/')
+                        }
+                        })
+
+           /*         swal(
+                        <div>
+                            <h1>Here is your article link!</h1>
+                            <input id="article-link" value={articleLinker()}/>
+                            <button onClick={copyToClipboard} id="copy-btn">Copy</button>
+                        </div>
+                    )*/                }}
             >
                 {(mutate) => (
                     <ApolloConsumer>
