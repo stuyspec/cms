@@ -22,7 +22,7 @@
     "apollo-client": "^2.4.5",
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.10.0",
     "prosemirror-commands": "^1.0.8",
