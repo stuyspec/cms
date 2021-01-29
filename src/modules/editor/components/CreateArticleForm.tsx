@@ -110,7 +110,7 @@ export const CreateArticleUnconnected: React.FC<any> = (props) => {
 
     function articleLinker() {
         var title = document.getElementsByClassName("mdc-text-field__input")[0] as HTMLInputElement
-        titleString = title.value.toLowerCase()
+        titleString = title.value.toLowerCase().trim().replace('"','')
         titleString = titleString.replace(/[^A-Z0-9]+/ig, "-")
         titleString = `https://cms.stuyspec.com/draft/edit/${titleString}`
         return titleString
