@@ -48,11 +48,13 @@ const useStyles = createUseStyles({
 const boldMark = schema.marks.strong;
 const italicMark = schema.marks.em;
 const linkMark = schema.marks.link;
+const highlightMark = schema.marks.highlight;
 
 //This generates functions to toggle the activation of each mark.
 const toggleBold = toggleMark(boldMark);
 const toggleItalic = toggleMark(italicMark);
 const toggleLink = toggleMark(linkMark);
+const toggleHighlight = toggleMark(highlightMark)
 
 //This generates functions to change the type of the current block type selected by the cursor.
 const setBlockParagraph = setBlockType(schema.nodes.paragraph);
@@ -99,6 +101,7 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView, media, on
     const shouldBoldBeChecked = shouldBeChecked(editorView, boldMark);
     const shouldItalicBeChecked = shouldBeChecked(editorView, italicMark);
     const shouldLinkBeChecked = shouldBeChecked(editorView, linkMark);
+    const shouldHighlightBeChecked = shouldBeChecked(editorView, highlightMark)
 
     if (state.selection instanceof NodeSelection) {
         const { node } = state.selection as NodeSelection;
@@ -130,6 +133,13 @@ export const MenuBar: React.FunctionComponent<IProps> = ({ editorView, media, on
                 onClick={() => { toggleItalic(state, dispatch); }}
                 checked={shouldItalicBeChecked}
                 disabled={!(selectionIsText || shouldItalicBeChecked)}
+            />
+            <MenuButton
+                icon="format_color_fill"
+                title="Highlight"
+                onClick={() => { toggleHighlight(state, dispatch); }}
+                checked={shouldHighlightBeChecked}
+                disabled={!(selectionIsText || shouldHighlightBeChecked)}
             />
             <MenuButton
                 icon="link"

@@ -123,6 +123,11 @@ export const marks = {
         toDOM(_: Mark, _inc: boolean): DOMOutputSpec { return ["strong"] }
     },
 
+    highlight: {
+        parseDOM: [{ tag: "mark" }, { style: "background-color"}] as ParseRule[],
+        toDOM(_: Mark, _inc: boolean): DOMOutputSpec { return ["mark"] }
+    },
+
     // :: MarkSpec Code font mark. Represented as a `<code>` element.
     code: {
         parseDOM: [{ tag: "code" }] as ParseRule[],
