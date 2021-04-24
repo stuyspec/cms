@@ -3,6 +3,22 @@
 
 A CMS for the [Spectator website](https://stuyspec.com) built in [React](https://github.com/facebook/react) and [Typescript](https://www.typescriptlang.org/). The editor utilizes [ProseMirror](https://prosemirror.net/) to enable rich multimedia content.
 
+## Setting Up
+1. Clone the repository
+```
+$ git clone https://github.com/stuyspec/cms.git
+```
+2. In the `cms` folder, run 
+```
+npm install
+```
+3. Run the application
+```
+npm start
+```
+4. CMS won't work alone; you will also need to setup your own local [stuyspec-api](https://github.com/stuyspec/stuyspec-api) database
+> React automatically hot reloads the code so it will take a few seconds to see your code reflect in the build
+
 # Interface
 ## Article/Draft Screen
 ![article homepage](https://user-images.githubusercontent.com/24882287/87843054-224b8d80-c87f-11ea-8efd-a43382bfa6d8.png)
