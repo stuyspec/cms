@@ -16,6 +16,7 @@ query userBySlug($slug: String!) {
         first_name
         last_name
         email
+        description
         profile_pic_url
     }
 }`
@@ -26,6 +27,7 @@ interface IUserData {
         first_name: string,
         last_name: string,
         email: string,
+        description: string,
         profile_pic_url: string,
     },
     profile_picture_b64: string
@@ -42,6 +44,7 @@ mutation updateUser(
     $first_name: String!,
     $last_name: String!,
     $email: String!,
+    $description: String!,
     $profile_picture_b64: String,
     $role: String,
     $id: ID!,
@@ -51,6 +54,7 @@ mutation updateUser(
             first_name: $first_name,
             last_name: $last_name,
             email: $email,
+            description: $description,
             role: $role,
             profile_picture_b64: $profile_picture_b64,
         ) {
@@ -70,6 +74,7 @@ interface IVariables {
     first_name: string,
     last_name: string,
     email: string,
+    description: string,
     role: string,
     profile_picture_b64: string
 }
@@ -120,6 +125,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                     first_name: data.userBySlug!.first_name,
                                                                     last_name: data.userBySlug!.last_name,
                                                                     email: data.userBySlug!.email,
+                                                                    description: data.userBySlug!.description,
                                                                     profile_pic_url: data.userBySlug!.profile_pic_url,
                                                                     password: "",
                                                                     role: "",
@@ -133,6 +139,7 @@ const EditUserUnconnected: React.FunctionComponent<any> = ({ slug }) => {
                                                                             first_name: state.first_name,
                                                                             last_name: state.last_name,
                                                                             email: state.email,
+                                                                            description: state.description,
                                                                             role: state.role,
                                                                             profile_picture_b64: state.profile_picture_b64
                                                                         }

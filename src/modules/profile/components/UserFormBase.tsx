@@ -2,6 +2,7 @@ import * as React from 'react';
 import "./UserForm.css"
 
 import { NameField } from './helpers/NameField';
+import { DescriptionField } from './helpers/DescriptionField';
 import { EmailField } from './helpers/EmailField';
 import { PasswordField } from './helpers/PasswordField';
 import { RoleField } from './helpers/RoleField';
@@ -13,11 +14,12 @@ interface IState {
     first_name: string,
     last_name: string,
     email: string,
+    description: string,
     password: string,
     profile_pic_url: string,
     role: string,
     isCreate: boolean,
-    profile_picture_b64: string
+    profile_picture_b64: string,
 }
 
 interface IProps {
@@ -71,6 +73,13 @@ export class UserFormBase extends React.Component<IProps, IState> {
                         required={true}
                     />
                     <br/>
+                    <DescriptionField
+                        value={this.state.description}
+                        onChange={this.handleDescriptionChange}
+                        label="Description"
+                        required={false}
+                    />
+                    <br/>                    
                     {password}
                     <RoleField
                         role={this.state.role}
@@ -111,6 +120,11 @@ export class UserFormBase extends React.Component<IProps, IState> {
     private handleEmailChange = (email: string) => {
         this.setState({
             email
+        })
+    }
+    private handleDescriptionChange = (description: string) => {
+        this.setState({
+            description
         })
     }
     private handlePasswordChange = (password: string) => {
