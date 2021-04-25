@@ -72,7 +72,7 @@ export function Extension({root, media, allMedia, type, ...rest}: IProps)  {
         return null;
     }
 
-    const mediaObjs = mediaIds.includes && allMedia ? allMedia.filter((m: any) => mediaIds.includes(parseInt(m.id))) : undefined
+    const mediaObjs = Array.isArray(mediaIds) && allMedia ? allMedia.filter((m: any) => mediaIds.includes(parseInt(m.id))) : undefined
 
     return ReactDOM.createPortal(<ExtensionHelper media={mediaObjs} type={type} {...rest} />, root);
 }
