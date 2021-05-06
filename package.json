@@ -43,7 +43,9 @@
     "redux": "^4.0.1",
     "rmwc": "^5.7.0",
     "sweetalert": "^2.1.2",
-    "typesafe-actions": "^2.0.4"
+    "typesafe-actions": "^2.0.4",
+    "ua-parser-js": ">=0.7.24",
+    "ssri": ">=6.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
