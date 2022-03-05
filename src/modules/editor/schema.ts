@@ -124,7 +124,7 @@ export const marks = {
     },
 
     highlight: {
-        parseDOM: [{ tag: "mark" }, { style: "background-color"}] as ParseRule[],
+        parseDOM: [{ tag: "mark" }, { style: "span.highlight"}] as ParseRule[],
         toDOM(_: Mark, _inc: boolean): DOMOutputSpec { return ["mark"] }
     },
 
