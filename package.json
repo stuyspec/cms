@@ -45,7 +45,7 @@
     "merge": ">=2.1.1",
     "sweetalert": "^2.1.2",
     "typesafe-actions": "^2.0.4",
-    "ua-parser-js": ">=0.7.24",
+    "ua-parser-js": ">=0.7.33",
     "ssri": ">=6.0.2"
   },
   "scripts": {
